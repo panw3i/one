@@ -1,0 +1,30 @@
+FROM centos:latest
+MAINTAINER The CentOS Project <admin@jiobxn.com>
+
+RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+RUN yum clean all; yum -y update; yum -y install net-tools bash-completion vim wget cronie at openssl iptables; yum clean all
+
+RUN mysql_v=$(curl -s http://dev.mysql.com/downloads/mysql/ |grep "<h1>" |awk '{print $4}') \
+        && mysql_V=$(echo $mysql_v |awk -F. '{print $1"."$2}') \
+        && system_v=$(uname -a |awk -F. '{print $(NF-1)}') \
+        && yum install -y https://repo.mysql.com/yum/mysql-${mysql_V}-community/docker/x86_64/mysql-community-server-minimal-${mysql_v}-1.${system_v}.x86_64.rpm \
+        && rm -rf /var/cache/yum/*
+
+RUN mkdir /docker-entrypoint-initdb.d
+
+VOLUME /var/lib/mysql
+
+COPY mysql-mini.sh /mysql.sh
+COPY backup.sh /backup.sh
+RUN chmod +x /*.sh
+
+ENTRYPOINT ["/mysql.sh"]
+
+EXPOSE 3306
+
+CMD ["mysqld"]
+
+# docker build -t mysql-mini .
+# docker run -d --restart always --privileged -p 13306:3306 -v /docker/mysql-mini:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=newpass -e MYSQL_DATABASE=zabbix -e MYSQL_USER=zabbix -e MYSQL_PASSWORD=newpass -e MYSQL_BACK=Y --hostname mysql --name mysql mysql-mini
+# docker logs mysql |grep "PASSWORD"
+# docker run -it --rm mysql-mini --help
