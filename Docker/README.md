@@ -7,29 +7,29 @@ The do?
 
 ----------
 
-## 你想翻墙
+## 国际网络加速
 选择有：shadowsocks、ocserv、strongswan、pptpd、nproxy、openvpn、squid
 
 ## 你想拥有tomcat集群
-得用：nginx、tomcat、mysql、redis
+使用：nginx、tomcat、mysql、redis
 
 ## 你想拥有php集群
-得用：nginx、httpd、php、mysql、redis
+使用：nginx、httpd、php、mysql、redis
 
 ## 你想拥有zabbix监控
-得用：zabbix、php、mysql
+使用：zabbix、php、mysql
 
 ## 你想拥有gitlab管理代码
-得用：gitlab、mysql、redis
+使用：gitlab、mysql、redis
 
 ## 你想拥有mysql主从复制
-得用：mysql
+使用：mysql
 
 ## 你想拥有不停机、不锁表的mysql主从复制
-得用：mysql、systemd
+使用：mysql、systemd
 
 ## 你想拥有ssh环境
-得用：ssh
+使用：ssh
 
 ## 你想拥有centos7测试环境
-得用：systemd
+使用：systemd
