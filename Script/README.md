@@ -4,7 +4,7 @@
 openvpn用户认证插件
 
 ## expect.sh
-主机批量管理工具
+主机批量管理工具，用于远程执行命令、安装软件包、拷贝文件
 
 ## translate、trans
 google翻译工具
