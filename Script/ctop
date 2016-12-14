@@ -1,0 +1,83 @@
+#!/bin/bash
+while true
+do
+##1.获取容器ID
+cname=($(docker ps |awk 'NR!=1{print $NF}'))
+cid=($(docker inspect --format "{{ .State.Pid }}" ${cname[*]}))
+n=$(echo ${#cname[@]})
+time=5
+
+##2.第一次获取流量值
+i=0
+while [ $i -lt $n ]
+do
+	in_0[$i]=$(cat /proc/${cid[$i]}/net/dev | grep eth0 | sed -e "s/\(.*\)\:\(.*\)/\2/g" | awk '{print $1 }')
+	out_0[$i]=$(cat /proc/${cid[$i]}/net/dev | grep eth0 | sed -e "s/\(.*\)\:\(.*\)/\2/g" | awk '{print $9 }')
+#	echo -e "$i\t${in_0[$i]}\t${out_0[$i]}\t${cid[$i]}\t${cname[$i]}"
+let "i++"
+done
+
+sleep $time
+
+#3.第二次获取流量值
+i=0
+while [ $i -lt $n ]
+do
+        in_1[$i]=$(cat /proc/${cid[$i]}/net/dev | grep eth0 | sed -e "s/\(.*\)\:\(.*\)/\2/g" | awk '{print $1 }')
+        out_1[$i]=$(cat /proc/${cid[$i]}/net/dev | grep eth0 | sed -e "s/\(.*\)\:\(.*\)/\2/g" | awk '{print $9 }')
+
+	dif_in=$(((${in_1[$i]}-${in_0[$i]})/time))
+	dif_out=$(((${out_1[$i]}-${out_0[$i]})/time))
+
+	dif_in=$((dif_in/1024))
+	dif_out=$((dif_out/1024))
+#all
+	all_in=$((${in_1[$i]}/1048576))
+	all_out=$((${out_1[$i]}/1048576))
+	#[ $dif_in -gt 20 ] && warning="yes"
+	#[ $dif_out -gt 20 ] && warning="yes"
+
+
+#1
+if [ $dif_in -gt 1024 ] ;then
+	dif_in=$((dif_in/1024))
+	mm_in=M
+else
+	mm_in=K
+	mm_out=K
+fi
+#1.1
+if [ $dif_out -gt 1024 ] ;then
+	dif_out=$((dif_out/1024)) 
+	mm_out=M
+else
+	mm_in=K
+	mm_out=K
+fi
+
+
+#2
+if [ $all_in -gt 1024 ] ;then
+	all_in=$((all_in/1024))
+	gg_in=G
+else
+	gg_in=M
+	gg_out=M
+fi
+#2.1
+if [ $all_out -gt 1024 ] ;then
+	all_out=$((all_out/1024)) 
+	gg_out=G
+else
+	gg_in=M
+	gg_out=M
+fi
+
+
+echo -e "$(date +%F_%T)\t${cid[$i]}\t${cname[$i]}\t$dif_in $mm_in\t$dif_out $mm_out"
+#echo -e "$(date +%F_%T)\t${cid[$i]}\t${cname[$i]}\t$all_in $gg_in\t$all_out $gg_out"
+
+#In is DOWN,Out is UP
+let "i++"
+done
+done
