@@ -1,6 +1,12 @@
 The do?
 ===
 
+如何获得帮助
+
+    docker run --rm mysql xsxs
+
+----------
+
 ## 你想翻墙
 选择有：shadowsocks、ocserv、strongswan、pptpd、nproxy、openvpn、squid
 
