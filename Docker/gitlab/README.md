@@ -30,9 +30,9 @@ Gitlab
 			-e HTTPS=<Y> \\                  使用HTTPS，这时候gitlab是放在反向代理后面
 			-e SSH_PORT=[2222] \\            ssh访问gitlab的端口
 			-e REDIS_SERVER=<redhat.xyz> \\  redis服务器地址
-			-e REDIS_PORT=[16379] \\         redis服务器端口
+			-e REDIS_PORT=[16379] \\         redis服务端口
 			-e DB_SERVER=<redhat.xyz> \\     mysql服务器地址
-			-e DB_PORT=[13306] \\            mysql服务器端口
+			-e DB_PORT=[13306] \\            mysql服务端口
 			-e DB_USER=[git] \\              mysql用户
 			-e DB_PASS=[Newp@555] \\         mysql用户的密码
 			-e DB_NAME=[gitlabhq_production] \\   mysql数据库名称

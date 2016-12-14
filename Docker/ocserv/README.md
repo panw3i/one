@@ -14,13 +14,13 @@ OCSERV
 			-p 443:443 \\
 			-e VPN_PORT=[443] \\       VPN端口
 			-e VPN_USER=<jiobxn> \\    VPN用户名
-			-e VPN_PASS=<123456> \\    VPN密码
+			-e VPN_PASS=<123456> \\    VPN密码，默认随机
 			-e P12_PASS=[jiobxn.com] \\  p12证书密码
 			-e MAX_CONN=[5] \\           每个客户端的最大连接数
 			-e MAX_CLIENT=[5] \\         最大客户端数
-			-e SERVER_CN=[SERVER_IP] \\  默认是服务器公网IP，这个一定不能填错
-			-e CLIENT_CN=["AnyConnect VPN"] \\   p12证书标识，便于在iphone上识别
-			-e CA_CN=["OpenConnect CA"] \\       ca证书标识
+			-e SERVER_CN=[SERVER_IP] \\  默认是服务器公网IP，不能填错
+			-e CLIENT_CN=["AnyConnect VPN"] \\   P12证书标识，便于在iphone上识别
+			-e CA_CN=["OpenConnect CA"] \\       CA证书标识
 			-e GATEWAY_VPN=[Y] \\                默认VPN做网关
 			-e IP_RANGE=[10.10.0] \\             分配的IP地址池
 			--hostname ocserv \\

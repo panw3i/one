@@ -13,8 +13,8 @@ Redis
 					docker run -d --restart always --privileged \\
 					-v /docker/redis:/usr/local/redis/data \\
 					-p 16379:6379 \\
-					-e REDIS_PASS=<bigpass> \\  redis密码
-					-e REDIS_PORT=[6379] \\     端口
+					-e REDIS_PASS=<bigpass> \\  redis密码，默认随机
+					-e REDIS_PORT=[6379] \\     redis端口
 					-e LOCAL_STROGE=Y \\        开启持久化
 					--hostname redis \\
 					--name redis redis

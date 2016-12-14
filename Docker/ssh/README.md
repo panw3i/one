@@ -9,4 +9,4 @@ SSH
 **协定：** []是默参数，<>是自定义参数
 
     USER=[root]        用户名
-    PASS=$(pwmake 64)  随机密码
+    PASS=<passwd>      随机密码

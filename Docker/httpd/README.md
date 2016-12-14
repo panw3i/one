@@ -26,6 +26,6 @@ HTTPD
 				-e SERVER_NAME=<www.redhat.xyz,redhat.xyz> \\  绑定主机名
 				-e WWW_ALIAS=<"/upload,/upload"> \\   alisa，第一个upload是别名，第二个upload是目录路径
 				-e APC_USER=<jiobxn> \\   用于查看/basic_status的用户
-				-e APC_PASS=123456 \\     密码
+				-e APC_PASS=<123456> \\     默认随机密码
 				--hostname httpd \\
 				--name httpd httpd

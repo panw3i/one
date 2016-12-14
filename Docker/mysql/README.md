@@ -20,12 +20,12 @@ MySQL
 				-v /docker/mysql-mini:/var/lib/mysql \\
 				-v /docker/sql:/docker-entrypoint-initdb.d \\  要导入的数据库放这里
 				-p 13306:3306 \\
-				-e MYSQL_ROOT_PASSWORD=<newpass> \\  root密码，不指定会生成一个随机密码
+				-e MYSQL_ROOT_PASSWORD=<newpass> \\  root密码，默认随机密码
 				-e MYSQL_DATABASE=<zabbix> \\        创建一个数据库
 				-e MYSQL_USER=<zabbix> \\            创建一个mysql用户
 				-e MYSQL_PASSWORD=<zbxpass> \\       mysql用户的密码
 				-e MYSQL_BACK=<Y> \\                 开启自动备份数据库，默认只保留3天的备份
-				-e MYSQL_PORT=[3306] \\              mysql端口
+				-e MYSQL_PORT=[3306] \\              mysql服务端口
 				-e MYSQL_MAX_CONN=[65535] \\         mysql最大连接数
 				-e SERVER_ID=<1> \\                  启用mysql主从模式，在主从模式下备份的数据库要想导入，必须设置SERVER ID
 				-e REPL_IPR=<192.168.10.%> \\        允许repl用户从哪些IP地址来连接mysql，如果没有指定REPL_USER用户会自动创建一个repl用户和随机密码

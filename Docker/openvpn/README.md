@@ -16,15 +16,15 @@ OpenVPN
 			-e TAP_TUN=[tun] \\    默认使用tun
 			-e VPN_PORT=[1194] \\  默认端口
 			-e VPN_USER=<jiobxn> \\  VPN用户名
-			-e VPN_PASS=<123456> \\  密码
+			-e VPN_PASS=<123456> \\  VPN密码，默认随机
 			-e MAX_CLIENT=[5] \\     最大客户端数
 			-e C_TO_C=[Y] \\         允许客户端与客户端之间通信
 			-e GATEWAY_VPN=[Y] \\    默认VPN做网关
 			-e SERVER_IP=[SERVER_IP] \\  默认是服务器公网IP
 			-e IP_RANGE=[10.8.0] \\      分配的IP地址池
 			-e PROXY_USER=<jiobxn> \\    http代理用户名
-			-e PROXY_PASS=<123456> \\    密码
-			-e PROXY_PORT=<80> \\        端口
+			-e PROXY_PASS=<123456> \\    代理密码，默认随机
+			-e PROXY_PORT=<80> \\        代理端口
 			-e DNS1=[8.8.4.4] \\         默认DNS
 			-e DNS2=[8.8.8.8] \\
 			--hostname openvpn \\

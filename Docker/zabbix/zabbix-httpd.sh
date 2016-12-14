@@ -149,6 +149,7 @@ else
 				-e ZBX_DB_SERVER=<redhat.xyz> \\
 				-e ZBX_DB_PORT=[13306] \\
 				-e ZBX_DB_USER=[zabbix] \\
+				-e ZBX_DB_PASSWORD=[newpass] \\
 				-e ZBX_DB_DATABASE=[zabbix] \\
 				-e ZBX_SERVER=<SERVER_IP> \\
 				-e ZBX_PORT=[20051] \\
