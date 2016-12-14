@@ -1,6 +1,8 @@
 NProxy
 ===
 
+> **NProxy**是一个nginx代理，可以代理访问任意网站
+
 ## Example:
 
     docker run -d --restart always -p 80:80 -p 443:443 -v /docker/nproxy:/key -e PROXY_HTTPS=Y -e NGX_DOMAIN=fqhub.com -e TAG=888 --hostname nproxy --name nproxy nproxy
