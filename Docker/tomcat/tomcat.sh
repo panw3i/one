@@ -71,12 +71,6 @@ if [ -z "$(grep "redhat.xyz" /usr/local/tomcat/conf/server.xml)" ]; then
 		echo "Tomcat user AND password: $TOM_USER  $TOM_PASS"
 	fi
 	
-	#pls
-	if [ "$(version.sh |grep "Server number" |awk -F':  ' '{print $2}' |awk -F. '{print $1}')" -eq 8 ]; then
-		sed -i '/catalina.base/d' /usr/local/tomcat/conf/context.xml
-	else
-		sed -i '/WEB-INF/ a \    <Loader delegate="true"/>' /usr/local/tomcat/conf/context.xml
-	fi
 	
 	#index
 	if [ ! -d /usr/local/tomcat/webapps/ROOT ]; then \cp -a /mnt/webapps/* /usr/local/tomcat/webapps/; fi
