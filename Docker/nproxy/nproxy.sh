@@ -186,10 +186,10 @@ if [ -z "$(grep "redhat.xyz" /etc/nginx/nginx.conf)" ]; then
 	
 	
 	if [ "$NGX_FILTER" ]; then
-		for i in $(echo $NGX_FILTER |sed 's/;;/\n/g') ;do
+		for i in $(echo $NGX_FILTER |sed 's/;/\n/g') ;do
 			if [ $(echo $i |grep ",,") ]; then
-				TEXT_A=$(echo $i |awk -F",," '{print $1}')
-				TEXT_B=$(echo $i |awk -F",," '{print $2}')
+				TEXT_A=$(echo $i |awk -F"," '{print $1}')
+				TEXT_B=$(echo $i |awk -F"," '{print $2}')
 				sed -i '/#sub_filter#/ a \            sub_filter '$TEXT_A' '$TEXT_B';' /etc/nginx/conf.d/default.conf
 			else
 				sed -i '/#sub_filter#/ a \            sub_filter '$i' $host;' /etc/nginx/conf.d/default.conf
@@ -227,7 +227,7 @@ else
 				-e NGX_CACHE=<Y> \\
 				-e CACHE_TIME=[30m] \\
 				-e MAX_CACHE=[1000m] \\
-				-e NGX_FILTER=<text1,,text2;;text3> \\
+				-e NGX_FILTER=<text1,text2;text3> \\
 				--hostname nproxy \\
 				--name nproxy nproxy
 	"	
