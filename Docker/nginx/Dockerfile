@@ -7,7 +7,7 @@ RUN yum clean all; yum -y update; yum -y install net-tools bash-completion vim w
 RUN cd /usr/local/src \
         && pcre_down="https://sourceforge.net/projects/pcre/files/pcre/" && pcre_v=$(curl -s $pcre_down |grep "tr title" |awk -F\" 'NR==1{print $2}') && wget -c "$pcre_down$pcre_v/pcre-$pcre_v.tar.gz" \
         && openssl_down="ftp://ftp.openssl.org/source/" && openssl_v=$(curl -s $openssl_down |grep "tar.gz$" |egrep -v "pre|fips" |awk 'END{print $NF}') && wget -c "$openssl_down$openssl_v" \
-        && wget -c $(curl -s http://zlib.net/ |grep "\.tar.gz" |awk -F\" 'NR==1{print $2}') \
+        && wget -c http://zlib.net/$(curl -s http://zlib.net/ |grep "\.tar.gz" |awk -F\" 'NR==1{print $2}') \
         && wget -c $(curl -s http://www.cpan.org/src/ |grep wget |awk -F\" '{print $2}') \
         && nginx_v=$(curl -s http://nginx.org/ |grep "td class" |awk -F'html' 'NR==1{print $2}' |grep -Po '(?<=\>)[^)]*(?=\<)') && wget -c http://nginx.org/download/$nginx_v.tar.gz
         
