@@ -28,6 +28,6 @@ NProxy
 				-e NGX_CACHE=<Y> \\             是否开启缓存
 				-e CACHE_TIME=[30m] \\          缓存的时间
 				-e MAX_CACHE=[1000m] \\         缓存的大小
-				-e NGX_FILTER=<text1,,text2;;text3> \\    字符串替换，text2替换掉text1，如果只有一个text3就会被$host替换掉
+				-e NGX_FILTER=<text1,text2;text3> \\    字符串替换，text2替换掉text1，如果只有一个text3就会被$host替换掉
 				--hostname nproxy \\
 				--name nproxy nproxy
