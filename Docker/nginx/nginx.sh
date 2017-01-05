@@ -267,8 +267,7 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 	        proxy_set_header   Referer           \$host;
 	        proxy_set_header   Accept-Encoding  "";
 	        sub_filter_once  off;
-		sub_filter_types * ;
-		#sub_filter#
+	        sub_filter_types * ;
 	        sub_filter \$proxy_host \$host;
 	    }
 
@@ -396,34 +395,6 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 	fi
 
 
-	if [ "$PROXY_FILTER" ]; then
-		for i in $(echo $PROXY_FILTER |sed 's/;/\n/g') ;do
-			if [ -n "$(echo $i |grep '|')" ]; then
-				if [ -n "$(echo $i |awk -F'|' '{print $2}' |grep ",")" ]; then
-					n=$(echo $i |awk -F'|' '{print $1}')
-					if [ $(echo $i |grep ",") ]; then
-						TEXT_A=$(echo $i |awk -F"," '{print $1}')
-						TEXT_B=$(echo $i |awk -F"," '{print $2}')
-						sed -i '/#sub_filter#/ a \            sub_filter '$TEXT_A' '$TEXT_B';' /usr/local/nginx/conf/vhost/proxy_$n.conf
-					else
-						sed -i '/#sub_filter#/ a \            sub_filter '$i' $host;' /usr/local/nginx/conf/vhost/proxy_$n.conf
-					fi
-				fi
-			else
-				if [ -n "$(echo $i |awk -F'|' '{print $2}' |grep ",")" ]; then
-					if [ $(echo $i |grep ",") ]; then
-						TEXT_A=$(echo $i |awk -F"," '{print $1}')
-						TEXT_B=$(echo $i |awk -F"," '{print $2}')
-						sed -i '/#sub_filter#/ a \            sub_filter '$TEXT_A' '$TEXT_B';' /usr/local/nginx/conf/vhost/proxy_*.conf
-					else
-						sed -i '/#sub_filter#/ a \            sub_filter '$i' $host;' /usr/local/nginx/conf/vhost/proxy_*.conf
-					fi
-				fi
-			fi
-		done
-	fi
-
-
 	if [ "$PROXY_HEADER" ]; then
 		for i in $(echo $PROXY_HEADER |sed 's/;/\n/g') ;do
 			if [ -n "$(echo $i |grep '|')" ]; then
@@ -468,7 +439,6 @@ else
 				-e TOMCAT_HTTPS=<Y> \\
 				-e PROXY_SERVER=<'a.redhat.xyz|10.0.0.31,10.0.0.41;b.redhat.xyz|www.baidu.com'> \\
 				-e PROXY_HTTPS=<Y> \\
-				-e PROXY_FILTER=<2|text1,text2;text3> \\
 				-e PROXY_HEADER=<2|host;http_host> \\
 				-e FULL_HTTPS=<Y> \\
 				-e DEFAULT_SERVER=<redhat.xyz> \\
