@@ -30,7 +30,7 @@ Nginx
 				-e TOMCAT_HTTPS=<Y> \\     后端tomcat启用了https
 				-e PROXY_SERVER=<'a.redhat.xyz|10.0.0.31,10.0.0.41;b.redhat.xyz|www.baidu.com'> \\  反向代理，以";"分割为一组
 				-e PROXY_HTTPS=<Y> \\      代理的后端服务器启用了https
-				-e HEADER_HOST=<proxy_host|http_host|host> \\  反向代理的主机头，默认是proxy_host
+				-e PROXY_HEADER=<2|host;http_host> \\  反向代理的主机头，默认是proxy_host
 				-e FULL_HTTPS=<Y> \\       开启全站https
 				-e DEFAULT_SERVER=<redhat.xyz> \\  默认主机名，如果有多个主机名，指定默认的
 				-e IP_HASH=<Y> \\          开启IP HASH
