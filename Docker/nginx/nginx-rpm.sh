@@ -7,7 +7,6 @@ if [ "$1" = 'nginx' ]; then
 : ${PHP_PATH:=/var/www}
 : ${HTTP_PORT:=80}
 : ${HTTPS_PORT:=443}
-: ${HEADER_HOST:=proxy_host}
 : ${NGX_CODING:=utf-8}
 
 
@@ -223,7 +222,7 @@ if [ -z "$(grep "redhat.xyz" /etc/nginx/nginx.conf)" ]; then
 	        proxy_read_timeout      300;
 	        proxy_connect_timeout   300;
 	        proxy_redirect     off;
-	        proxy_set_header   Host              \$proxy_host;
+	        proxy_set_header   Host              \$host;
 	        proxy_set_header   X-Real-IP         \$remote_addr;
 	        proxy_set_header   X-Forwarded-By    \$server_addr:\$server_port;
 	        proxy_set_header   X-Forwarded-Proto \$scheme;
@@ -278,6 +277,7 @@ if [ -z "$(grep "redhat.xyz" /etc/nginx/nginx.conf)" ]; then
 	        proxy_set_header   Referer           \$host;
 	        proxy_set_header   Accept-Encoding  "";
 	        sub_filter_once  off;
+	        sub_filter_types * ;
 	        sub_filter \$proxy_host \$host;
 	    }
 
@@ -332,10 +332,6 @@ if [ -z "$(grep "redhat.xyz" /etc/nginx/nginx.conf)" ]; then
 				sed -i 's/proxy_pass http/proxy_pass https/g' /etc/nginx/conf.d/java.conf
 		fi
 
-		if [ "$HEADER_HOST" != "proxy_host" ]; then
-			sed -i 's/proxy_host;/'$HEADER_HOST';/g' /etc/nginx/conf.d/java.conf
-		fi
-	
 	
 		if [ -n "$(echo $JAVA_SERVER |grep \|)" ]; then
 			for i in $(echo $JAVA_SERVER |awk -F'|' '{print $1}' |sed 's/,/\n/g'); do
@@ -376,10 +372,6 @@ if [ -z "$(grep "redhat.xyz" /etc/nginx/nginx.conf)" ]; then
 				sed -i 's/proxy_pass http/proxy_pass https/g' /etc/nginx/conf.d/proxy_$n.conf
 			fi
 		
-			if [ "$HEADER_HOST" != "proxy_host" ]; then
-				sed -i 's/proxy_host;/'$HEADER_HOST';/g' /etc/nginx/conf.d/proxy_$n.conf
-			fi
-		
 		
 			if [ -n "$(echo $i |grep '|')" ]; then
 				for x in $(echo $i |awk -F'|' '{print $1}' |sed 's/,/\n/g'); do
@@ -412,6 +404,17 @@ if [ -z "$(grep "redhat.xyz" /etc/nginx/nginx.conf)" ]; then
 		done
 	fi
 
+
+	if [ "$PROXY_HEADER" ]; then
+		for i in $(echo $PROXY_HEADER |sed 's/;/\n/g') ;do
+			if [ -n "$(echo $i |grep '|')" ]; then
+				n=$(echo $i |awk -F'|' '{print $1}')
+				sed -i 's/proxy_host;/'$(echo $i |awk -F'|' '{print $2}')';/g' /etc/nginx/conf.d/proxy_$n.conf
+			else
+				sed -i 's/proxy_host;/'$i';/g' /etc/nginx/conf.d/proxy_*.conf
+			fi
+		done
+	fi
 
 
 	if [ "$IP_HASH" = "Y" ]; then
@@ -446,7 +449,7 @@ else
 				-e TOMCAT_HTTPS=<Y> \\
 				-e PROXY_SERVER=<'redhat.xyz,www.redhat.xyz|10.0.0.31,10.0.0.41;b.redhat.xyz|www.baidu.com'> \\
 				-e PROXY_HTTPS=<Y> \\
-				-e HEADER_HOST=<proxy_host|http_host|host> \\
+				-e PROXY_HEADER=<2|host;http_host> \\
 				-e FULL_HTTPS=<Y> \\
 				-e DEFAULT_SERVER=<redhat.xyz> \\
 				-e IP_HASH=<Y> \\
