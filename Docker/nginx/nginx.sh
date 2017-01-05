@@ -268,6 +268,7 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 	        proxy_set_header   Accept-Encoding  "";
 	        sub_filter_once  off;
 		sub_filter_types * ;
+		#sub_filter#
 	        sub_filter \$proxy_host \$host;
 	    }
 
