@@ -165,7 +165,7 @@ CLEAN() {
 for i in $(cat /tmp/hosts.txt); do
 	IP=$(echo "$i"|cut -f3 -d":")
 	PORT=$(echo "$i"|cut -f4 -d":")
-    USER=$(echo "$i"|cut -f2 -d":")
+	USER=$(echo "$i"|cut -f2 -d":")
 	PASS=$(echo "$i"|cut -f5 -d":")
 	if [ -z "$USER" ]; then USER=root; fi
 	if [ -z "$PORT" ]; then PORT=22; fi
