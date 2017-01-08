@@ -49,7 +49,7 @@ expect {
 for i in $(cat /tmp/hosts.txt); do
 	IP=$(echo "$i"|cut -f3 -d":")
 	PORT=$(echo "$i"|cut -f4 -d":")
-    USER=$(echo "$i"|cut -f2 -d":")
+	USER=$(echo "$i"|cut -f2 -d":")
 	PASS=$(echo "$i"|cut -f5 -d":")
 	if [ -z "$USER" ]; then USER=root; fi
 	if [ -z "$PORT" ]; then PORT=22; fi
@@ -73,7 +73,7 @@ SSHALL() {
 for i in $(cat /tmp/hosts.txt); do
 	IP=$(echo "$i"|cut -f3 -d":")
 	PORT=$(echo "$i"|cut -f4 -d":")
-    USER=$(echo "$i"|cut -f2 -d":")
+	USER=$(echo "$i"|cut -f2 -d":")
 	if [ -z "$USER" ]; then USER=root; fi
 	if [ -z "$PORT" ]; then PORT=22; fi
 
@@ -83,7 +83,9 @@ for i in $(cat /tmp/hosts.txt); do
 		scp -P $PORT ./hosts.txt $USER@$IP:~
 
 		#ssh -p $PORT $USER@$IP "nohup /bin/sh ~/expect.sh SSH &"                        #这一条会在当前窗口执行完所有
+		ssh -p $PORT $USER@$IP '[ -z "$(ps -ef |grep crond |grep -v grep)" ] && crond'   #启动CROND
 		ssh -p $PORT $USER@$IP "echo '* * * * * . /etc/profile;/bin/sh ~/expect.sh SSH' >>/var/spool/cron/$USER"  #默认mini安装的centos、fedora都没有expect、at命令
+		#ssh -p $PORT $USER@$IP '[ -z "$(ps -ef |grep crond |grep -v grep)" ] && atd'    #启动ATD
 		#ssh -p $PORT $USER@$IP "echo '/bin/sh ~/expect.sh SSH' |at now + 1 minutes"     #用这一条要小心了，如果脚本参数是SSHALL，将会进入死循环，你只有将at包卸载才能停止
 
 		#ssh -p $PORT $USER@$IP "sed -i '/expect.sh SSH/d' /var/spool/cron/$USER"
