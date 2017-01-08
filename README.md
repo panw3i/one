@@ -1,4 +1,4 @@
-Welcome to my IT history
+Welcome!
 ===
 ## 记事本
 ### IT笔记 --> [Wiki](https://github.com/jiobxn/one/wiki)
