@@ -142,13 +142,10 @@ if [ -z "$(grep "redhat.xyz" /etc/nginx/nginx.conf)" ]; then
             proxy_http_version 1.1;
             proxy_read_timeout      300;
             proxy_connect_timeout   300;
-            proxy_redirect     off;
             proxy_set_header   Host              \$proxy_host;
             proxy_set_header   X-Real-IP         \$remote_addr;
-            proxy_set_header   X-Forwarded-By    \$server_addr:\$server_port;
             proxy_set_header   X-Forwarded-Proto \$scheme;
             proxy_set_header   X-Forwarded-For   \$proxy_add_x_forwarded_for;
-            proxy_set_header   Referer           \$host;
             proxy_set_header   Accept-Encoding  "";
             sub_filter_once  off;
             sub_filter_types * ;
