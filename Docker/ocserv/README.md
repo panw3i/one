@@ -4,7 +4,7 @@ OCSERV
 ## Example:
 
     #推荐使用证书连接
-    docker run -d --restart always --privileged -v /docker/ocserv:/key -p 443:443 --hostname ocserv --name ocserv ocserv
+    docker run -d --restart always --privileged -v /docker/ocserv:/key -p 443:443 --hostname ocserv --name ocserv jiobxn/ocserv
 
 > _ocserv 0.11.6会有问题_
 
