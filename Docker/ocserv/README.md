@@ -16,8 +16,8 @@ OCSERV
 			-e VPN_USER=<jiobxn> \\    VPN用户名
 			-e VPN_PASS=<123456> \\    VPN密码，默认随机
 			-e P12_PASS=[jiobxn.com] \\  p12证书密码
-			-e MAX_CONN=[5] \\           每个客户端的最大连接数
-			-e MAX_CLIENT=[5] \\         最大客户端数
+			-e MAX_CONN=[3] \\           每个客户端的最大连接数
+			-e MAX_CLIENT=[3] \\         最大客户端数
 			-e SERVER_CN=[SERVER_IP] \\  默认是服务器公网IP，不能填错
 			-e CLIENT_CN=["AnyConnect VPN"] \\   P12证书标识，便于在iphone上识别
 			-e CA_CN=["OpenConnect CA"] \\       CA证书标识
