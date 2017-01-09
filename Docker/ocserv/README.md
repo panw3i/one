@@ -6,7 +6,7 @@ OCSERV
     #推荐使用证书连接
     docker run -d --restart always --privileged -v /docker/ocserv:/key -p 443:443 --hostname ocserv --name ocserv ocserv
 
-_ocserv 0.11.6会有问题_
+> _ocserv 0.11.6会有问题_
 
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
