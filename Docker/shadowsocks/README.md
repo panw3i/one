@@ -3,7 +3,7 @@ Shadowsocks
 
 ## Example:
 
-    docker run -d --restart always -p 8443:8443 --hostname shadowsocks --name shadowsocks shadowsocks
+    docker run -d --restart always -p 8443:8443 --hostname shadowsocks --name shadowsocks jiobxn/shadowsocks
 
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
