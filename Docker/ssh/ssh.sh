@@ -6,13 +6,13 @@ set -e
 
 __setup(){
     mkdir -p /var/run/sshd
-	echo "$SSH_USERNAME:$SSH_USERPASS" | chpasswd
+	echo "$USER:$PASS" | chpasswd
 	ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N '' 
 	\cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 }
 
 __print(){
-	echo -e "ssh username password: $SSH_USERNAME\t $SSH_USERPASS"
+	echo -e "ssh username password: $USER\t $PASS"
 }
 
 if [ ! -f /etc/ssh/ssh_host_rsa_key ]; then
