@@ -4,7 +4,7 @@ MAINTAINER The CentOS Project <admin@jiobxn.com>
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN yum clean all; yum -y update; yum -y install net-tools bash-completion vim wget cronie at openssl iptables; yum clean all
 
-RUN mysql_v=$(curl -s http://dev.mysql.com/downloads/mysql/ |grep "<h1>" |awk '{print $4}') \
+RUN mysql_v=$(curl -s https://dev.mysql.com/downloads/mysql/ |grep "<h1>" |awk '{print $4}') \
         && mysql_V=$(echo $mysql_v |awk -F. '{print $1"."$2}') \
         && system_v=$(uname -a |awk -F. '{print $(NF-1)}') \
         && yum install -y https://repo.mysql.com/yum/mysql-${mysql_V}-community/docker/x86_64/mysql-community-server-minimal-${mysql_v}-1.${system_v}.x86_64.rpm \
