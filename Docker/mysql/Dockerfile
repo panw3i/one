@@ -6,7 +6,7 @@ RUN yum clean all; yum -y update; yum -y install net-tools bash-completion vim w
 
 RUN useradd -r -s /sbin/nologin mysql \
         && cd /usr/local/src \
-        && mysql_v=$(curl -s http://dev.mysql.com/downloads/mysql/ |grep "<h1>" |awk '{print $4}') && mysql_V=$(echo $mysql_v |awk -F. '{print $1"."$2}') \
+        && mysql_v=$(curl -s https://dev.mysql.com/downloads/mysql/ |grep "<h1>" |awk '{print $4}') && mysql_V=$(echo $mysql_v |awk -F. '{print $1"."$2}') \
         && wget -c http://dev.mysql.com/get/Downloads/MySQL-${mysql_V}/mysql-${mysql_v}.tar.gz
 
 RUN cd /usr/local/src \
