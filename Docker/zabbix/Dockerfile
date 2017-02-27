@@ -2,7 +2,7 @@ FROM centos:latest
 MAINTAINER The CentOS Project <admin@jiobxn.com>
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN rpm -ivh http://repo.mysql.com/$(curl -s "http://dev.mysql.com/downloads/repo/yum/" |grep "noarch.rpm" |head -1 |grep -Po '(?<=\()[^)]*(?=\))')
+RUN rpm -ivh http://repo.mysql.com/$(curl -s "https://dev.mysql.com/downloads/repo/yum/" |grep "noarch.rpm" |head -1 |grep -Po '(?<=\()[^)]*(?=\))')
 RUN epel_url="http://dl.fedoraproject.org/pub/epel/$(awk '{print $4}' /etc/redhat-release |awk -F. '{print $1}')/x86_64/e/" \
         && rpm -ivh $epel_url$(curl -s $epel_url |grep "epel-release" |awk -F\" '{print $6}')
 RUN yum clean all; yum -y update; yum -y install httpd mod_ssl net-tools bash-completion vim wget make gcc-c++ iptables cronie; yum -y install OpenIPMI-devel libssh2-devel unixODBC-devel iksemel-devel net-snmp-devel mysql-community-devel mysql-community-client libxml2-devel curl-devel java-1.8.0-openjdk-devel openldap-devel fping wqy-zenhei-fonts; yum clean all
