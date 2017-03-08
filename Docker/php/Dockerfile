@@ -5,7 +5,7 @@ RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN epel_url="http://dl.fedoraproject.org/pub/epel/$(awk '{print $4}' /etc/redhat-release |awk -F. '{print $1}')/x86_64/e/" \
         && rpm -ivh $epel_url$(curl -s $epel_url |grep "epel-release" |awk -F\" '{print $6}')
 RUN yum clean all && yum -y update \
-        && yum -y install net-tools bash-completion vim wget xargs strace make gcc-c++ autoconf iptables bzip2 unzip bzip2-devel mingw64-win-iconv libmcrypt-devel libxml2-devel libcurl-devel libpng-devel libc-client-devel krb5-devel libicu-devel libjpeg libjpeg-devel libXpm-devel freetype-devel gmp-devel readline-devel net-snmp-devel libtidy-devel libgcrypt-devel gd-devel gdbm-devel libxslt-devel mhash-devel openldap-devel libacl-devel \
+        && yum -y install net-tools bash-completion vim wget xargs strace make gcc-c++ autoconf iptables bzip2 unzip bzip2-devel mingw64-win-iconv libmcrypt-devel libxml2-devel libcurl-devel libpng-devel libc-client-devel krb5-devel libicu-devel libjpeg libjpeg-devel libXpm-devel freetype-devel gmp-devel readline-devel net-snmp-devel libtidy-devel libgcrypt-devel gd-devel gdbm-devel libxslt-devel mhash-devel openldap-devel libacl-devel enchant-devel libwebp-devel libedit-devel \
         && yum -y reinstall glibc-common && yum clean all
 
 RUN cd /usr/local/src \
@@ -53,12 +53,18 @@ RUN cd /usr/local/src \
            --with-gdbm \
            --with-bz2 \
            --with-fpm-acl \
+           --with-enchant \
+           --with-webp-dir \
+           --with-pcre-jit \
+           --with-libedit \
+           --with-system-ciphers \
            --enable-zend-signals \
            --enable-calendar \
            --enable-opcache \
            --enable-exif \
            --enable-intl \
            --enable-mysqlnd \
+           --enable-dba \
            --enable-fpm \
            --enable-xml \
            --enable-ftp \
@@ -77,7 +83,6 @@ RUN cd /usr/local/src \
            --enable-session \
            --enable-embedded-mysqli \
            --enable-gd-native-ttf \
-           --enable-maintainer-zts \
            --enable-inline-optimization \
         && make -j8 && make install \
         && \cp /usr/local/src/php-*/php.ini-development /usr/local/php/etc/php.ini \
