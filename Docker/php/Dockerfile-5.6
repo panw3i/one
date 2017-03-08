@@ -12,12 +12,14 @@ RUN cd /usr/local/src \
         && PHP_VERSION="$(curl -s http://php.net/downloads.php |grep tar.gz |awk -F\" 'NR==3{print $2}' |awk -F/ '{print $3}')" \
         && wget -c http://php.net/distributions/${PHP_VERSION} \
         && wget -c https://github.com/phpredis/phpredis/archive/develop.zip \
-        && wget -c http://downloads.zend.com/guard/7.0.0/zend-loader-php5.6-linux-x86_64.tar.gz
+        && wget -c http://downloads.zend.com/guard/7.0.0/zend-loader-php5.6-linux-x86_64.tar.gz \
+        && wget -c https://github.com/php-memcached-dev/php-memcached/archive/2.2.0.tar.gz
         
 RUN cd /usr/local/src \
         && tar zxf php-*.tar.gz \
         && unzip develop.zip \
         && tar zxf zend-loader-php5.6-linux-x86_64.tar.gz \
+        && tar zxf 2.2.0.tar.gz \
         && cd /usr/local/src/php-* \
         && ./configure --prefix=/usr/local/php \
            --with-config-file-path=/usr/local/php/etc \
@@ -56,11 +58,15 @@ RUN cd /usr/local/src \
            --with-gdbm \
            --with-bz2 \
            --with-fpm-acl \
+           --with-enchant \
+           --with-libedit \
+           --with-system-ciphers \
            --enable-calendar \
            --enable-opcache \
            --enable-exif \
            --enable-intl \
            --enable-mysqlnd \
+           --enable-dba \
            --enable-fpm \
            --enable-xml \
            --enable-ftp \
@@ -87,6 +93,9 @@ RUN cd /usr/local/src \
         && cd /usr/local/src/phpredis-develop \
         && phpize && ./configure && make -j8 && make install \
         && sed -i '876 i extension=redis.so' /usr/local/php/etc/php.ini \
+        && cd /usr/local/src/php-memcached-* \
+        && phpize && ./configure && make -j8 && make install \
+        && sed -i '877 i extension=memcached.so' /usr/local/php/etc/php.ini \
         && sed -i 's/;date.timezone =/date.timezone = PRC/' /usr/local/php/etc/php.ini \
         && cp /usr/local/src/zend-loader-php5.6-linux-x86_64/ZendGuardLoader.so "$(php -i |grep extensions |awk '{print $3}')" \
         && \cp /usr/local/php/etc/php-fpm.conf.default /usr/local/php/etc/php-fpm.conf \
