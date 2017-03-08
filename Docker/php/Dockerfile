@@ -5,17 +5,19 @@ RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN epel_url="http://dl.fedoraproject.org/pub/epel/$(awk '{print $4}' /etc/redhat-release |awk -F. '{print $1}')/x86_64/e/" \
         && rpm -ivh $epel_url$(curl -s $epel_url |grep "epel-release" |awk -F\" '{print $6}')
 RUN yum clean all && yum -y update \
-        && yum -y install net-tools bash-completion vim wget xargs strace make gcc-c++ autoconf iptables bzip2 unzip bzip2-devel mingw64-win-iconv libmcrypt-devel libxml2-devel libcurl-devel libpng-devel libc-client-devel krb5-devel libicu-devel libjpeg libjpeg-devel libXpm-devel freetype-devel gmp-devel readline-devel net-snmp-devel libtidy-devel libgcrypt-devel gd-devel gdbm-devel libxslt-devel mhash-devel openldap-devel libacl-devel enchant-devel libwebp-devel libedit-devel \
+        && yum -y install net-tools bash-completion vim wget strace make gcc-c++ autoconf iptables bzip2 unzip bzip2-devel mingw64-win-iconv libmcrypt-devel libxml2-devel libcurl-devel libpng-devel libc-client-devel krb5-devel libicu-devel libjpeg libjpeg-devel libXpm-devel freetype-devel gmp-devel readline-devel net-snmp-devel libtidy-devel libgcrypt-devel gd-devel gdbm-devel libxslt-devel mhash-devel openldap-devel libacl-devel enchant-devel libwebp-devel libedit-devel libmemcached-devel \
         && yum -y reinstall glibc-common && yum clean all
 
 RUN cd /usr/local/src \
         && PHP_VERSION="$(curl -s http://php.net/downloads.php |grep tar.gz |awk -F\" 'NR==1{print $2}' |awk -F/ '{print $3}')" \
         && wget -c http://php.net/distributions/${PHP_VERSION} \
-        && wget -c https://github.com/phpredis/phpredis/archive/php7.zip
-        
+        && wget -c https://github.com/phpredis/phpredis/archive/php7.zip \
+        && wget -c "https://github.com$(curl -s https://github.com/php-memcached-dev/php-memcached/releases |grep tar.gz |awk -F\" 'NR==1{print $2}')" 
+
 RUN cd /usr/local/src \
         && tar zxf php-*.tar.gz \
         && unzip php7.zip \
+        && tar zxf v*.tar.gz \
         && cd /usr/local/src/php-* \
         && ./configure --prefix=/usr/local/php \
            --with-config-file-path=/usr/local/php/etc \
@@ -91,6 +93,9 @@ RUN cd /usr/local/src \
         && cd /usr/local/src/phpredis-php7 \
         && phpize && ./configure && make -j8 && make install \
         && sed -i '876 i extension=redis.so' /usr/local/php/etc/php.ini \
+        && cd /usr/local/src/php-memcached-* \
+        && phpize && ./configure && make -j8 && make install \
+        && sed -i '877 i extension=memcached.so' /usr/local/php/etc/php.ini \
         && \cp /usr/local/php/etc/php-fpm.conf.default /usr/local/php/etc/php-fpm.conf \
         && \cp /usr/local/php/etc/php-fpm.d/www.conf.default /usr/local/php/etc/php-fpm.d/www.conf \
         && sed -i 's/listen = 127.0.0.1:9000/listen = [::]:9000/' /usr/local/php/etc/php-fpm.d/www.conf \
