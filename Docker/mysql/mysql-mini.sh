@@ -2,14 +2,14 @@
 set -e
 
 if [ "$1" = 'mysqld' ]; then
-    #Get data path
-    DATADIR="$("$@" --verbose --help 2>/dev/null | awk '$1 == "datadir" { print $2; exit }')"
+	#Get data path
+	DATADIR="$("$@" --verbose --help 2>/dev/null | awk '$1 == "datadir" { print $2; exit }')"
     
 	if [ -d "$DATADIR/mysql" ]; then
 		echo "$DATADIR/mysql already exists, skip"
 
 		#Server ID
-		if [ "$SERVER_ID" ]; then
+		if [ -n "$SERVER_ID" -a -z "$(grep ^server-id /etc/my.cnf)" ]; then
 			sed -i '/\[mysqld\]/a log-bin=mysql-bin\nserver-id='$SERVER_ID'\ninnodb_flush_log_at_trx_commit=1\nsync_binlog=1\nlower_case_table_names=1\ngeneral-log=1' /etc/my.cnf
 		fi
 	else
@@ -166,8 +166,18 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 		fi
 	fi
 
+	#iptables, Need root authority "--privileged"
+	if [ $IPTABLES ]; then
+		[ -z $MYSQL_PORT ] && MYSQL_PORT=3306
+		cat > /iptables.sh <<-END
+		iptables -I INPUT -p tcp --dport $MYSQL_PORT -j DROP
+		iptables -I INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+		iptables -I INPUT -s $IPTABLES -p tcp -m state --state NEW -m tcp --dport $MYSQL_PORT -j ACCEPT
+		END
+	fi
 
 	echo "Start MYSQL ****"
+	#[ -f /iptables.sh ] && . /iptables.sh
 	crond
 
 	exec "$@"
@@ -175,7 +185,7 @@ else
 
     echo -e "
     Example:
-				docker run -d --restart always --privileged \\
+				docker run -d --restart always [--privileged] \\
 				-v /docker/mysql-mini:/var/lib/mysql \\
 				-v /docker/sql:/docker-entrypoint-initdb.d \\
 				-p 13306:3306 \\
@@ -192,6 +202,7 @@ else
 				-e REPL_PASSWORD=<newpass> \\
 				-e MASTER_HOST=<192.168.10.130> \\
 				-e MASTER_PORT=[3306] \\
+				-e IPTABLES=<"192.168.10.0/24,172.17.0.0/24"> \\
 				--hostname mysql-mini \\
 				--name mysql-mini mysql-mini
 	"
