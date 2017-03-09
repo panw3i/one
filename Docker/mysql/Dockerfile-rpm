@@ -2,7 +2,7 @@ FROM centos:latest
 MAINTAINER The CentOS Project <admin@jiobxn.com>
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN rpm -ivh http://repo.mysql.com/$(curl -s "https://dev.mysql.com/downloads/repo/yum/" |grep "noarch.rpm" |head -1 |grep -Po '(?<=\()[^)]*(?=\))')
+RUN rpm -ivh http://repo.mysql.com/$(curl -s "https://dev.mysql.com/downloads/repo/yum/" |grep "noarch.rpm" |grep "$(uname -a |awk -F. '{print $(NF-1)}')" |grep -Po '(?<=\()[^)]*(?=\))')
 RUN rpm --import http://repo.mysql.com/RPM-GPG-KEY-mysql
 RUN yum clean all; yum -y update; yum -y install net-tools bash-completion vim wget cronie at openssl iptables; yum install -y mysql-community-server; yum clean all
 
@@ -18,7 +18,7 @@ ENTRYPOINT ["/mysql.sh"]
 
 EXPOSE 3306
 
-CMD ["mysqld", "--user=root"]
+CMD ["mysqld", "--user=mysql"]
 
 # docker build -t mysql-rpm .
 # docker run -d --restart always --privileged -p 13306:3306 -v /docker/mysql-rpm:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=newpass -e MYSQL_DATABASE=zabbix -e MYSQL_USER=zabbix -e MYSQL_PASSWORD=newpass -e MYSQL_BACK=Y --hostname mysql --name mysql mysql-rpm
