@@ -17,6 +17,7 @@ if [ "$1" = 'mysqld_safe' ]; then
 		echo "Initialize MYSQL"
 		#Initialize MYSQL
 		cp /usr/local/mysql/support-files/my-default.cnf /etc/my.cnf
+		[ ! -f /usr/local/mysql/tmp ] && mkdir /usr/local/mysql/tmp && chown mysql.mysql /usr/local/mysql/tmp
 
 		#Server ID
 		if [ "$SERVER_ID" ]; then
