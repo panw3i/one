@@ -28,7 +28,7 @@ RUN cd /usr/local/src \
         && make -j8 &&  make install \
         && rm -rf /usr/local/src/* \
         && rm -rf /usr/local/boost \
-        && ln -s /usr/local/mysql/bin/* /usr/local/bin/
+        && ln -s /usr/local/mysql/bin/* /usr/bin/
 
 RUN mkdir /docker-entrypoint-initdb.d
 
