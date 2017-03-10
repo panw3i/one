@@ -23,8 +23,8 @@ Zabbix
 				-e ZBX_DB_USER=[zabbix] \\          mysql用户名
 				-e ZBX_DB_PASSWORD=[newpass] \\     mysql密码
 				-e ZBX_DB_DATABASE=[zabbix] \\      数据库名称
-				-e ZBX_SERVER=<SERVER_IP> \\        默认是服务器公网IP
-				-e ZBX_PORT=[20051] \\              zabbix客户端端口，如果使用 --network=host + ZBX_SERVER=localhost 就不需要将zabbix客户端端口映射出来了
+				-e ZBX_SERVER=<SERVER_IP> \\        默认是容器本地IP
+				-e ZBX_PORT=[20051] \\              zabbix服务器端口
 				-e ZBX_USER=[admin] \\              默认管理员用户
 				--hostname zabbix-httpd \\
 				--name zabbix-httpd zabbix-httpd
