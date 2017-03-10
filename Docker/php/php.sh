@@ -13,6 +13,7 @@ if [ "$1" = 'php-fpm' ]; then
 
 if [ -z "$(grep "redhat.xyz" /usr/local/php/etc/php.ini)" ]; then
 	localedef -v -c -i en_US -f UTF-8 en_US.UTF-8 2>/dev/null || echo
+	localedef -v -c -i zh_CN -f UTF-8 zh_CN.UTF-8 2>/dev/null || echo
 	echo "Initialize PHP"
 	sed -i '2 i ;redhat.xyz' /usr/local/php/etc/php.ini
 
