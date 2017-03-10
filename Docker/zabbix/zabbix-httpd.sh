@@ -9,7 +9,7 @@ if [ "$1" = 'httpd' ]; then
 : ${ZBX_DB_USER:=zabbix}
 : ${ZBX_DB_PASSWORD:=newpass}
 : ${ZBX_DB_DATABASE:=zabbix}
-: ${ZBX_PORT:=20051}
+: ${ZBX_PORT:=10051}
 : ${ZBX_USER:=admin}
 
 if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
@@ -49,6 +49,7 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 		#Initialize databases
 		DB=$(MYSQL_PWD="$ZBX_DB_PASSWORD" mysql -h$ZBX_DB_SERVER -P$ZBX_DB_PORT -u$ZBX_DB_USER -e "use $ZBX_DB_DATABASE; SELECT 113;" |awk 'NR!=1{print $1,$2}')
 		TAB=$(MYSQL_PWD="$ZBX_DB_PASSWORD" mysql -h$ZBX_DB_SERVER -P$ZBX_DB_PORT -u$ZBX_DB_USER -e "use $ZBX_DB_DATABASE; show tables;" |awk 'NR!=1{print $1,$2}' |wc -l)
+		[ $? -eq 1 ] && exit 1
 		if [ "$DB" -eq 113 ]; then
 			if [ "$TAB" -gt 100 ]; then
 				echo "$ZBX_DB_DATABASE table already exists, skip"
@@ -78,6 +79,10 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 		else
 			DEV=$(route -n |awk '$1=="0.0.0.0"{print $NF }')
 			if [ -z $ZBX_SERVER ]; then
+				ZBX_SERVER=$(ifconfig $DEV |awk '$3=="netmask"{print $2}')
+			fi
+		
+			if [ -z $ZBX_SERVER ]; then
 				ZBX_SERVER=$(curl -s https://httpbin.org/ip |awk -F\" 'NR==2{print $4}')
 			fi
 			
@@ -85,15 +90,12 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 				ZBX_SERVER=$(curl -s https://showip.net/)
 			fi
 			
-			if [ -z $ZBX_SERVER ]; then
-				ZBX_SERVER=$(ifconfig $DEV |awk '$3=="netmask"{print $2}')
-			fi
-		
 			\cp -a /usr/local/zabbix/php $WWW_PATH/zabbix
 			chown -R $WWW_USER.$WWW_USER $WWW_PATH/zabbix/
 
 			sed -i "/check for deprecated PHP 5.6.0 option 'always_populate_raw_post_data'/,+4d" $WWW_PATH/zabbix/include/classes/setup/CFrontendSetup.php
 			sed -i "/public function checkPhpAlwaysPopulateRawPostData/,+11d" $WWW_PATH/zabbix/include/classes/setup/CFrontendSetup.php
+			sed -i '/$last = strtolower(substr($val, -1));/a$val = substr($val,0,-1);' $WWW_PATH/zabbix/include/func.inc.php
 
 			\cp /usr/share/fonts/wqy-zenhei/wqy-zenhei.ttc $WWW_PATH/zabbix/fonts/DejaVuSans.ttf
 			zh_CN=$(grep -n zh_CN $WWW_PATH/zabbix/include/locales.inc.php |awk -F: '{print $1}')
@@ -103,21 +105,17 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 			<?php
 			// Zabbix GUI configuration file.
 			global \$DB;
-
 			\$DB['TYPE']     = 'MYSQL';
 			\$DB['SERVER']   = '$ZBX_DB_SERVER';
 			\$DB['PORT']     = '$ZBX_DB_PORT';
 			\$DB['DATABASE'] = '$ZBX_DB_DATABASE';
 			\$DB['USER']     = '$ZBX_DB_USER';
 			\$DB['PASSWORD'] = '$ZBX_DB_PASSWORD';
-
 			// Schema name. Used for IBM DB2 and PostgreSQL.
 			\$DB['SCHEMA'] = '';
-
 			\$ZBX_SERVER      = '$ZBX_SERVER';
 			\$ZBX_SERVER_PORT = '$ZBX_PORT';
 			\$ZBX_SERVER_NAME = '$ZBX_USER';
-
 			\$IMAGE_FORMAT_DEFAULT = IMAGE_FORMAT_PNG;
 			?>
 			END
@@ -152,7 +150,7 @@ else
 				-e ZBX_DB_PASSWORD=[newpass] \\
 				-e ZBX_DB_DATABASE=[zabbix] \\
 				-e ZBX_SERVER=<SERVER_IP> \\
-				-e ZBX_PORT=[20051] \\
+				-e ZBX_PORT=[10051] \\
 				-e ZBX_USER=[admin] \\
 				--hostname zabbix-httpd \\
 				--name zabbix-httpd zabbix-httpd
