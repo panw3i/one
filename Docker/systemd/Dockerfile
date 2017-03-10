@@ -4,10 +4,11 @@ MAINTAINER "The CentOS Project" <admin@redhat.xyz>
 ENV container docker
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+RUN rpm -ivh "http://repo.mysql.com/$(curl -s http://repo.mysql.com/ |grep "$(uname -a |awk -F. '{print $(NF-1)}')" |awk -F\"  'END{print $6}')"
 RUN epel_url="http://dl.fedoraproject.org/pub/epel/$(awk '{print $4}' /etc/redhat-release |awk -F. '{print $1}')/x86_64/e/"; \
     rpm -ivh $epel_url$(curl -s $epel_url |grep "epel-release" |awk -F\" '{print $6}')
 RUN yum -y update; yum clean all
-RUN yum -y install systemd bash-completion vim wget initscripts iptables-services bind-utils iftop iproute net-tools cronie at mtr nmap tcpdump openssl; yum clean all; \
+RUN yum -y install systemd bash-completion vim wget initscripts iptables-services bind-utils iftop iproute net-tools cronie at mtr nmap tcpdump openssl perl perl-Data-Dumper automake libtool git mysql-community-devel mysql-community-client; yum clean all; \
     (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
     rm -f /lib/systemd/system/multi-user.target.wants/*; \
     rm -f /etc/systemd/system/*.wants/*; \
@@ -16,6 +17,15 @@ RUN yum -y install systemd bash-completion vim wget initscripts iptables-service
     rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
     rm -f /lib/systemd/system/basic.target.wants/*; \
     rm -f /lib/systemd/system/anaconda.target.wants/*;
+
+RUN git clone https://github.com/akopytov/sysbench.git \
+    && cd sysbench \
+    && ./autogen.sh \
+    && ./configure \
+    && make -j8 \
+    && make install \
+    && cd .. \
+    && rm -rf sysbench
 
 RUN system_v=$(awk '{print $4}' /etc/redhat-release |awk -F. '{print $1}') \
     && xtrabackup_url="https://www.percona.com/downloads/XtraBackup/" \
