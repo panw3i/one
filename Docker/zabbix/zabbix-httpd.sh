@@ -39,8 +39,6 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 			exit 1
 		fi
 
-		WWW_PATH="/var/www/html/"
-		WWW_USER="apache"
 
 	#Initialize zabbix
 	if [ "$ZBX_DB_SERVER" ]; then
@@ -73,25 +71,25 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 		sed -i 's/# StartJavaPollers=0/StartJavaPollers=5/' /usr/local/zabbix/etc/zabbix_server.conf
 
 		#Initialize web php
-		if [ -d "$WWW_PATH/zabbix" ]; then
-			echo "$WWW_PATH/zabbix already exists, skip"
+		if [ -d "/var/www/html/zabbix" ]; then
+			echo "/var/www/html/zabbix already exists, skip"
 		else
 			DEV=$(route -n |awk '$1=="0.0.0.0"{print $NF }')
 			ZBX_SERVER=$(ifconfig $DEV |awk '$3=="netmask"{print $2}')
 			[ -z $ZBX_SERVER ] && ZBX_SERVER=localhost
 			
-			\cp -a /usr/local/zabbix/php $WWW_PATH/zabbix
-			chown -R $WWW_USER.$WWW_USER $WWW_PATH/zabbix/
+			\cp -a /usr/local/zabbix/php /var/www/html/zabbix
+			chown -R apache.apache /var/www/html/zabbix/
 
-			sed -i "/check for deprecated PHP 5.6.0 option 'always_populate_raw_post_data'/,+4d" $WWW_PATH/zabbix/include/classes/setup/CFrontendSetup.php
-			sed -i "/public function checkPhpAlwaysPopulateRawPostData/,+11d" $WWW_PATH/zabbix/include/classes/setup/CFrontendSetup.php
-			sed -i '/$last = strtolower(substr($val, -1));/a$val = substr($val,0,-1);' $WWW_PATH/zabbix/include/func.inc.php
+			sed -i "/check for deprecated PHP 5.6.0 option 'always_populate_raw_post_data'/,+4d" /var/www/html/zabbix/include/classes/setup/CFrontendSetup.php
+			sed -i "/public function checkPhpAlwaysPopulateRawPostData/,+11d" /var/www/html/zabbix/include/classes/setup/CFrontendSetup.php
+			sed -i '/$last = strtolower(substr($val, -1));/a$val = substr($val,0,-1);' /var/www/html/zabbix/include/func.inc.php
 
-			\cp /usr/share/fonts/wqy-zenhei/wqy-zenhei.ttc $WWW_PATH/zabbix/fonts/DejaVuSans.ttf
-			zh_CN=$(grep -n zh_CN $WWW_PATH/zabbix/include/locales.inc.php |awk -F: '{print $1}')
-			sed -i ''$zh_CN's/false/true/' $WWW_PATH/zabbix/include/locales.inc.php
+			\cp /usr/share/fonts/wqy-zenhei/wqy-zenhei.ttc /var/www/html/zabbix/fonts/DejaVuSans.ttf
+			zh_CN=$(grep -n zh_CN /var/www/html/zabbix/include/locales.inc.php |awk -F: '{print $1}')
+			sed -i ''$zh_CN's/false/true/' /var/www/html/zabbix/include/locales.inc.php
 
-			cat >>$WWW_PATH/zabbix/conf/zabbix.conf.php <<-END
+			cat >>/var/www/html/zabbix/conf/zabbix.conf.php <<-END
 			<?php
 			// Zabbix GUI configuration file.
 			global \$DB;
@@ -110,7 +108,7 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 			?>
 			END
 
-			sed -i "s/\['PORT'\]     = '3306'/\['PORT'\]     = '0'/g" $WWW_PATH/zabbix/conf/zabbix.conf.php
+			sed -i "s/\['PORT'\]     = '3306'/\['PORT'\]     = '0'/g" /var/www/html/zabbix/conf/zabbix.conf.php
 		fi
 	else
 		echo -e "error. Not specified MYSQL server."
