@@ -80,14 +80,7 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 			if [ -z $ZBX_SERVER ]; then
 				ZBX_SERVER=$(ifconfig $DEV |awk '$3=="netmask"{print $2}')
 			fi
-		
-			if [ -z $ZBX_SERVER ]; then
-				ZBX_SERVER=127.0.0.1
-			fi
-			
-			if [ -z $ZBX_PORT ]; then
-				ZBX_SERVER=10051
-			fi
+			[ -z $ZBX_SERVER ] && ZBX_SERVER=localhost
 			
 			\cp -a /usr/local/zabbix/php $WWW_PATH/zabbix
 			chown -R $WWW_USER.$WWW_USER $WWW_PATH/zabbix/
@@ -113,7 +106,7 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 			// Schema name. Used for IBM DB2 and PostgreSQL.
 			\$DB['SCHEMA'] = '';
 			\$ZBX_SERVER      = '$ZBX_SERVER';
-			\$ZBX_SERVER_PORT = '$ZBX_PORT';
+			\$ZBX_SERVER_PORT = '10051';
 			\$ZBX_SERVER_NAME = 'admin';
 			\$IMAGE_FORMAT_DEFAULT = IMAGE_FORMAT_PNG;
 			?>
@@ -139,7 +132,6 @@ else
 				-v /docker/www:/var/www/html \\
 				-p 11080:80 \\
 				-p 11443:443 \\
-				-p 20050:10050 \\
 				-e PHP_SERVER=<redhat.xyz> \\
 				-e PHP_PORT=[9000] \\
 				-e PHP_PATH=[/var/www] \\
@@ -148,8 +140,7 @@ else
 				-e ZBX_DB_USER=[zabbix] \\
 				-e ZBX_DB_PASSWORD=[newpass] \\
 				-e ZBX_DB_DATABASE=[zabbix] \\
-				-e ZBX_SERVER=<SERVER_IP> \\
-				-e ZBX_PORT=[10051] \\
+				-e ZBX_SERVER=[LOCAL_IP] \\
 				--hostname zabbix-httpd \\
 				--name zabbix-httpd zabbix-httpd
 	"
