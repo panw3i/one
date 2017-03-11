@@ -139,7 +139,7 @@ else
 				-v /docker/www:/var/www/html \\
 				-p 11080:80 \\
 				-p 11443:443 \\
-				-p 20051:10051 \\
+				-p 20050:10050 \\
 				-e PHP_SERVER=<redhat.xyz> \\
 				-e PHP_PORT=[9000] \\
 				-e PHP_PATH=[/var/www] \\
