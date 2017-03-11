@@ -45,7 +45,10 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 		else
 			DEV=$(route -n |awk '$1=="0.0.0.0"{print $NF }')
 			ZBX_SERVER=$(ifconfig $DEV |awk '$3=="netmask"{print $2}')
-			[ -z "$ZBX_SERVER" ] && echo "none local ip address .." &&exit 1
+
+			if [ -z $ZBX_SERVER ]; then
+				ZBX_SERVER=127.0.0.1
+			fi
 			
 			\cp -a /usr/local/zabbix/php /var/www/html/zabbix
 			chown -R apache.apache /var/www/html/zabbix/
@@ -103,7 +106,7 @@ else
 				-v /docker/www:/var/www/html \\
 				-p 11080:80 \\
 				-p 11443:443 \\
-				-p 20051:10051 \\
+				-p 20050:10050 \\
 				-e PHP_SERVER=<redhat.xyz> \\
 				-e PHP_PORT=[9000] \\
 				-e PHP_PATH=[/var/www] \\
