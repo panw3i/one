@@ -47,7 +47,7 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 		#Initialize databases
 		DB=$(MYSQL_PWD="$ZBX_DB_PASSWORD" mysql -h$ZBX_DB_SERVER -P$ZBX_DB_PORT -u$ZBX_DB_USER -e "use $ZBX_DB_DATABASE; SELECT 113;" |awk 'NR!=1{print $1,$2}')
 		TAB=$(MYSQL_PWD="$ZBX_DB_PASSWORD" mysql -h$ZBX_DB_SERVER -P$ZBX_DB_PORT -u$ZBX_DB_USER -e "use $ZBX_DB_DATABASE; show tables;" |awk 'NR!=1{print $1,$2}' |wc -l)
-		[ $? -eq 1 ] && && echo "Mysql connection failed .." && exit 1
+		[ $? -eq 1 ] && echo "Mysql connection failed .." && exit 1
 		
 		if [ "$DB" -eq 113 ]; then
 			if [ "$TAB" -gt 100 ]; then
