@@ -39,22 +39,22 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 		sed -i 's/# JavaGatewayPort=10052/JavaGatewayPort=10052/' /usr/local/zabbix/etc/zabbix_server.conf
 		sed -i 's/# StartJavaPollers=0/StartJavaPollers=5/' /usr/local/zabbix/etc/zabbix_server.conf
 
+                localedef -v -c -i en_US -f UTF-8 en_US.UTF-8 2>/dev/null || echo
+                localedef -v -c -i zh_CN -f UTF-8 zh_CN.UTF-8 2>/dev/null || echo
+                        
+                sed -i 's/;date.timezone =/date.timezone = PRC/' /etc/php.ini 
+                sed -i 's/max_input_time = 60/max_input_time = 300/' /etc/php.ini 
+                sed -i 's/max_execution_time = 30/max_execution_time = 300/' /etc/php.ini 
+                sed -i 's/post_max_size = 8M/post_max_size = 64M/' /etc/php.ini 
+                sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 32M/' /etc/php.ini 
+                sed -i 's/memory_limit = 128M/memory_limit = 256M/' /etc/php.ini 
+
 		#Initialize web php
 		if [ -d "/var/www/html/zabbix" ]; then
 			echo "/var/www/html/zabbix already exists, skip"
 		else
 			\cp -a /usr/local/zabbix/php /var/www/html/zabbix
 			chown -R apache.apache /var/www/html/zabbix/
-
-		        localedef -v -c -i en_US -f UTF-8 en_US.UTF-8 2>/dev/null || echo
-		        localedef -v -c -i zh_CN -f UTF-8 zh_CN.UTF-8 2>/dev/null || echo
-
-			sed -i 's/;date.timezone =/date.timezone = PRC/' /etc/php.ini 
-			sed -i 's/max_input_time = 60/max_input_time = 300/' /etc/php.ini 
-			sed -i 's/max_execution_time = 30/max_execution_time = 300/' /etc/php.ini 
-			sed -i 's/post_max_size = 8M/post_max_size = 64M/' /etc/php.ini 
-			sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 32M/' /etc/php.ini 
-			sed -i 's/memory_limit = 128M/memory_limit = 256M/' /etc/php.ini 
 
 			\cp /usr/share/fonts/wqy-zenhei/wqy-zenhei.ttc /var/www/html/zabbix/fonts/DejaVuSans.ttf
 			zh_CN=$(grep -n zh_CN /var/www/html/zabbix/include/locales.inc.php |awk -F: '{print $1}')
