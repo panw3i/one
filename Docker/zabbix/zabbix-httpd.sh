@@ -77,9 +77,7 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 			echo "$WWW_PATH/zabbix already exists, skip"
 		else
 			DEV=$(route -n |awk '$1=="0.0.0.0"{print $NF }')
-			if [ -z $ZBX_SERVER ]; then
-				ZBX_SERVER=$(ifconfig $DEV |awk '$3=="netmask"{print $2}')
-			fi
+			ZBX_SERVER=$(ifconfig $DEV |awk '$3=="netmask"{print $2}')
 			[ -z $ZBX_SERVER ] && ZBX_SERVER=localhost
 			
 			\cp -a /usr/local/zabbix/php $WWW_PATH/zabbix
@@ -140,7 +138,6 @@ else
 				-e ZBX_DB_USER=[zabbix] \\
 				-e ZBX_DB_PASSWORD=[newpass] \\
 				-e ZBX_DB_DATABASE=[zabbix] \\
-				-e ZBX_SERVER=[zabbix_ip] \\
 				--hostname zabbix-httpd \\
 				--name zabbix-httpd zabbix-httpd
 	"
