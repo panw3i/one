@@ -8,7 +8,7 @@ RUN epel_url="http://dl.fedoraproject.org/pub/epel/$(awk '{print $4}' /etc/redha
 RUN yum clean all && yum -y update \
         && yum -y install httpd mod_ssl php php-mysql php-xml php-gd php-bcmath php-mbstring net-tools bash-completion vim wget make gcc-c++ iptables cronie \
         && yum -y install OpenIPMI-devel libssh2-devel unixODBC-devel iksemel-devel net-snmp-devel mysql-community-devel mysql-community-client libxml2-devel curl-devel java-1.8.0-openjdk-devel openldap-devel fping wqy-zenhei-fonts \
-        && yum -y reinstall glibc-common && yum clean all
+        && yum clean all
 
 RUN useradd -r -s /sbin/nologin zabbix \
         && cd /usr/local/src \
