@@ -43,13 +43,6 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 		if [ -d "/var/www/html/zabbix" ]; then
 			echo "/var/www/html/zabbix already exists, skip"
 		else
-			DEV=$(route -n |awk '$1=="0.0.0.0"{print $NF }')
-			ZBX_SERVER=$(ifconfig $DEV |awk '$3=="netmask"{print $2}')
-
-			if [ -z $ZBX_SERVER ]; then
-				ZBX_SERVER=127.0.0.1
-			fi
-			
 			\cp -a /usr/local/zabbix/php /var/www/html/zabbix
 			chown -R apache.apache /var/www/html/zabbix/
 
@@ -79,7 +72,7 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 			\$DB['PASSWORD'] = '$ZBX_DB_PASSWORD';
 			// Schema name. Used for IBM DB2 and PostgreSQL.
 			\$DB['SCHEMA'] = '';
-			\$ZBX_SERVER      = '$ZBX_SERVER';
+			\$ZBX_SERVER      = 'localhost';
 			\$ZBX_SERVER_PORT = '10051';
 			\$ZBX_SERVER_NAME = 'admin';
 			\$IMAGE_FORMAT_DEFAULT = IMAGE_FORMAT_PNG;
@@ -106,7 +99,6 @@ else
 				-v /docker/www:/var/www/html \\
 				-p 11080:80 \\
 				-p 11443:443 \\
-				-p 20050:10050 \\
 				-e PHP_SERVER=<redhat.xyz> \\
 				-e PHP_PORT=[9000] \\
 				-e PHP_PATH=[/var/www] \\
