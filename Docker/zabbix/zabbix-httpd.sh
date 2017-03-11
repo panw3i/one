@@ -9,8 +9,6 @@ if [ "$1" = 'httpd' ]; then
 : ${ZBX_DB_USER:=zabbix}
 : ${ZBX_DB_PASSWORD:=newpass}
 : ${ZBX_DB_DATABASE:=zabbix}
-: ${ZBX_PORT:=10051}
-: ${ZBX_USER:=admin}
 
 if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 		echo "Initialize httpd"
@@ -84,11 +82,11 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 			fi
 		
 			if [ -z $ZBX_SERVER ]; then
-				ZBX_SERVER=$(curl -s https://httpbin.org/ip |awk -F\" 'NR==2{print $4}')
+				ZBX_SERVER=127.0.0.1
 			fi
 			
-			if [ -z $ZBX_SERVER ]; then
-				ZBX_SERVER=$(curl -s https://showip.net/)
+			if [ -z $ZBX_PORT ]; then
+				ZBX_SERVER=10051
 			fi
 			
 			\cp -a /usr/local/zabbix/php $WWW_PATH/zabbix
@@ -116,7 +114,7 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 			\$DB['SCHEMA'] = '';
 			\$ZBX_SERVER      = '$ZBX_SERVER';
 			\$ZBX_SERVER_PORT = '$ZBX_PORT';
-			\$ZBX_SERVER_NAME = '$ZBX_USER';
+			\$ZBX_SERVER_NAME = 'admin';
 			\$IMAGE_FORMAT_DEFAULT = IMAGE_FORMAT_PNG;
 			?>
 			END
@@ -152,7 +150,6 @@ else
 				-e ZBX_DB_DATABASE=[zabbix] \\
 				-e ZBX_SERVER=<SERVER_IP> \\
 				-e ZBX_PORT=[10051] \\
-				-e ZBX_USER=[admin] \\
 				--hostname zabbix-httpd \\
 				--name zabbix-httpd zabbix-httpd
 	"
