@@ -140,7 +140,7 @@ else
 				-e ZBX_DB_USER=[zabbix] \\
 				-e ZBX_DB_PASSWORD=[newpass] \\
 				-e ZBX_DB_DATABASE=[zabbix] \\
-				-e ZBX_SERVER=[LOCAL_IP] \\
+				-e ZBX_SERVER=[zabbix_ip] \\
 				--hostname zabbix-httpd \\
 				--name zabbix-httpd zabbix-httpd
 	"
