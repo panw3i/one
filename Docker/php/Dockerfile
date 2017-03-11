@@ -6,7 +6,7 @@ RUN epel_url="http://dl.fedoraproject.org/pub/epel/$(awk '{print $4}' /etc/redha
         && rpm -ivh $epel_url$(curl -s $epel_url |grep "epel-release" |awk -F\" '{print $6}')
 RUN yum clean all && yum -y update \
         && yum -y install net-tools bash-completion vim wget strace make gcc-c++ autoconf iptables bzip2 unzip bzip2-devel mingw64-win-iconv libmcrypt-devel libxml2-devel libcurl-devel libpng-devel libc-client-devel krb5-devel libicu-devel libjpeg libjpeg-devel libXpm-devel freetype-devel gmp-devel readline-devel net-snmp-devel libtidy-devel libgcrypt-devel gd-devel gdbm-devel libxslt-devel mhash-devel openldap-devel libacl-devel enchant-devel libwebp-devel libedit-devel libmemcached-devel \
-        && yum -y reinstall glibc-common && yum clean all
+        && yum clean all
 
 RUN cd /usr/local/src \
         && PHP_VERSION="$(curl -s http://php.net/downloads.php |grep tar.gz |awk -F\" 'NR==1{print $2}' |awk -F/ '{print $3}')" \
