@@ -48,10 +48,10 @@ RUN chmod +x /zabbix.sh
 
 ENTRYPOINT ["/zabbix.sh"]
 
-EXPOSE 80 443 10050
+EXPOSE 80 443
 
 CMD ["httpd", "-DFOREGROUND"]
 
 # docker build -t zabbix .
-# docker run -d --restart always --privileged -p 11080:80 -p 11443:443 -p 20050:10050 -v /docker/www:/var/www/html -e ZBX_DB_SERVER=redhat.xyz -e ZBX_DB_PORT=13306 --hostname zabbix --name zabbix zabbix
+# docker run -d --restart always --privileged -p 11080:80 -p 11443:443 -v /docker/www:/var/www/html -e ZBX_DB_SERVER=redhat.xyz -e ZBX_DB_PORT=13306 --hostname zabbix --name zabbix zabbix
 # docker run -it --rm zabbix --help
