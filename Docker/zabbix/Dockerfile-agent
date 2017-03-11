@@ -31,4 +31,4 @@ ENTRYPOINT ["/zabbix.sh"]
 CMD ["127.0.0.1"]
 
 # docker build -t zabbix-agent .
-# docker run -d --restart always --privileged --network=host --name zabbix-agentd zabbix-agentd 192.168.10.100
+# docker run -d --restart always --privileged --network=host --name zabbix-agent zabbix-agent 192.168.10.100
