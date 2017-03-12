@@ -24,7 +24,7 @@ Strongswan
 
 ### IOS Client:
 
-    L2TP: user+pass+psk    #L2TP不可用
+    L2TP: user+pass+psk    #L2TP在墙内不可用
     IPSec: ca.crt+user+pass+psk or ca.crt+strongswan.p12+user+pass, 注意: Server is SERVER_CN
     IKEv2: user+pass+ca.crt, 注意: Remote ID is SERVER_CN, Local ID is user
 
