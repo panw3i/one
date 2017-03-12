@@ -2,9 +2,7 @@ FROM centos:latest
 MAINTAINER The CentOS Project <admin@jiobxn.com>
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN epel_url="http://dl.fedoraproject.org/pub/epel/$(awk '{print $4}' /etc/redhat-release |awk -F. '{print $1}')/x86_64/e/" \
-        && rpm -ivh $epel_url$(curl -s $epel_url |grep "epel-release" |awk -F\" '{print $6}')
-RUN yum clean all; yum -y update; yum -y install ocserv iptables cronie net-tools bash-completion vim; yum clean all
+RUN yum -y install epel-release; yum -y update; yum -y install ocserv iptables cronie net-tools bash-completion vim; yum clean all
 
 VOLUME /key
 
