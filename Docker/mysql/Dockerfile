@@ -18,13 +18,11 @@ RUN cd /usr/local/src \
            -DDOWNLOAD_BOOST=1 -DWITH_BOOST=/usr/local/src \
            -DDEFAULT_COLLATION=utf8_general_ci \
            -DDEFAULT_CHARSET=utf8 \
+           -DWITH_LIBWRAP=1 \
+           -DWITH_INNODB_MEMCACHED=1 \
            -DWITH_EXTRA_CHARSETS=all \
-           -DWITH_INNOBASE_STORAGE_ENGINE=1 \
            -DWITH_ARCHIVE_STORAGE_ENGINE=1 \
            -DWITH_BLACKHOLE_STORAGE_ENGINE=1 \
-           -DWITH_PERFSCHEMA_STORAGE_ENGINE=1 \
-           -DDISABLE_PSI_MUTEX=1  \
-           -DENABLED_LOCAL_INFILE=1 \
         && make -j8 &&  make install \
         && rm -rf /usr/local/src/* \
         && rm -rf /usr/local/boost \
