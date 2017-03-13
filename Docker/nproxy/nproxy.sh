@@ -3,7 +3,7 @@ set -e
 
 if [ "$1" = 'nginx' ]; then
 
-: ${TAG:="-"}
+: ${TAG:="888"}
 : ${NGX_PASS:=$(pwmake 64)}
 : ${NGX_DOMAIN:=example.com}
 : ${NGX_DNS=8.8.8.8}
@@ -214,7 +214,7 @@ else
 				-p 443:443 \\
 				-e HTTP_PORT=[80] \\
 				-e HTTPS_PORT=[443] \\
-				-e TAG=["-"] \\
+				-e TAG=["888"] \\
 				-e NGX_DOMAIN=[example.com] \\
 				-e PROXY_HTTPS=<Y> \\
 				-e NGX_DNS=[8.8.8.8] \\
