@@ -195,7 +195,7 @@ else
 				-e MYSQL_PASSWORD=<zbxpass> \\
 				-e MYSQL_BACK=<Y> \\
 				-e MYSQL_PORT=[3306] \\
-				-e MYSQL_MAX_CONN=[65535] \\
+				-e MYSQL_MAX_CONN=[10000] \\
 				-e SERVER_ID=<1> \\
 				-e REPL_IPR=<192.168.10.%> \\
 				-e REPL_USER=<repl> \\
