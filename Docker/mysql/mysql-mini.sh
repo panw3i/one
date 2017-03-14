@@ -108,6 +108,8 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 			echo >&2 'MySQL init process failed.'
 			exit 1
 		fi
+		
+		sed -i '/\[mysqld\]/a max_connections = 10000' /etc/my.cnf
 	fi
 	
 	#Backup Database
@@ -119,9 +121,7 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 	
 	#Mysql max connections
 	if [ "$MYSQL_MAX_CONN" ]; then
-		sed -i '/\[mysqld\]/a max_connections = '$MYSQL_MAX_CONN'' /etc/my.cnf
-	else
-		sed -i '/\[mysqld\]/a max_connections = 65535' /etc/my.cnf
+		sed -i '/max_connections = 10000/max_connections = '$MYSQL_MAX_CONN'/' /etc/my.cnf
 	fi
 	
 	#Mysql modify the default port
