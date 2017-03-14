@@ -110,6 +110,8 @@ if [ "$1" = 'mysqld_safe' ]; then
 			echo >&2 'MySQL init process failed.'
 			exit 1
 		fi
+		
+		sed -i '/\[mysqld\]/a max_connections = 10000' /etc/my.cnf
 	fi
 	
 	#Backup Database
@@ -121,9 +123,7 @@ if [ "$1" = 'mysqld_safe' ]; then
 	
 	#Mysql max connections
 	if [ "$MYSQL_MAX_CONN" ]; then
-		sed -i '/\[mysqld\]/a max_connections = '$MYSQL_MAX_CONN'' /etc/my.cnf
-	else
-		sed -i '/\[mysqld\]/a max_connections = 65535' /etc/my.cnf
+		sed -i '/max_connections = 10000/max_connections = '$MYSQL_MAX_CONN'/' /etc/my.cnf
 	fi
 	
 	#Mysql modify the default port
@@ -197,7 +197,7 @@ else
 				-e MYSQL_PASSWORD=<zbxpass> \\
 				-e MYSQL_BACK=<Y> \\
 				-e MYSQL_PORT=[3306] \\
-				-e MYSQL_MAX_CONN=[65535] \\
+				-e MYSQL_MAX_CONN=[10000] \\
 				-e SERVER_ID=<1> \\
 				-e REPL_IPR=<192.168.10.%> \\
 				-e REPL_USER=<repl> \\
