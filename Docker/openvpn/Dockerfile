@@ -1,5 +1,5 @@
 FROM centos:latest
-MAINTAINER The CentOS Project <admin@jiobxn.com>
+MAINTAINER "The CentOS Project" <admin@jiobxn.com>
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN yum -y install epel-release; yum -y update; yum install openvpn --downloadonly --downloaddir=/mnt/; yum -y install openvpn easy-rsa squid cronie iptables net-tools bash-completion vim wget; yum clean all
