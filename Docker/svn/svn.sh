@@ -122,7 +122,7 @@ else
 				-v /docker/key:/key \\
 				-p 10080:80 \\
 				-p 10443:443 \\
-        -p 13690:3690 \\
+				-p 13690:3690 \\
 				-e ADMIN=[admin] \\
 				-e USER=[user1] \\
 				-e ADMIN_PASS=[passwd0] \\
