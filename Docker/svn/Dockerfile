@@ -17,4 +17,4 @@ CMD ["httpd", "-DFOREGROUND"]
 
 # docker build -t svn .
 # docker run -d --restart always -p 10080:80 -p 10443:443 -p 13690:3690 -v /docker/svn:/home/svn --hostname svn --name svn svn
-# docker run -it --rm httpd-rpm --help
+# docker logs svn
