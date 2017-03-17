@@ -11,6 +11,7 @@ Nginx
 
     #运行一个反向代理的nginx实例
     docker run -d --restart always -p 10080:80 -p 10443:443 -e PROXY_SERVER=172.17.0.13 --hostname nginx --name nginx nginx
+    docker run -d --restart always -p 80:80 -p 443:443 -e PROXY_SERVER="jiobxn.com,www.jiobxn.com|jiobxn.wordpress.com" -e PROXY_HTTPS=Y --hostname nginx --name nginx nginx
 
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
