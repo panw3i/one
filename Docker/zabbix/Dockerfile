@@ -13,7 +13,7 @@ RUN yum clean all && yum -y update \
 RUN useradd -r -s /sbin/nologin zabbix \
         && cd /usr/local/src \
         && zabbix_down="https://sourceforge.net/projects/zabbix/files/ZABBIX%20Latest%20Stable/" \
-        && zabbix_v=$(curl -s $zabbix_down |grep "tr title" |head -1 |awk -F\" '{print $2}') \
+        && zabbix_v=$(curl -s $zabbix_down |grep "tr title" |head |awk -F\" '{print $2}' |sort -n |tail -1) \
         && wget -c "$zabbix_down$zabbix_v/zabbix-$zabbix_v.tar.gz"
 
 RUN cd /usr/local/src \
