@@ -13,7 +13,8 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 	#Initialize zabbix
 	if [ "$ZBX_DB_SERVER" ]; then
 		#Initialize databases
-		DB=$(MYSQL_PWD="$ZBX_DB_PASSWORD" mysql -h$ZBX_DB_SERVER -P$ZBX_DB_PORT -u$ZBX_DB_USER -e "use $ZBX_DB_DATABASE; SELECT 113;" |awk 'NR!=1{print $1,$2}')
+		DB=$(mysql -h$ZBX_DB_SERVER -P$ZBX_DB_PORT -u$ZBX_DB_USER -p$ZBX_DB_PASSWORD -e "use $ZBX_DB_DATABASE; SELECT 113;" 2>/dev/null |awk 'NR!=1{print $1,$2}' |sed 's/ //')
+		DB=$(mysql -h$ZBX_DB_SERVER -P$ZBX_DB_PORT -u$ZBX_DB_USER -p$ZBX_DB_PASSWORD -e "use $ZBX_DB_DATABASE; SELECT 113;" 2>/dev/null |awk 'NR!=1{print $1,$2}' |sed 's/ //')
 		TAB=$(MYSQL_PWD="$ZBX_DB_PASSWORD" mysql -h$ZBX_DB_SERVER -P$ZBX_DB_PORT -u$ZBX_DB_USER -e "use $ZBX_DB_DATABASE; show tables;" |awk 'NR!=1{print $1,$2}' |wc -l)
 		[ $? -eq 1 ] && echo "Mysql connection failed .." && exit 1
 		if [ "$DB" -eq 113 ]; then
@@ -39,6 +40,7 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 		sed -i 's/# JavaGatewayPort=10052/JavaGatewayPort=10052/' /usr/local/zabbix/etc/zabbix_server.conf
 		sed -i 's/# StartJavaPollers=0/StartJavaPollers=5/' /usr/local/zabbix/etc/zabbix_server.conf
 
+		#Initialize php
                 localedef -v -c -i en_US -f UTF-8 en_US.UTF-8 2>/dev/null || echo
                 localedef -v -c -i zh_CN -f UTF-8 zh_CN.UTF-8 2>/dev/null || echo
                         
@@ -49,7 +51,8 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
                 sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 32M/' /etc/php.ini 
                 sed -i 's/memory_limit = 128M/memory_limit = 256M/' /etc/php.ini 
 
-		#Initialize web php
+		#Initialize web
+		echo -e "#redhat.xyz\nServerName localhost" >>/etc/httpd/conf/httpd.conf
 		if [ -d "/var/www/html/zabbix" ]; then
 			echo "/var/www/html/zabbix already exists, skip"
 		else
@@ -99,9 +102,6 @@ else
 				-v /docker/www:/var/www/html \\
 				-p 11080:80 \\
 				-p 11443:443 \\
-				-e PHP_SERVER=<redhat.xyz> \\
-				-e PHP_PORT=[9000] \\
-				-e PHP_PATH=[/var/www] \\
 				-e ZBX_DB_SERVER=<redhat.xyz> \\
 				-e ZBX_DB_PORT=[13306] \\
 				-e ZBX_DB_USER=[zabbix] \\
