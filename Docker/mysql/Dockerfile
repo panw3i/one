@@ -1,5 +1,5 @@
 FROM centos:latest
-MAINTAINER The CentOS Project <admin@jiobxn.com>
+MAINTAINER "The CentOS Project" <admin@jiobxn.com>
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN yum clean all; yum -y update; yum -y install net-tools bash-completion vim wget cronie at zlib-devel pcre-devel perl-devel perl-CPAN perl-Data-Dumper ncurses-devel cmake tcp_wrappers tcp_wrappers-devel openssl openssl-devel make gcc-c++ iptables; yum clean all
