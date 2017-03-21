@@ -6,7 +6,7 @@ ENV container docker
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN rpm -ivh "http://repo.mysql.com/$(curl -s http://repo.mysql.com/ |grep "$(awk '{print $4}' /etc/redhat-release |awk -F. '{print "el"$1}')" |awk -F\"  'END{print $6}')"
 RUN yum -y install epel-release; yum -y update
-RUN yum -y install systemd bash-completion vim wget initscripts iptables-services bind-utils iftop iproute net-tools cronie at mtr nmap tcpdump openssl perl perl-Data-Dumper automake libtool git mysql-community-devel mysql-community-client; yum clean all; \
+RUN yum -y install systemd bash-completion vim wget initscripts iptables-services bind-utils iftop iproute net-tools cronie at mtr nmap tcpdump openssl perl perl-Data-Dumper automake libtool git mysql-community-devel mysql-community-client httpd-tools; yum clean all; \
     (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
     rm -f /lib/systemd/system/multi-user.target.wants/*; \
     rm -f /etc/systemd/system/*.wants/*; \
