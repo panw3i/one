@@ -1,10 +1,8 @@
 FROM centos:latest
-MAINTAINER The CentOS Project <admin@jiobxn.com>
+MAINTAINER "The CentOS Project" <admin@jiobxn.com>
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN epel_url="http://dl.fedoraproject.org/pub/epel/$(awk '{print $4}' /etc/redhat-release |awk -F. '{print $1}')/x86_64/e/" \
-        && rpm -ivh $epel_url$(curl -s $epel_url |grep "epel-release" |awk -F\" '{print $6}')
-RUN yum clean all && yum -y update \
+RUN yum clean all; yum -y install epel-release; yum -y update \
         && yum -y install net-tools bash-completion vim wget strace make gcc-c++ autoconf iptables bzip2 unzip bzip2-devel mingw64-win-iconv libmcrypt-devel libxml2-devel libcurl-devel libpng-devel libc-client-devel krb5-devel libicu-devel libjpeg libjpeg-devel libXpm-devel freetype-devel gmp-devel readline-devel net-snmp-devel libtidy-devel libgcrypt-devel gd-devel gdbm-devel libxslt-devel mhash-devel openldap-devel libacl-devel enchant-devel libwebp-devel libedit-devel libmemcached-devel \
         && yum clean all
 
@@ -114,5 +112,5 @@ EXPOSE 9000
 
 CMD ["php-fpm"]
 
-# docker build -t php7 .
-# docker run -d --restart always -p 9000:9000 -v /docker/www:/var/www --hostname php --name php php7
+# docker build -t php:7 .
+# docker run -d --restart always -p 9000:9000 -v /docker/www:/var/www --hostname php --name php php:7
