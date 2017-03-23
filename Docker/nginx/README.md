@@ -30,11 +30,11 @@ Nginx
 				-e TOMCAT_HTTPS=<Y> \\     后端tomcat启用了https
 				-e PROXY_SERVER=<'redhat.xyz,www.redhat.xyz|10.0.0.31,10.0.0.41;g.redhat.xyz|www.google.com'> \\  反向代理，以";"分隔为一组
 				-e PROXY_HTTPS=<Y> \\      代理的后端服务器启用了https
-				-e PROXY_HEADER=<2|host;http_host> \\  反向代理的主机头，默认是proxy_host
+				-e PROXY_HEADER=<2|host;http_host> \\  反向代理的主机头，默认是proxy_host，数字2表示第二个proxy-server
 				-e FULL_HTTPS=<Y> \\       开启全站https
 				-e DEFAULT_SERVER=<redhat.xyz> \\  默认主机名，如果有多个主机名，指定默认的
 				-e IP_HASH=<Y> \\          开启IP HASH
-				-e PHP_ALIAS=<'1|/upload1,/upload;2|/upload2,/upload'> \\    alisa，第一个upload是别名，第二个upload是目录路径
+				-e PHP_ALIAS=<'1|/upload1,/upload;2|/upload2,/upload'> \\    alisa，upload1是别名，逗号后面的upload是目录路径，数字2表示第二个proxy-server
 				-e JAVA_ALIAS=<'1|/upload1,/upload;2|/upload2,/upload'> \\
 				-e PROXY_ALIAS=<'1|/upload1,/upload;2|/upload2,/upload'> \\
 				-e NGX_USER=<admin> \\    用于查看/basic_status的用户
