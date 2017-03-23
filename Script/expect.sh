@@ -186,7 +186,7 @@ done
 ################################################# 第三部分 ###############################################
 
 if [ "${1:0:2}" == '-m' ]; then
-	awk -F: '{if($1~/'${2:0:99}'/) print}' ./hosts.txt >/tmp/hosts.txt
+	awk -F: '{if($1~/'${2:0:99}'/) print}' ./hosts.txt >/tmp/hosts.txt && chmod 600 /tmp/hosts.txt
 	ACMD="$3"
 	CMD=$4
 	FILE=$4
