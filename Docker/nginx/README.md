@@ -16,9 +16,10 @@ Nginx
 
     #运行一个DOMAIN模式实例
     docker run -d --restart always -p 10084:80 -p 10444:443 -e DOMAIN_PROXY="fqhub.com%backend_https=y" --hostname fqhub --name nginx nginx
-    
-    四种模式可以一起用，需要使用"root=project directory"
 
+四种模式可以一起用，需要使用"root=project directory"区分不同项目目录
+
+***
 
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
