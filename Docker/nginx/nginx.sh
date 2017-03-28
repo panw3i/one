@@ -2,7 +2,6 @@
 set -e
 
 if [ "$1" = 'nginx' ]; then
-#if [ "$1" = '/usr/sbin/init' ]; then
 
 : ${NGX_PASS:="jiobxn.com"}
 : ${NGX_CHARSET:="utf-8"}
