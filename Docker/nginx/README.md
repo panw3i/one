@@ -3,41 +3,67 @@ Nginx
 
 ## Example:
 
-    #运行一个PHP环境的nginx实例
-    docker run -d --restart always -p 10080:80 -p 10443:443 -v /docker/www:/usr/local/nginx/html -e PHP_SERVER=172.17.0.8:9000 --hostname nginx --name nginx nginx
+    #运行一个FCGI模式实例
+    docker run -d --restart always -p 10080:80 -p 10443:443 -v /docker/www:/usr/local/nginx/html -e FCGI_SERVER="php.redhat.xyz|192.17.0.5:9000" --hostname php --name php nginx
 
-    #运行一个tomcat环境的nginx实例
-    docker run -d --restart always -p 10080:80 -p 10443:443 -v /docker/webapps:/usr/local/nginx/html -e TOMCAT_SERVER=172.17.0.10:18080 --hostname nginx --name nginx nginx
+    #运行两个JAVA_PHP模式实例
+    docker run -d --restart always -p 10081:80 -p 10441:443 -v /docker/webapps:/usr/local/nginx/html -e JAVA_PHP_SERVER="java.redhat.xyz|172.17.0.6:8080" --hostname java --name java nginx
 
-    #运行一个反向代理的nginx实例
-    docker run -d --restart always -p 80:80 -p 443:443 -e PROXY_SERVER="jiobxn.com,www.jiobxn.com|jiobxn.wordpress.com" -e PROXY_HTTPS=Y --hostname nginx --name nginx nginx
+    docker run -d --restart always -p 10082:80 -p 10442:443 -v /docker/www:/usr/local/nginx/html -e JAVA_PHP_SERVER="apache.redhat.xyz|172.17.0.7" --hostname apache --name apache nginx
+
+    #运行一个PROXY模式实例
+    docker run -d --restart always -p 10083:80 -p 10443:443 -e PROXY_SERVER="g.redhat.xyz|www.google.co.id%backend_https=y" --hostname google --name proxy nginx
+
+    #运行一个DOMAIN模式实例
+    docker run -d --restart always -p 10084:80 -p 10444:443 -e DOMAIN_PROXY="fqhub.com%backend_https=y" --hostname fqhub --name nginx nginx
+    
+    四种模式可以一起用，需要使用"root=project directory"
+
 
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
 
-				docker run -d --restart always \\
-				-v /docker/www:/usr/local/nginx/html \\
-				-v /docker/upload:/upload \\  alias目录，在集群环境中通常挂载到分布式存储用于存储图片
-				-v /docker/key:/key \\  ssl证书{server.crt,server.kry}
-				-p 10080:80 \\
-				-p 10443:443 \\
-				-e HTTP_PORT=[80] \\    HTTP端口
-				-e HTTPS_PORT=[443] \\  HTTPS端口
-				-e NGX_CODING=[utf-8] \\   默认字符集
-				-e PHP_SERVER=<'php.redhat.xyz|10.0.0.11:9000,10.0.0.12:9000;redhat.xyz|10.0.0.13:9000'> \\  PHP服务器地址，"|"前面是主机名，后面是PHP服务器地址
-				-e PHP_PATH=[/var/www] \\  PHP工作路径
-				-e JAVA_SERVER=<'java.redhat.xyz|10.0.0.21:1080,10.0.0.22:2080;redhat.xyz|10.0.0.13:3080'> \\    tomcat服务器地址，"|"前面是主机名，后面是JAVA服务器地址
-				-e TOMCAT_HTTPS=<Y> \\     后端tomcat启用了https
-				-e PROXY_SERVER=<'redhat.xyz,www.redhat.xyz|10.0.0.31,10.0.0.41;g.redhat.xyz|www.google.com'> \\  反向代理，以";"分隔为一组
-				-e PROXY_HTTPS=<Y> \\      代理的后端服务器启用了https
-				-e PROXY_HEADER=<2|host;http_host> \\  反向代理的主机头，默认是proxy_host，数字2表示第二个proxy-server
-				-e FULL_HTTPS=<Y> \\       开启全站https
-				-e DEFAULT_SERVER=<redhat.xyz> \\  默认主机名，如果有多个主机名，指定默认的
-				-e IP_HASH=<Y> \\          开启IP HASH
-				-e PHP_ALIAS=<'1|/upload1,/upload;2|/upload2,/upload'> \\    alisa，upload1是别名，逗号后面的upload是目录路径，数字2表示第二个proxy-server
-				-e JAVA_ALIAS=<'1|/upload1,/upload;2|/upload2,/upload'> \\
-				-e PROXY_ALIAS=<'1|/upload1,/upload;2|/upload2,/upload'> \\
-				-e NGX_USER=<admin> \\    用于查看/basic_status的用户
-				-e NGX_PASS=<redhat> \\   默认随机密码
-				--hostname nginx \\
-				--name nginx nginx
+
+
+基本选项：四种工作模式，每个独立的站点以";"为分隔符
+
+	FCGI_SERVER=<php.jiobxn.com|192.17.0.5:9000[%<Other options>]>
+	JAVA_PHP_SERVER=<tomcat.jiobxn.com|192.17.0.6:8080[%<Other options>];apache.jiobxn.com|192.17.0.7[%<Other options>]>
+	PROXY_SERVER=<g.jiobxn.com|www.google.co.id.hk%backend_https=Y>
+	DOMAIN_PROXY=<fqhub.com%backend_https=Y>
+
+默认选项：
+
+	DEFAULT_SERVER=<jiobxn.com>						#在多个站点中选择一个默认站点，IP访问的站点
+	NGX_PASS=[jiobxn.com]							# /nginx_status 密码
+	NGX_USER=<nginx>							# /nginx_status 用户名，默认为空
+	NGX_CHARSET=[utf-8]							#字符集
+	FCGI_PATH=[/var/www]							#fcgi工作目录
+	HTTP_PORT=[80]								#http端口
+	HTTPS_PORT=[443]							#https端口
+	DOMAIN_TAG=[888]							#域名混淆字符，用于DOMAIN_PROXY模式
+	EOORO_JUMP=[https://cn.bing.com]					#错误跳转，用于DOMAIN_PROXY模式
+	NGX_DNS=[8.8.8.8]							#DNS，用于DOMAIN_PROXY模式
+	CACHE_TIME=[8h]								#缓存时间
+	CACHE_SIZE=[4g]								#用于缓存的磁盘大小
+	CACHE_MEM=[物理内存的%10]						    #用于缓存的内存大小
+
+
+其他选项：作用于四种工作模式，与基本选项之间以"%"为分隔符，选项之间用","为分隔符，参数之间用"|"为分隔符，用于替换某种模式下的默认选项
+
+		alias=</boy|/mp4>						#别名目录，别名/boy 容器目录/mp4，用于FCGI、JAVA_PHP和PROXY
+		root=<wordpress>						#网站根目录，html/wordpress
+		http_port=<8080>						#HTTP端口
+		https_port=<8443>						#HTTPS端口
+		crt_key=<jiobxn.crt|jiobxn.key>					#SSL证书，在/key目录下
+		full_https=<Y>							#全站HTTPS，http跳转到https
+		charset=<gb2312>						#字符集
+		cache=<Y>							#启用缓存
+		header=<host>							#上游主机头，FCGI和JAVA_PHP是host，PROXY和DOMAIN是proxy_host
+		ip_hash=<Y>							#ip hash，会话一致性，用于FCGI和JAVA_PHP模式
+		backend_https=<Y>						#上游HTTPS，用于PROXY和DOMAIN模式
+		dns=<223.5.5.5>							#DNS，用于DOMAIN模式
+		tag=<9999>							#域名混淆字符，用于DOMAIN模式
+		error=<https://www.bing.com>					#错误跳转，用于DOMAIN模式
+		auth=<admin|passwd>						#用户认证，用于PROXY和DOMAIN模式
+		filter=<.google.com|.fqhub.com>					#字符替换，用于PROXY和DOMAIN模式
