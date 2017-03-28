@@ -77,6 +77,5 @@ EXPOSE 80 443
 CMD ["nginx"]
 
 # docker build -t nginx .
-# docker run -d --restart always -p 10080:80 -p 10443:443 -v /docker/www:/usr/local/nginx/html -e PHP_SERVER=redhat.xyz:9000 --hostname nginx --name nginx nginx
-# docker run -d --restart always -p 10080:80 -p 10443:443 -v /docker/webapps:/usr/local/nginx/html -e TOMCAT_SERVER=redhat.xyz:18080 --hostname nginx --name nginx nginx
+# docker run -d --restart always -p 80:80 -p 443:443 -v /docker/www:/www -v /docker/nginx:/key -e DOMAIN_PROXY="fqhub.com%backend_https=y" -e PROXY_SERVER="jiobxn.com,www.jiobxn.com|jiobxn.wordpress.com%backend_https=y,alias=/down|/www" --hostname nginx --name test-nginx nginx
 # docker run -it --rm nginx --help
