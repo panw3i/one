@@ -16,5 +16,5 @@ EXPOSE 80 443
 CMD ["nginx"]
 
 # docker build -t nginx-rpm .
-# docker run -d --restart always -p 80:80 -p 443:443 -v /docker/www:/www -v /docker/nginx:/key -e DOMAIN_PROXY="fqhub.com%backend_https=y" -e PROXY_SERVER="jiobxn.com,www.jiobxn.com|jiobxn.wordpress.com%backend_https=y,alias=/down|/www" --hostname nginx --name test-nginx nginx
+# docker run -d --restart always -p 80:80 -p 443:443 -v /docker/www:/www -v /docker/nginx:/key -e DOMAIN_PROXY="fqhub.com%backend_https=y" -e PROXY_SERVER="jiobxn.com,www.jiobxn.com|jiobxn.wordpress.com%backend_https=y,alias=/down|/www" --hostname nginx --name test-nginx nginx-rpm
 # docker run -it --rm nginx-rpm --help
