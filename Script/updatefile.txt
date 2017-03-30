@@ -39,11 +39,11 @@ BACK-ID="/www-backup/xxoo"
 for i in $(cat $BACK-ID/log.txt); do
 	if [ -n "$(echo $i |egrep "mkdir|add")" ]; then
 		[ "$1" == "L" ] && echo -e "$(echo $i |grep mkdir |awk '{print $2}')  \033[35m rm dir \033[0m"
-		rm -rf "$(echo $i |egrep "mkdir|add" |awk '{print $2}')" |echo
+		[ "$1" == "yes" ] && rm -rf "$(echo $i |egrep "mkdir|add" |awk '{print $2}')" |echo
 	fi
 	
 	if [ -n "$(echo $i |grep update)" ]; then 
 		[ "$1" == "L" ] && echo -e "$(echo $i |grep update |awk '{print $3}')  \033[35m rb file \033[0m"
-		\cp  "$(echo $i |grep update |awk '{print $2}')" "$(echo $i |grep update |awk '{print $3}')"
+		[ "$1" == "yes" ] && \cp  "$(echo $i |grep update |awk '{print $2}')" "$(echo $i |grep update |awk '{print $3}')"
 	fi
 done
