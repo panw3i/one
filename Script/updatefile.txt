@@ -1,0 +1,49 @@
+#!/bin/bash
+#Update
+WWW="/var/www/html"
+DIR="h5"
+TIME="$(date +%F_%T)"
+BACK-ID="/www-backup/$(date +%F_%T)"
+
+[ ! -d "$WWW/$DIR" ] && echo none "$WWW/$DIR" && exit 1
+
+for i in $(find $DIR -type d); do
+	if [ ! -d "$WWW/$i" ]; then
+		[ "$1" == "L" ] && echo -e "$WWW/$i  \033[32m Add Directory \033[0m"
+		[ "$1" == "yes" ] && mkdir -p "$WWW/$i" 
+#		[ "$1" == "yes" ] && mkdir -p "$BACK-ID/$i" && echo "mkdir $WWW/$i" >"$BACK-ID/log.txt"
+	fi
+done
+
+
+for i in $(find $DIR -type f); do
+	if [ -f "$WWW/$i" ]; then
+		[ "$1" == "L" ] && echo -e "$WWW/$i  \033[34m Update File \033[0m"
+		[ "$1" == "yes" ] && cp "$WWW/$i" "$WWW/$i-$TIME" && \cp $i "$WWW/$i" 
+#		[ "$1" == "yes" ] && cp "$WWW/$i" "$BACK-ID/$i" && \cp $i "$WWW/$i" && echo "update $BACK-ID/$i $WWW/$i" >>"$BACK-ID/log.txt"
+	else
+		[ "$1" == "L" ] && echo -e "$WWW/$i  \033[32m Add File \033[0m"
+		[ "$1" == "yes" ] &&  \cp $i "$WWW/$i"
+#		[ "$1" == "yes" ] &&  \cp $i "$WWW/$i" && echo "add $WWW/$i" >>"$BACK-ID/log.txt"
+	fi
+done
+
+
+
+#!/bin/bash
+#Rollback
+BACK-ID="/www-backup/xxoo"
+
+[ ! -f "$BACK-ID/log.txt" ] && echo none "$BACK-ID/log.txt" && exit 1
+
+for i in $(cat $BACK-ID/log.txt); do
+	if [ -n "$(echo $i |egrep "mkdir|add")" ]; then
+		[ "$1" == "L" ] && echo -e "$(echo $i |grep mkdir |awk '{print $2}')  \033[35m rm dir \033[0m"
+		rm -rf "$(echo $i |egrep "mkdir|add" |awk '{print $2}')" |echo
+	fi
+	
+	if [ -n "$(echo $i |grep update)" ]; then 
+		[ "$1" == "L" ] && echo -e "$(echo $i |grep update |awk '{print $3}')  \033[35m rb file \033[0m"
+		\cp  "$(echo $i |grep update |awk '{print $2}')" "$(echo $i |grep update |awk '{print $3}')"
+	fi
+done
