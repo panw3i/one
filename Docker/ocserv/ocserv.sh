@@ -102,8 +102,6 @@ if [ -z "$(grep "redhat.xyz" /etc/ocserv/ocserv.conf)" ]; then
 	sed -i "s@#ipv4-network = 192.168.1.0/24@ipv4-network = $IP_RANGE.0/24@" /etc/ocserv/ocserv.conf
 	sed -i "s/#dns = 192.168.1.2/dns = 8.8.8.8\ndns = 8.8.4.4/" /etc/ocserv/ocserv.conf
 	sed -i "s@user-profile = profile.xml@#user-profile = profile.xml@" /etc/ocserv/ocserv.conf
-	#sed -i 's/#tls-priorities = "NORMAL:%SERVER_PRECEDENCE:%COMPAT:-VERS-SSL3.0"/tls-priorities = "NORMAL:%SERVER_PRECEDENCE:%COMPAT:-VERS-SSL3.0"/' /etc/ocserv/ocserv.conf
-	#sed -i 's/tls-priorities = "@SYSTEM"/#tls-priorities = "@SYSTEM"/g' /etc/ocserv/ocserv.conf
 
 	
 	if [ $VPN_USER ]; then
