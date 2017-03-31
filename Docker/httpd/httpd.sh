@@ -4,6 +4,7 @@ set -e
 if [ "$1" = 'httpd' ]; then
 
 : ${APC_PASS:=$(pwmake 64)}
+: ${APC_CHARSET:=UTF-8}
 : ${PHP_PORT:=9000}
 : ${PHP_PATH:=/var/www}
 : ${HTTP_PORT:=80}
@@ -38,7 +39,7 @@ if [ -z "$(grep "redhat.xyz" /usr/local/apache/conf/httpd.conf)" ]; then
 	#
 	#redhat.xyz
 	ServerName localhost
-	AddDefaultCharset UTF-8
+	AddDefaultCharset $APC_CHARSET
 
 	<IfModule deflate_module>  
 	AddOutputFilterByType DEFLATE all  
