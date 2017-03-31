@@ -1,10 +1,12 @@
 FROM centos:latest
 MAINTAINER "The CentOS Project" <admin@jiobxn.com>
 
+ARG mysql_v="57"
+
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN rpm -ivh http://repo.mysql.com/$(curl -s "https://dev.mysql.com/downloads/repo/yum/" |grep "noarch.rpm" |grep "$(awk '{print $4}' /etc/redhat-release |awk -F. '{print "el"$1}')" |grep -Po '(?<=\()[^)]*(?=\))')
-RUN rpm --import http://repo.mysql.com/RPM-GPG-KEY-mysql
-RUN yum clean all; yum -y update; yum -y install net-tools bash-completion vim wget cronie at openssl iptables; yum install -y mysql-community-server; yum clean all
+RUN sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/mysql-community.repo
+RUN yum clean all; yum -y update; yum -y install net-tools bash-completion vim wget cronie at openssl iptables; yum --enablerepo=mysql$mysql_v-community install -y mysql-community-server; yum clean all
 
 RUN mkdir /docker-entrypoint-initdb.d
 
