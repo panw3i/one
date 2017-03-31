@@ -18,13 +18,31 @@ if [ "$1" = 'mysqld' ]; then
 			sed -i '/\[mysqld\]/a log-bin=mysql-bin\nserver-id='$SERVER_ID'\ninnodb_flush_log_at_trx_commit=1\nsync_binlog=1\nlower_case_table_names=1\ngeneral-log=1' /etc/my.cnf
 		fi
 
-		echo "Initialize MYSQL"
 		#Initialize MYSQL
-		mysqld --initialize-insecure --user=mysql
-		mysql_ssl_rsa_setup 2>/dev/null
-		mysqld --skip-networking --user=mysql &
-		pid="$!"
-		
+		mysql_V="$(rpm -qa |awk -F- '$1=="mysql"{print $5}' |awk -F. '{print $1$2}')"
+
+		if [ "$mysql_V" -ge "57" ]; then
+			echo "Initializing MySQL $mysql_V"
+			mysqld --initialize-insecure
+			mysql_ssl_rsa_setup 2>/dev/null
+			mysqld --skip-networking &
+			pid="$!"
+		else
+			if [ "$mysql_V" -eq "56" ]; then
+				echo "Initializing MySQL $mysql_V"
+				mysql_install_db --rpm --keep-my-cnf &>/dev/null
+				mysqld --skip-networking &>/dev/null &
+				pid="$!"
+			fi
+			
+			if [ "$mysql_V" -eq "55" ]; then
+				echo "Initializing MySQL $mysql_V"
+				mysql_install_db --rpm &>/dev/null
+				mysqld --skip-networking &>/dev/null &
+				pid="$!"
+			fi
+		fi
+
 		#Login mysql Use socket
 		mysql=( mysql --protocol=socket -uroot )
 		
@@ -48,7 +66,6 @@ if [ "$1" = 'mysqld' ]; then
 		#Generate a random string
 		if [ -z "$MYSQL_ROOT_PASSWORD" ]; then
 			MYSQL_ROOT_PASSWORD="$(pwmake 128)"
-			echo "MYSQL ROOT PASSWORD: $MYSQL_ROOT_PASSWORD"
 		fi
 		
 		#Set the root password and remote database access
@@ -180,7 +197,7 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 	#[ -f /iptables.sh ] && . /iptables.sh
 	crond
 
-	exec "$@"
+	exec "$@" &>/dev/null
 else
 
     echo -e "
