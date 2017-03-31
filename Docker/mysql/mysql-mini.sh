@@ -19,7 +19,7 @@ if [ "$1" = 'mysqld' ]; then
 		fi
 
 		#Initialize MYSQL
-		mysql_V="$(rpm -qa |awk -F- '$1=="mysql"{print $5}' |awk -F. '{print $1$2}')"
+		mysql_V="$(rpm -qa |awk -F- '$1"-"$2"-"$3=="mysql-community-server"{print $5}' |awk -F. '{print $1$2}')"
 
 		if [ "$mysql_V" -ge "57" ]; then
 			echo "Initializing MySQL $mysql_V"
