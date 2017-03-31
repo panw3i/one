@@ -92,18 +92,18 @@ if [ -z "$(grep "redhat.xyz" /etc/ocserv/ocserv.conf)" ]; then
 	
 	#Configure
 	sed -i '1 i #redhat.xyz' /etc/ocserv/ocserv.conf
-	sed -i 's/auth = "pam"/#auth = "pam"/g' /etc/ocserv/ocserv.conf
-	sed -i "s#./sample.passwd,otp=./sample.otp#/etc/ocserv/ocpasswd#g" /etc/ocserv/ocserv.conf
-	sed -i "s/max-same-clients = 2/max-same-clients = ${MAX_CONN}/g" /etc/ocserv/ocserv.conf
-	sed -i "s/max-clients = 16/max-clients = ${MAX_CLIENT}/g" /etc/ocserv/ocserv.conf
-	sed -i "s/tcp-port = 443/tcp-port = ${VPN_PORT}/g" /etc/ocserv/ocserv.conf
-	sed -i "s/udp-port = 443/udp-port = ${VPN_PORT}/g" /etc/ocserv/ocserv.conf
-	sed -i "s/default-domain = example.com/#default-domain = example.com/g" /etc/ocserv/ocserv.conf
-	sed -i "s@#ipv4-network = 192.168.1.0/24@ipv4-network = $IP_RANGE.0/24@g" /etc/ocserv/ocserv.conf
-	sed -i "s/#dns = 192.168.1.2/dns = 8.8.8.8\ndns = 8.8.4.4/g" /etc/ocserv/ocserv.conf
-	sed -i "s@user-profile = profile.xml@#user-profile = profile.xml@g" /etc/ocserv/ocserv.conf
-	sed -i 's/#tls-priorities = "NORMAL:%SERVER_PRECEDENCE:%COMPAT:-VERS-SSL3.0"/tls-priorities = "NORMAL:%SERVER_PRECEDENCE:%COMPAT:-VERS-SSL3.0"/g' /etc/ocserv/ocserv.conf
-	sed -i 's/tls-priorities = "@SYSTEM"/#tls-priorities = "@SYSTEM"/g' /etc/ocserv/ocserv.conf
+	sed -i 's/auth = "pam"/#auth = "pam"/' /etc/ocserv/ocserv.conf
+	sed -i "s#./sample.passwd,otp=./sample.otp#/etc/ocserv/ocpasswd#" /etc/ocserv/ocserv.conf
+	sed -i "s/max-same-clients = 2/max-same-clients = ${MAX_CONN}/" /etc/ocserv/ocserv.conf
+	sed -i "s/max-clients = 16/max-clients = ${MAX_CLIENT}/" /etc/ocserv/ocserv.conf
+	sed -i "s/tcp-port = 443/tcp-port = ${VPN_PORT}/" /etc/ocserv/ocserv.conf
+	sed -i "s/udp-port = 443/udp-port = ${VPN_PORT}/" /etc/ocserv/ocserv.conf
+	sed -i "s/default-domain = example.com/#&/" /etc/ocserv/ocserv.conf
+	sed -i "s@#ipv4-network = 192.168.1.0/24@ipv4-network = $IP_RANGE.0/24@" /etc/ocserv/ocserv.conf
+	sed -i "s/#dns = 192.168.1.2/dns = 8.8.8.8\ndns = 8.8.4.4/" /etc/ocserv/ocserv.conf
+	sed -i "s@user-profile = profile.xml@#user-profile = profile.xml@" /etc/ocserv/ocserv.conf
+	#sed -i 's/#tls-priorities = "NORMAL:%SERVER_PRECEDENCE:%COMPAT:-VERS-SSL3.0"/tls-priorities = "NORMAL:%SERVER_PRECEDENCE:%COMPAT:-VERS-SSL3.0"/' /etc/ocserv/ocserv.conf
+	#sed -i 's/tls-priorities = "@SYSTEM"/#tls-priorities = "@SYSTEM"/g' /etc/ocserv/ocserv.conf
 
 	
 	if [ $VPN_USER ]; then
