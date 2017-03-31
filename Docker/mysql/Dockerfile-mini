@@ -1,13 +1,14 @@
 FROM centos:latest
 MAINTAINER "The CentOS Project" <admin@jiobxn.com>
 
+ARG mysql_v="5.7"
+
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN yum clean all; yum -y update; yum -y install net-tools bash-completion vim wget cronie at openssl iptables; yum clean all
 
-RUN mysql_v=$(curl -s https://dev.mysql.com/downloads/mysql/ |grep "<h1>" |awk '{print $4}') \
-        && mysql_V=$(echo $mysql_v |awk -F. '{print $1"."$2}') \
-        && system_v=$(awk '{print $4}' /etc/redhat-release |awk -F. '{print "el"$1}') \
-        && yum install -y https://repo.mysql.com/yum/mysql-${mysql_V}-community/docker/x86_64/mysql-community-server-minimal-${mysql_v}-1.${system_v}.x86_64.rpm \
+RUN mysql_V=$(curl -s https://dev.mysql.com/downloads/mysql/$mysql_v.html#downloads |grep "<h1>" |awk '{print $4}') \
+        && mysql_rpm=$(curl -s https://repo.mysql.com/yum/mysql-$mysql_v-community/docker/x86_64/ |grep server-minimal |grep $mysql_V |awk -F\" '{print $6}') \
+        && yum install -y https://repo.mysql.com/yum/mysql-${mysql_v}-community/docker/x86_64/$mysql_rpm \
         && rm -rf /var/cache/yum/*
 
 RUN mkdir /docker-entrypoint-initdb.d
