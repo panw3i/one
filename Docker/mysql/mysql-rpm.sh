@@ -197,7 +197,7 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 	#[ -f /iptables.sh ] && . /iptables.sh
 	crond
 
-	exec "$@"
+	exec "$@" &>/dev/null
 else
 
     echo -e "
