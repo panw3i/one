@@ -23,6 +23,7 @@ if [ -z "$(grep "redhat.xyz" /usr/local/tomcat/conf/server.xml)" ]; then
 	    <Connector
                protocol="org.apache.coyote.http11.Http11NioProtocol"
                port="8443" acceptCount="$((`nproc`*10240))" maxThreads="$((`nproc`*10240))"
+	       compression="on" disableUploadTimeout="true" URIEncoding="UTF-8"
                scheme="https" secure="true" SSLEnabled="true"
                keystoreFile="conf/.keystore" keystorePass="redhat"
                clientAuth="false" sslProtocol="TLS"/>
@@ -30,7 +31,7 @@ if [ -z "$(grep "redhat.xyz" /usr/local/tomcat/conf/server.xml)" ]; then
 	sed -i '/A "Connector" using the shared thread pool/ r /tomcat-ssl.txt' /usr/local/tomcat/conf/server.xml
 	
 	#gzip
-	sed -i '/Connector port="8080"/ a \               acceptCount="'$((`nproc`*10240))'" maxThreads="'$((`nproc`*10240))'"' /usr/local/tomcat/conf/server.xml
+	sed -i '/Connector port="8080"/ a \               acceptCount="'$((`nproc`*10240))'" maxThreads="'$((`nproc`*10240))'" \               compression="on" disableUploadTimeout="true" URIEncoding="UTF-8"' /usr/local/tomcat/conf/server.xml
 
 	#server name
 	if [ "$SERVER_NAME" ]; then
