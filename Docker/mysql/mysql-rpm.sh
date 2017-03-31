@@ -18,12 +18,30 @@ if [ "$1" = 'mysqld' ]; then
 			sed -i '/\[mysqld\]/a log-bin=mysql-bin\nserver-id='$SERVER_ID'\ninnodb_flush_log_at_trx_commit=1\nsync_binlog=1\nlower_case_table_names=1\ngeneral-log=1' /etc/my.cnf
 		fi
 
-		echo "Initialize MYSQL"
 		#Initialize MYSQL
-		mysqld --initialize-insecure --user=mysql
-		mysql_ssl_rsa_setup 2>/dev/null
-		mysqld --skip-networking --user=mysql &
-		pid="$!"
+		mysql_V="$(rpm -qa |awk -F- '$1"-"$2"-"$3=="mysql-community-server"{print $4}' |awk -F. '{print $1$2}')"
+
+		if [ "$mysql_V" -ge "57" ]; then
+			echo "Initializing MySQL $mysql_V"
+			mysqld --initialize-insecure --user=mysql
+			mysql_ssl_rsa_setup 2>/dev/null
+			mysqld --skip-networking --user=mysql &
+			pid="$!"
+		else
+			if [ "$mysql_V" -eq "56" ]; then
+				echo "Initializing MySQL $mysql_V"
+				mysql_install_db --rpm --keep-my-cnf --user=mysql &>/dev/null
+				mysqld --skip-networking --user=mysql &>/dev/null &
+				pid="$!"
+			fi
+			
+			if [ "$mysql_V" -eq "55" ]; then
+				echo "Initializing MySQL $mysql_V"
+				mysql_install_db --rpm --user=mysql &>/dev/null
+				mysqld --skip-networking --user=mysql &>/dev/null &
+				pid="$!"
+			fi
+		fi
 		
 		#Login mysql Use socket
 		mysql=( mysql --protocol=socket -uroot )
