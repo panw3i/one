@@ -11,7 +11,7 @@ if [ "$1" = 'mysqld_safe' ]; then
 
 		#Server ID
 		if [ -n "$SERVER_ID" -a -z "$(grep ^server-id /etc/my.cnf)" ]; then
-			sed -i '/\[mysqld\]/a log-bin=mysql-bin\nserver-id='$SERVER_ID'\ninnodb_flush_log_at_trx_commit=1\nsync_binlog=1\nlower_case_table_names=1\ngeneral-log=1' /etc/my.cnf
+			sed -i '/\[mysqld\]/a log-bin=mysql-bin\nserver-id='$SERVER_ID'\ninnodb_flush_log_at_trx_commit=1\nsync_binlog=1\nlower_case_table_names=1' /etc/my.cnf
 		fi
 	else
 		echo "Initialize MYSQL"
@@ -21,7 +21,7 @@ if [ "$1" = 'mysqld_safe' ]; then
 
 		#Server ID
 		if [ "$SERVER_ID" ]; then
-			sed -i '/\[mysqld\]/a log-bin=mysql-bin\nserver-id='$SERVER_ID'\ninnodb_flush_log_at_trx_commit=1\nsync_binlog=1\nlower_case_table_names=1\ngeneral-log=1' /etc/my.cnf
+			sed -i '/\[mysqld\]/a log-bin=mysql-bin\nserver-id='$SERVER_ID'\ninnodb_flush_log_at_trx_commit=1\nsync_binlog=1\nlower_case_table_names=1' /etc/my.cnf
 		fi
 
 		mysqld --initialize-insecure --user=mysql 2> /mysql.log
@@ -126,6 +126,11 @@ if [ "$1" = 'mysqld_safe' ]; then
 		sed -i '/max_connections = 10000/max_connections = '$MYSQL_MAX_CONN'/' /etc/my.cnf
 	fi
 	
+	#Mysql general log
+	if [ "$MYSQL_GENERAL_LOG" ]; then
+		sed -i '/\[mysqld\]/a general-log = 1' /etc/my.cnf
+	fi
+	
 	#Mysql modify the default port
 	if [ "$MYSQL_PORT" ]; then
 		sed -i '/\[mysqld\]/a port = '$MYSQL_PORT'' /etc/my.cnf
@@ -205,6 +210,7 @@ else
 				-e MASTER_HOST=<192.168.10.130> \\
 				-e MASTER_PORT=[3306] \\
 				-e IPTABLES=<"192.168.10.0/24,172.17.0.0/24"> \\
+				-e MYSQL_GENERAL_LOG=Y \\
 				--hostname mysql \\
 				--name mysql mysql
 	"
