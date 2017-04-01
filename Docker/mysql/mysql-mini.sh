@@ -126,7 +126,7 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 			exit 1
 		fi
 		
-		sed -i '/\[mysqld\]/a max_connections = 10000 \n general-log=1' /etc/my.cnf
+		sed -i '/\[mysqld\]/a max_connections = 10000' /etc/my.cnf
 	fi
 	
 	#Backup Database
@@ -139,6 +139,11 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 	#Mysql max connections
 	if [ "$MYSQL_MAX_CONN" ]; then
 		sed -i '/max_connections = 10000/max_connections = '$MYSQL_MAX_CONN'/' /etc/my.cnf
+	fi
+	
+	#Mysql general log
+	if [ "$MYSQL_GENERAL_LOG" ]; then
+		sed -i '/\[mysqld\]/a general-log = 1' /etc/my.cnf
 	fi
 	
 	#Mysql modify the default port
@@ -220,6 +225,7 @@ else
 				-e MASTER_HOST=<192.168.10.130> \\
 				-e MASTER_PORT=[3306] \\
 				-e IPTABLES=<"192.168.10.0/24,172.17.0.0/24"> \\
+				-e MYSQL_GENERAL_LOG=Y \\
 				--hostname mysql-mini \\
 				--name mysql-mini mysql-mini
 	"
