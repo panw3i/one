@@ -10,12 +10,12 @@ if [ "$1" = 'mysqld' ]; then
 
 		#Server ID
 		if [ -n "$SERVER_ID" -a -z "$(grep ^server-id /etc/my.cnf)" ]; then
-			sed -i '/\[mysqld\]/a log-bin=mysql-bin\nserver-id='$SERVER_ID'\ninnodb_flush_log_at_trx_commit=1\nsync_binlog=1\nlower_case_table_names=1\ngeneral-log=1' /etc/my.cnf
+			sed -i '/\[mysqld\]/a log-bin=mysql-bin\nserver-id='$SERVER_ID'\ninnodb_flush_log_at_trx_commit=1\nsync_binlog=1\nlower_case_table_names=1' /etc/my.cnf
 		fi
 	else
 		#Server ID
 		if [ "$SERVER_ID" ]; then
-			sed -i '/\[mysqld\]/a log-bin=mysql-bin\nserver-id='$SERVER_ID'\ninnodb_flush_log_at_trx_commit=1\nsync_binlog=1\nlower_case_table_names=1\ngeneral-log=1' /etc/my.cnf
+			sed -i '/\[mysqld\]/a log-bin=mysql-bin\nserver-id='$SERVER_ID'\ninnodb_flush_log_at_trx_commit=1\nsync_binlog=1\nlower_case_table_names=1' /etc/my.cnf
 		fi
 
 		#Initialize MYSQL
@@ -126,7 +126,7 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 			exit 1
 		fi
 		
-		sed -i '/\[mysqld\]/a max_connections = 10000' /etc/my.cnf
+		sed -i '/\[mysqld\]/a max_connections = 10000 \n general-log=1' /etc/my.cnf
 	fi
 	
 	#Backup Database
