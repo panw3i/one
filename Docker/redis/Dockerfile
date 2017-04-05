@@ -4,7 +4,7 @@ MAINTAINER "The CentOS Project" <admin@jiobxn.com>
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN yum clean all; yum -y update; yum -y install net-tools bash-completion vim wget make gcc-c++ iptables cronie autoconf zlib-devel openssl-devel bison; yum clean all
 
-cd /usr/local/src \
+RUN cd /usr/local/src \
         && wget -c $(curl -s https://redis.io/ |grep tar.gz |awk -F\' '{print $2}') \
         && wget -c $(curl -s https://www.ruby-lang.org/zh_cn/downloads/ |grep tar.gz |awk -F\" 'NR==1{print $2}')
 
