@@ -11,10 +11,9 @@ RUN cd /usr/local/src \
 RUN cd /usr/local/src \
         && tar zxf ruby-*.tar.gz \
         && tar zxf redis-*.tar.gz \
-        && cd /usr/local/src/cd ruby-* \
-        && cd /usr/local/src/autoconf \
-        && cd /usr/local/src/./configure --disable-install-rdoc \
-        && cd /usr/local/src/make -j8 && make install \
+        && cd /usr/local/src/ruby-* \
+        && autoconf && ./configure --disable-install-rdoc \
+        && make -j8 && make install \
         && `#gem sources -r http://rubygems.org/ -a https://gems.ruby-china.org/` \
         && gem install json_pure \
         && gem update --system \
