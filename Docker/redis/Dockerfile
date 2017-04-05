@@ -4,18 +4,23 @@ MAINTAINER The CentOS Project <admin@jiobxn.com>
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN yum clean all; yum -y update; yum -y install tcl ruby-devel gcc-c++ make net-tools bash-completion vim wget iptables; yum clean all
 
-RUN `#gem sources -r http://rubygems.org/ -a https://gems.ruby-china.org/` \
+cd /usr/local/src \
+        && wget -c $(curl -s https://redis.io/ |grep tar.gz |awk -F\' '{print $2}') \
+        && wget -c $(curl -s https://www.ruby-lang.org/zh_cn/downloads/ |grep tar.gz |awk -F\" 'NR==1{print $2}')
+
+RUN cd /usr/local/src \
+        && tar zxf ruby-*.tar.gz \
+        && tar zxf redis-*.tar.gz \
+        && cd /usr/local/src/cd ruby-* \
+        && cd /usr/local/src/autoconf \
+        && cd /usr/local/src/./configure --disable-install-rdoc \
+        && cd /usr/local/src/make -j8 && make install \
+        && `#gem sources -r http://rubygems.org/ -a https://gems.ruby-china.org/` \
         && gem install json_pure \
         && gem update --system \
         && gem install bundler \
         && `#bundle config mirror.https://rubygems.org https://gems.ruby-china.org` \
-        && gem install redis
-
-RUN cd /usr/local/src \
-        && wget -c $(curl -s http://redis.io/ |grep tar.gz |awk -F\' '{print $2}')
-
-RUN cd /usr/local/src \
-        && tar zxf redis-*.tar.gz \
+        && gem install redis \
         && cd /usr/local/src/redis-* \
         && make -j8 PREFIX=/usr/local/redis \
         && make PREFIX=/usr/local/redis install \
