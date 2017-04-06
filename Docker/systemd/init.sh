@@ -27,7 +27,7 @@ else
 	echo
 	echo -e "MySQL repl: MySQL Master and Slave root passwords to be consistent."
 	echo "1."
-echo "docker run -d --restart always --privileged --ip=192.168.10.131 --net=mynetwork -v /docker/mysql-mini:/var/lib/mysql -v /docker/sql:/docker-entrypoint-initdb.d -e MYSQL_ROOT_PASSWORD=newpass -e MYSQL_BACK=Y -e SERVER_ID=1 -e REPL_IPR=192.168.10.% -e REPL_USER=repl -e REPL_PASSWORD=newpass --hostname mysql --name mysql mysql-mini"
+	echo "docker run -d --restart always --privileged --ip=192.168.10.131 --net=mynetwork -v /docker/mysql-mini:/var/lib/mysql -v /docker/sql:/docker-entrypoint-initdb.d -e MYSQL_ROOT_PASSWORD=newpass -e MYSQL_BACK=Y -e SERVER_ID=1 -e REPL_IPR=192.168.10.% -e REPL_USER=repl -e REPL_PASSWORD=newpass --hostname mysql --name mysql mysql-mini"
 	echo "2."
 	echo "docker run -d --restart always --privileged -v /docker/mysql-mini:/var/lib/mysql -v /docker/mysql-mini2:/xtrabackup -e MYSQL_ROOT_PASSWORD=newpass --name xtrabackup systemd xtrabackup"
 	echo "3."
