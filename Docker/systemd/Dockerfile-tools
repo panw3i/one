@@ -34,7 +34,7 @@ RUN git clone https://github.com/wg/wrk.git
 
 RUN system_v=$(awk '{print $4}' /etc/redhat-release |awk -F. '{print $1}') \
     && xtrabackup_url="https://www.percona.com/downloads/XtraBackup/" \
-    && xtrabackup_v=$(curl -s $xtrabackup_url |grep selected |awk -F\" 'NR==1{print $2}' |awk -F- '{print $3}') \
+    && xtrabackup_v=$(curl -s https://www.percona.com/downloads/XtraBackup/LATEST/ |grep selected |awk -F\" 'NR==1{print $2}' |awk -F- '{print $3}') \
     && xtrabackup_down=$(curl -s $xtrabackup_url/Percona-XtraBackup-$xtrabackup_v/binary/redhat/$system_v/ |sed 's/href=/\n/g' |grep rpm |awk -F\" 'NR==1{print $2}') \
     && yum install https://www.percona.com/$xtrabackup_down perl-Digest-MD5 -y
     
