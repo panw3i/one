@@ -3,7 +3,7 @@ Systemd
 
 ## Example:
 
-    #运行一个默认实例
+    #运行一个默认实例
     docker run -d --restart always --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro --name systemd systemd"
 
     #不停机、不锁表的mysql主从复制。mysql master和slave的root密码要一致
