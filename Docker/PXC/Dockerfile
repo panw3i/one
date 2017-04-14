@@ -18,13 +18,13 @@ RUN chmod +x /*.sh
 
 ENTRYPOINT ["/mysql.sh"]
 
-EXPOSE 3306 4567
+EXPOSE 3306 4567 4568 4444
 
 CMD ["mysqld_safe", "--basedir=/usr"]
 
 # docker build --build-arg mysql_v=57 -t mysql-pxc:5.7 .
-docker run -d --restart always --privileged --network=mynetwork --ip=10.0.0.61 -e REPL_IPR=10.0.0.% -e MYSQL_ROOT_PASSWORD=newpass -e PXC_ADDRESS="10.0.0.61,10.0.0.62,10.0.0.63" -e XPC_INIT=Y --hostname pxc1 --name pxc1 mysql-pxc:5.7
-docker run -d --restart always --privileged --network=mynetwork --ip=10.0.0.62 -e PXC_ADDRESS="10.0.0.61,10.0.0.62,10.0.0.63" --hostname pxc2 --name pxc2 mysql-pxc:5.7
-docker run -d --restart always --privileged --network=mynetwork --ip=10.0.0.63 -e PXC_ADDRESS="10.0.0.61,10.0.0.62,10.0.0.63" --hostname pxc3 --name pxc3 mysql-pxc:5.7
+docker run -d --restart always --network=mynetwork --ip=10.0.0.61 -e REPL_IPR=10.0.0.% -e MYSQL_ROOT_PASSWORD=newpass -e PXC_ADDRESS="10.0.0.61,10.0.0.62,10.0.0.63" -e XPC_INIT=Y --hostname pxc1 --name pxc1 mysql-pxc:5.7
+docker run -d --restart always --network=mynetwork --ip=10.0.0.62 -e PXC_ADDRESS="10.0.0.61,10.0.0.62,10.0.0.63" --hostname pxc2 --name pxc2 mysql-pxc:5.7
+docker run -d --restart always --network=mynetwork --ip=10.0.0.63 -e PXC_ADDRESS="10.0.0.61,10.0.0.62,10.0.0.63" --hostname pxc3 --name pxc3 mysql-pxc:5.7
 # docker logs mysql |grep "PASSWORD"
 # docker run -it --rm mysql-pxc --help
