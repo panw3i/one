@@ -4,7 +4,7 @@ Systemd
 ## Example:
 
     #运行一个默认实例
-    docker run -d --restart always --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro --name systemd systemd"
+    docker run -d --restart always --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro --name systemd systemd
 
     #不停机、不锁表的mysql主从复制。mysql master和slave的root密码要一致
     1. 运行一个master实例：docker run -d --restart always --privileged --ip=192.168.10.131 --net=mynetwork -v /docker/mysql-mini:/var/lib/mysql -v /docker/sql:/docker-entrypoint-initdb.d -e MYSQL_ROOT_PASSWORD=newpass -e MYSQL_BACK=Y -e SERVER_ID=1 -e REPL_IPR=192.168.10.% -e REPL_USER=repl -e REPL_PASSWORD=newpass --hostname mysql --name mysql mysql-mini
