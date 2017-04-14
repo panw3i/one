@@ -102,6 +102,7 @@ if [ "$1" = 'mysqld_safe' ]; then
 	#Repl user
 	if [ "$REPL_IPR" ]; then
 		echo "GRANT REPLICATION SLAVE ON *.*  TO 'repl'@'"$REPL_IPR"' IDENTIFIED BY '"$MYSQL_REPL_PASSWORD"' ;" | "${mysql[@]}"
+		echo -e "MYSQL repl PASSWORD: $MYSQL_REPL_PASSWORD"
 	fi
 	
 	#Import Database
@@ -214,7 +215,6 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 	echo "MYSQL root PASSWORD: $MYSQL_ROOT_PASSWORD"
 	echo "MYSQL root LOCAL PASSWORD: $MYSQL_ROOT_LOCAL_PASSWORD"
 	echo "MYSQL sstuser PASSWORD: $MYSQL_SSTUSER_PASSWORD"
-	echo -e "MYSQL repl PASSWORD: $MYSQL_REPL_PASSWORD"
 	echo
 	mysqld_safe --basedir=/usr --wsrep-new-cluster
 	}
