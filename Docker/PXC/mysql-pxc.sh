@@ -273,7 +273,6 @@ else
 				-e MYSQL_PASSWORD=<zbxpass> \\
 				-e MYSQL_MAX_CONN=[10000] \\
 				-e IPTABLES=<"192.168.10.0/24,10.0.0.0/24"> \\
-				-e MYSQL_GENERAL_LOG=Y \\
 				--hostname mysql-pxc \\
 				--name mysql-pxc mysql-pxc
 	" 
