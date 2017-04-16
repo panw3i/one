@@ -4,15 +4,16 @@ Percona Xtradb Cluster
 ## Example:
 
     #运行一个MySQL 5.7集群（集群的最少节点数，建议为3）
-    docker run -d --restart always --network=mynetwork --ip=10.0.0.61 -e REPL_IPR=10.0.0.% -e MYSQL_ROOT_PASSWORD=newpass -e PXC_ADDRESS="10.0.0.61,10.0.0.62,10.0.0.63" -e XPC_INIT=Y --hostname pxc1 --name pxc1 mysql-pxc:5.7
-    docker run -d --restart always --network=mynetwork --ip=10.0.0.62 -e PXC_ADDRESS="10.0.0.61,10.0.0.62,10.0.0.63" --hostname pxc2 --name pxc2 mysql-pxc:5.7
-    docker run -d --restart always --network=mynetwork --ip=10.0.0.63 -e PXC_ADDRESS="10.0.0.61,10.0.0.62,10.0.0.63" --hostname pxc3 --name pxc3 mysql-pxc:5.7
+    docker run -d --restart always --network=mynetwork --ip=10.0.0.61 -v /docker/pxc1:/var/lib/mysql -e REPL_IPR=10.0.0.% -e MYSQL_ROOT_PASSWORD=newpass -e PXC_ADDRESS="10.0.0.61,10.0.0.62,10.0.0.63" -e XPC_INIT=Y --hostname pxc1 --name pxc1 mysql-pxc:5.7
+    docker run -d --restart always --network=mynetwork --ip=10.0.0.62 -v /docker/pxc2:/var/lib/mysql -e PXC_ADDRESS="10.0.0.61,10.0.0.62,10.0.0.63" --hostname pxc2 --name pxc2 mysql-pxc:5.7
+    docker run -d --restart always --network=mynetwork --ip=10.0.0.63 -v /docker/pxc3:/var/lib/mysql -e PXC_ADDRESS="10.0.0.61,10.0.0.62,10.0.0.63" --hostname pxc3 --name pxc3 mysql-pxc:5.7
 
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
 
 				docker run -d --restart always [--privileged] \\
-				-v /docker/sql:/docker-entrypoint-initdb.d \\          要导入的数据库放这里
+				-v /docker/pxc1:/var/lib/mysql \\                      数据持久化
+				-v /docker/sql:/docker-entrypoint-initdb.d \\          要导入的数据库放这里
 				-e XPC_INIT=<Y> \\                                     初始化集群，在一个集群环境中必须要一台开启初始化
 				-e PXC_ADDRESS=<"10.0.0.61,10.0.0.62,10.0.0.63"> \\    集群地址，逗号分隔
 				-e MYSQL_ROOT_PASSWORD=<newpass> \\                     MySQL远程root密码
