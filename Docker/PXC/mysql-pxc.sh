@@ -233,8 +233,23 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 		fi
 		
 		if [ -z $(grep redhat.xyz /etc/my.cnf) ]; then
+			if [ "$mysql_V" -ge "57" ]; then
+        			echo "Initializing MySQL $mysql_V"
+        			mysqld --initialize-insecure --user=mysql
+			else
+        			if [ "$mysql_V" -eq "56" ]; then
+			       		echo "Initializing MySQL $mysql_V"
+					mysql_install_db --rpm --keep-my-cnf --user=mysql &>/dev/null
+				fi
+
+				if [ "$mysql_V" -eq "55" ]; then
+					echo "Initializing MySQL $mysql_V"
+					mysql_install_db --rpm --user=mysql &>/dev/null
+				fi
+			fi
+
 			init_cnf
-			sleep 20
+			sleep 15
 		fi
 	fi
 	
@@ -258,6 +273,7 @@ else
     echo -e "
     Example:
 				docker run -d --restart always [--privileged] \\
+				-v /docker/pxc-N:/var/lib/mysql \\
 				-v /docker/sql:/docker-entrypoint-initdb.d \\
 				-e XPC_INIT=<Y> \\
 				-e PXC_ADDRESS=<"10.0.0.61,10.0.0.62,10.0.0.63"> \\
