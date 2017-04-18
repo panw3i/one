@@ -2,7 +2,6 @@
 #Update
 WWW="/var/www/html"
 DIR="h5"
-TIME="$(date +%F_%T)"
 BACK-ID="/www-backup/$(date +%F_%T)"
 
 [ ! -d "$WWW/$DIR" ] && echo "none $WWW/$DIR" && exit 1
