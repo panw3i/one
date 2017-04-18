@@ -132,13 +132,13 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 	cat >/etc/my.cnf <<-EOF
 	#redhat.xyz
 	!includedir /etc/my.cnf.d/
-	#5.7#!includedir /etc/percona-xtradb-cluster.conf.d/
+	##5.7	!includedir /etc/percona-xtradb-cluster.conf.d/
 
 	[mysqld]
-	#logbin#log-bin=$(hostname)-bin
-	#logbin#server-id=1
-	#logbin#innodb_flush_log_at_trx_commit=1
-	#logbin#sync_binlog=$SYNC_BINLOG
+	##logbin	log-bin=$(hostname)-bin
+	##logbin	server-id=1
+	##logbin	innodb_flush_log_at_trx_commit=1
+	##logbin	sync_binlog=$SYNC_BINLOG
 
 	max_connections=10000
 	datadir=/var/lib/mysql
@@ -172,38 +172,38 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 	innodb_autoinc_lock_mode=2
 
 	# 5.5、5.6
-	#5.6#innodb_buffer_pool_size        = 100M
-	#5.6#innodb_flush_log_at_trx_commit = 0
-	#5.6#innodb_flush_method            = O_DIRECT
-	#5.6#innodb_log_files_in_group      = 2
-	#5.6#innodb_log_file_size           = 20M
-	#5.6#innodb_file_per_table          = 1
-	#5.6#innodb_autoinc_lock_mode       = 2
+	##5.6	innodb_buffer_pool_size        = 100M
+	##5.6	innodb_flush_log_at_trx_commit = 0
+	##5.6	innodb_flush_method            = O_DIRECT
+	##5.6	innodb_log_files_in_group      = 2
+	##5.6	innodb_log_file_size           = 20M
+	##5.6	innodb_file_per_table          = 1
+	##5.6	innodb_autoinc_lock_mode       = 2
 
 	# 5.5
-	#5.5#innodb_locks_unsafe_for_binlog = 1
+	##5.5	innodb_locks_unsafe_for_binlog = 1
 	EOF
 
 
 	if [ "$mysql_V" -eq "57" ]; then
-		sed -i 's/#5.7#//g' /etc/my.cnf
+		sed -i 's/##5.7//g' /etc/my.cnf
 		if [ "$SYNC_BINLOG" -eq "1" ]; then
 			sed -i '/\[mysqld\]/a sync_binlog=1' /etc/my.cnf
 		fi
 	fi
 	
 	if [ "$mysql_V" -eq "56" ]; then
-		sed -i 's/#5.6#//g' /etc/my.cnf
+		sed -i 's/##5.6//g' /etc/my.cnf
 		if [ "$LOG_BIN" == "Y" ]; then
-			sed -i 's/#logbin#//g' /etc/my.cnf
+			sed -i 's/##logbin//g' /etc/my.cnf
 		fi
 	fi
 		
 	if [ "$mysql_V" -eq "55" ]; then
-		sed -i 's/#5.6#//g' /etc/my.cnf
-		sed -i 's/#5.5#//g' /etc/my.cnf
+		sed -i 's/##5.6//g' /etc/my.cnf
+		sed -i 's/##5.5//g' /etc/my.cnf
 		if [ "$LOG_BIN" == "Y" ]; then
-			sed -i 's/#logbin#//g' /etc/my.cnf
+			sed -i 's/##logbin//g' /etc/my.cnf
 		fi
 	fi
 	}
