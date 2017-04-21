@@ -26,6 +26,6 @@ Percona Xtradb Cluster
 				-e MYSQL_DATABASE=<zabbix> \\                           初始化集群时创建一个数据库
 				-e MYSQL_USER=<zabbix> \\                               初始化集群时创建一个用户
 				-e MYSQL_PASSWORD=<zbxpass> \\                          初始化集群时创建用户的密码
-				-e MYSQL_MAX_CONN=[1000] \\                             最大连接数
+				-e MYSQL_MAX_CONN=[1100] \\                             最大连接数
 				--hostname mysql-pxc \\
 				--name mysql-pxc mysql-pxc
