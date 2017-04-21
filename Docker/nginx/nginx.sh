@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-if [ "$1" = 'nginx' ]; then
-
 : ${NGX_PASS:="jiobxn.com"}
 : ${NGX_CHARSET:="utf-8"}
 : ${FCGI_PATH:="/var/www"}
@@ -17,9 +15,10 @@ if [ "$1" = 'nginx' ]; then
 
 
 
-if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
-	echo "Initialize nginx"
+##-----------------HTTP----------------
 
+http_conf() {
+	echo "Initialize nginx"
 	if [ -f /key/server.crt -a -f /key/server.key ]; then
 		\cp /key/{server.crt,server.key} /usr/local/nginx/conf/
 	else
@@ -29,8 +28,7 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 	fi
 
 
-#global
-
+	#global
 	mkdir /usr/local/nginx/conf/vhost
 	cat >/usr/local/nginx/conf/nginx.conf <<-END
 	#redhat.xyz
@@ -48,6 +46,9 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 	    tcp_nopush      on;
 	    keepalive_timeout  70;
 
+	##acclog_off    access_log off;
+	##errlog_off    error_log off;
+		
 	    charset $NGX_CHARSET;
 
 	    client_max_body_size 0;
@@ -78,9 +79,7 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 	END
 
 
-
-#default
-
+	#default
 	cat >/usr/local/nginx/conf/vhost/default.conf <<-END
 	server {
 	    listen       $HTTP_PORT;#
@@ -107,11 +106,11 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 	##nginx_status    }
 	}
 	END
+}
 
 
-#fcgi
 
-	fcgi_server() {
+fcgi_server() {
 	cat >/usr/local/nginx/conf/vhost/fcgi_$n.conf <<-END
 	server {
 	    listen       $HTTP_PORT;#
@@ -143,6 +142,7 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 	        include        fastcgi_params;
 	        fastcgi_read_timeout    300;
 	        fastcgi_connect_timeout 300;
+	        fastcgi_keep_conn on;
 			
 	##cache        fastcgi_cache cache1;
 	##cache        fastcgi_cache_valid 200      $CACHE_TIME;
@@ -161,12 +161,11 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 	    }
 	}
 	END
-	}
+}
 
 
-#java-php
 
-	java_php_server() {
+java_php_server() {
 	cat >/usr/local/nginx/conf/vhost/java-php_$n.conf <<-END
 	server {
 	    listen       $HTTP_PORT;#
@@ -195,6 +194,7 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 	        proxy_http_version 1.1;
 	        proxy_read_timeout      300;
 	        proxy_connect_timeout   300;
+	        proxy_set_header   Connection "";
 	        proxy_set_header   Host              \$host;
 	        proxy_set_header   X-Real-IP         \$remote_addr;
 	        proxy_set_header   X-Forwarded-Proto \$scheme;
@@ -218,12 +218,11 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 	    }
 	}
 	END
-	}
+}
 
 
-#proxy
 
-	proxy_server() {
+proxy_server() {
 	cat >>/usr/local/nginx/conf/vhost/proxy_$n.conf <<-END
 	server {
 	    listen       $HTTP_PORT;#
@@ -247,13 +246,14 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 	        proxy_http_version 1.1;
 	        proxy_read_timeout      300;
 	        proxy_connect_timeout   300;
+	        proxy_set_header   Connection "";
 	        proxy_set_header   Host              \$proxy_host;
 	        proxy_set_header   X-Real-IP         \$remote_addr;
 	        proxy_set_header   X-Forwarded-Proto \$scheme;
 	        proxy_set_header   X-Forwarded-For   \$proxy_add_x_forwarded_for;
 	        proxy_set_header   Accept-Encoding  "";
-	        sub_filter_once  off;
-	        sub_filter_types * ;
+	        sub_filter_once    off;
+	        sub_filter_types   * ;
 			
             #sub_filter#
 	        sub_filter \$proxy_host \$host;
@@ -278,18 +278,17 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 	    }
 	}
 	END
-	}
+}
 
 
-#domain
 
-	domain_proxy() {
+domain_proxy() {
 	cat >/usr/local/nginx/conf/vhost/domain_$n.conf <<-END
 	server {
 	    listen       $HTTP_PORT;#
 	    listen       $HTTPS_PORT ssl;
 	    #server_name#
-	    server_name *.$(echo $i |awk -F% '{print $1}');
+	    server_name *.$(echo $i |awk -F% '{print $1}'); #$(echo $i |awk -F% '{print $1}')
 
 	    ssl_certificate      /usr/local/nginx/conf/server.crt;
 	    ssl_certificate_key  /usr/local/nginx/conf/server.key;
@@ -317,13 +316,14 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
             proxy_http_version 1.1;
             proxy_read_timeout      300;
             proxy_connect_timeout   300;
+	        proxy_set_header   Connection "";
             proxy_set_header   Host              \$proxy_host;
             proxy_set_header   X-Real-IP         \$remote_addr;
             proxy_set_header   X-Forwarded-Proto \$scheme;
             proxy_set_header   X-Forwarded-For   \$proxy_add_x_forwarded_for;
             proxy_set_header   Accept-Encoding  "";
-            sub_filter_once  off;
-            sub_filter_types * ;
+            sub_filter_once    off;
+            sub_filter_types   * ;
 			
             #sub_filter#
             sub_filter https:// http://;
@@ -354,13 +354,11 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
             location = /50x.html {return 301 https://cn.bing.com;}
 	}
 	END
-	}
+}
 
 
 
-#other
-
-	other_settings() {
+http_other() {
 	for i in $(echo $i |awk -F% '{print $2}' |sed 's/,/\n/g'); do
 		#别名目录
 		if [ -n "$(echo $i |grep 'alias=' |grep '|')" ]; then
@@ -414,7 +412,7 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 		
 		#启用缓存
 		if [ -n "$(echo $i |grep 'cache=')" ]; then
-			sed -i '/##cache//g' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
+			sed -i 's/##cache//g' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
 		fi
 		
 		#上游主机头
@@ -424,9 +422,21 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 			sed -i '/'$NGX_HEADER';/'$header';/g' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
 		fi
 		
-		#ip hash
-		if [ -n "$(echo $i |grep 'ip_hash=')" ]; then
-			sed -i '/upstream '$project_name'-lb-'$n'/ a \        ip_hash;' /usr/local/nginx/conf/nginx.conf
+		#负载均衡
+		if [ -n "$(echo $i |grep 'http_lb=')" ]; then
+			http_lb="$(echo $i |grep 'lb=' |awk -F= '{print $2}')"
+		
+			if [ "$http_lb" == "ip_hash" ]; then
+				sed -i '/upstream '$project_name'-lb-'$n'/ a \        ip_hash;' /usr/local/nginx/conf/nginx.conf
+			fi
+		
+			if [ "$http_lb" == "hash" ]; then
+				sed -i '/upstream '$project_name'-lb-'$n'/ a \        hash $remote_addr;' /usr/local/nginx/conf/nginx.conf
+			fi
+		
+			if [ "$http_lb" == "least_conn" ]; then
+				sed -i '/upstream '$project_name'-lb-'$n'/ a \        least_conn;' /usr/local/nginx/conf/nginx.conf
+			fi
 		fi
 		
 		#上游HTTPS
@@ -474,23 +484,37 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 			
 			sed -i '/#sub_filter#/ a \        sub_filter '$sub_s'  '$sub_d';' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
 		fi
+		
+		#日志
+		if [ -n "$(echo $i |grep 'log=')" ]; then
+			log="$(echo $i |grep 'log=' |awk -F= '{print $2}')"
+			logfile="$(grep "server_name " /usr/local/nginx/conf/vhost/${project_name}_$n.conf |awk -F# '{print $2}' |sort |head -1)"
+			
+			if [ "$log" == "Y" ]; then
+				sed -i '/#server_name#/ i \    access_log logs/'$logfile'-access.log;' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
+				sed -i '/#server_name#/ i \    error_log logs/'$logfile'-error.log;' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
+			fi
+			
+			if [ "$log" == "N" ]; then
+				sed -i '/#server_name#/ i \    access_log off;' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
+				sed -i '/#server_name#/ i \    error_log off;' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
+			fi 
+		fi
 	done
-	}
+}
 
 
 
-#basic
-
-	basic_settings() {
+http_basic() {
 	if [ -n "$(echo $i |grep '%')" ]; then
-	echo "% yes"
+		echo "% yes"
 		if [ -n "$(echo $i |awk -F% '{print $1}' |grep '|')" ]; then
 			for x in $(echo $i |awk -F% '{print $1}' |awk -F'|' '{print $1}' |sed 's/,/\n/g'); do
-				sed -i '/#server_name#/ a \    server_name '$x';' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
+				sed -i '/#server_name#/ a \    server_name '$x'; #'$x'' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
 			done
 
 			if [ -n "$(echo $i |awk -F% '{print $1}' |awk -F'|' '{print $2}' |grep ",")" ]; then
-				sed -i '/#upstream#/ a \    upstream '$project_name'-lb-'$n' {\n\    }\n' /usr/local/nginx/conf/nginx.conf
+				sed -i '/#upstream#/ a \    upstream '$project_name'-lb-'$n' {\n\        keepalive 20;\n\    }\n' /usr/local/nginx/conf/nginx.conf
 
 				for y in $(echo $i |awk -F% '{print $1}' |awk -F'|' '{print $2}' |sed 's/,/\n/g'); do
 					sed -i '/upstream '$project_name'-lb-'$n'/ a \        server '$y';' /usr/local/nginx/conf/nginx.conf
@@ -499,10 +523,10 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 				sed -i 's/'$project_name'-lb-'$n'/'$(echo $i |awk -F% '{print $1}' |awk -F'|' '{print $2}')'/' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
 			fi
 		else
-			sed -i '/#server_name#/ a \    server_name localhost;' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
+			sed -i '/#server_name#/ a \    server_name localhost; #localhost' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
 
 			if [ -n "$(echo $i |awk -F% '{print $1}' |grep ",")" ]; then
-				sed -i '/#upstream/a \    upstream '$project_name'-lb-'$n' {\n\    }\n' /usr/local/nginx/conf/nginx.conf
+				sed -i '/#upstream#/a \    upstream '$project_name'-lb-'$n' {\n\        keepalive 20;\n\    }\n' /usr/local/nginx/conf/nginx.conf
 
 				for x in $(echo $i |awk -F% '{print $1}' |sed 's/,/\n/g'); do
 					sed -i '/upstream '$project_name'-lb-'$n'/ a \        server '$x';' /usr/local/nginx/conf/nginx.conf
@@ -512,16 +536,16 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 			fi
 		fi
 
-		other_settings
+		http_other
 	else
-	echo "% no"
+		echo "% no"
 		if [ -n "$(echo $i |grep '|')" ]; then
 			for x in $(echo $i |awk -F'|' '{print $1}' |sed 's/,/\n/g'); do
-				sed -i '/#server_name#/ a \    server_name '$x';' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
+				sed -i '/#server_name#/ a \    server_name '$x'; #'$x'' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
 			done
 
 			if [ -n "$(echo $i |awk -F'|' '{print $2}' |grep ",")" ]; then
-				sed -i '/#upstream#/ a \    upstream '$project_name'-lb-'$n' {\n\    }\n' /usr/local/nginx/conf/nginx.conf
+				sed -i '/#upstream#/ a \    upstream '$project_name'-lb-'$n' {\n\        keepalive 20;\n\    }\n' /usr/local/nginx/conf/nginx.conf
 
 				for y in $(echo $i |awk -F'|' '{print $2}' |sed 's/,/\n/g'); do
 					sed -i '/upstream '$project_name'-lb-'$n'/ a \        server '$y';' /usr/local/nginx/conf/nginx.conf
@@ -530,10 +554,10 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 				sed -i 's/'$project_name'-lb-'$n'/'$(echo $i |awk -F'|' '{print $2}')'/' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
 			fi
 		else
-			sed -i '/#server_name#/ a \    server_name localhost;' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
+			sed -i '/#server_name#/ a \    server_name localhost; #localhost' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
 
 			if [ -n "$(echo $i |grep ",")" ]; then
-				sed -i '/#upstream#/ a \    upstream '$project_name'-lb-'$n' {\n\    }\n' /usr/local/nginx/conf/nginx.conf
+				sed -i '/#upstream#/ a \    upstream '$project_name'-lb-'$n' {\n\        keepalive 20;\n\    }\n' /usr/local/nginx/conf/nginx.conf
 
 				for x in $(echo $i |sed 's/,/\n/g'); do
 					sed -i '/upstream '$project_name'-lb-'$n'/ a \        server '$x';' /usr/local/nginx/conf/nginx.conf
@@ -543,81 +567,204 @@ if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
 			fi
 		fi
 	fi
+}
+
+
+
+##-------------------STREAM------------------
+
+stream_conf() {
+	cat >/usr/local/nginx/conf/nginx.conf <<-END
+	#redhat.xyz
+	worker_processes  $(nproc);
+
+	events {
+	    worker_connections  $((`nproc`*10240));
 	}
 
+	stream {
+	    #upstream#
+
+	    #server#
+	}
+	daemon off;
+	END
+}
 
 
-	#FCGI
-	if [ "$FCGI_SERVER" ]; then
+
+stream_server() {
+	if [ -n "$(echo $i |grep '%')" ]; then
+		echo "% yes"
+		if [ -n "$(echo $i |awk -F% '{print $1}' |grep '|')" ]; then
+			PORT=$(echo $i |awk -F% '{print $1}' |awk -F'|' '{print $1}')
+
+			if [ -n "$(echo $i |awk -F% '{print $1}' |awk -F'|' '{print $2}' |grep ",")" ]; then
+				sed -i '/#upstream#/ a \    upstream backend-lb-'$n' {\n\    }\n' /usr/local/nginx/conf/nginx.conf
+
+				for y in $(echo $i |awk -F% '{print $1}' |awk -F'|' '{print $2}' |sed 's/,/\n/g'); do
+					sed -i '/upstream backend-lb-'$n'/ a \        server '$y';' /usr/local/nginx/conf/nginx.conf
+				done
+				
+				sed -i '/#server#/ a \    server {\n\        #backend-lb-'$n'#\n\        listen '$PORT';#'$n'\n\        proxy_pass backend-lb-'$n';\n\    }\n' /usr/local/nginx/conf/nginx.conf
+			else
+				sed -i '/#server#/ a \    server {\n\        #backend-lb-'$n'#\n\        listen '$PORT';#'$n'\n\        proxy_pass '$(echo $i |awk -F% '{print $1}' |awk -F'|' '{print $2}')';\n\    }\n' /usr/local/nginx/conf/nginx.conf
+			fi
+		else
+			echo "error.." && exit 1
+		fi
+	else
+		echo "% no"
+		if [ -n "$(echo $i |grep '|')" ]; then
+			PORT=$(echo $i |awk -F'|' '{print $1}')
+
+			if [ -n "$(echo $i |awk -F'|' '{print $2}' |grep ",")" ]; then
+				sed -i '/#upstream#/ a \    upstream backend-lb-'$n' {\n\    }\n' /usr/local/nginx/conf/nginx.conf
+
+				for y in $(echo $i |awk -F'|' '{print $2}' |sed 's/,/\n/g'); do
+					sed -i '/upstream backend-lb-'$n'/ a \        server '$y';' /usr/local/nginx/conf/nginx.conf
+				done
+				
+				sed -i '/#server#/ a \    server {\n\        #backend-lb-'$n'#\n\        listen '$PORT';#'$n'\n\        proxy_pass backend-lb-'$n';\n\    }\n' /usr/local/nginx/conf/nginx.conf
+			else
+				sed -i '/#server#/ a \    server {\n\        #backend-lb-'$n'#\n\        listen '$PORT';#'$n'\n\        proxy_pass '$(echo $i |awk -F'|' '{print $2}')';\n\    }\n' /usr/local/nginx/conf/nginx.conf
+			fi
+		else
+			echo "error.." && exit 1
+		fi
+	fi
+}
+	
+
+
+stream_other() {
+	for i in $(echo $i |awk -F% '{print $2}' |sed 's/,/\n/g'); do		
+		#负载均衡
+		if [ -n "$(echo $i |grep 'stream_lb=')" ]; then
+			stream_lb="$(echo $i |grep 'stream_lb=' |awk -F= '{print $2}')"
+		
+			if [ "$stream_lb" == "hash" ]; then
+				sed -i '/upstream backend-lb-'$n'/ a \        hash $remote_addr;' /usr/local/nginx/conf/nginx.conf
+			fi
+			
+			if [ "$stream_lb" == "least_conn" ]; then
+				sed -i '/upstream backend-lb-'$n'/ a \        least_conn;' /usr/local/nginx/conf/nginx.conf
+			fi
+		fi
+		
+		#后端连接超时(1m)
+		if [ -n "$(echo $i |grep 'conn_timeout=')" ]; then
+			connect_timeout="$(echo $i |grep 'connect_timeout=' |awk -F= '{print $2}')"
+			sed -i '/#backend-lb-'$n'#/ a \        proxy_connect_timeout '$connect_timeout';' /usr/local/nginx/conf/nginx.conf
+		fi
+		
+		#空闲超时(10m)
+		if [ -n "$(echo $i |grep 'proxy_timeout=')" ]; then
+			proxy_timeout="$(echo $i |grep 'proxy_timeout=' |awk -F= '{print $2}')"
+			sed -i '/#backend-lb-'$n'#/ a \        proxy_timeout '$proxy_timeout';' /usr/local/nginx/conf/nginx.conf
+		fi
+		
+		#UDP
+		if [ -n "$(echo $i |grep 'udp=')" ]; then
+			sed -i 's/'$PORT';#'$n'/'$PORT' udp;#'$n'/' /usr/local/nginx/conf/nginx.conf
+		fi
+	done
+}
+
+
+###start
+
+if [ "$1" = 'nginx' ]; then
+  if [ -z "$(grep "redhat.xyz" /usr/local/nginx/conf/nginx.conf)" ]; then
+
+	if [ "$STREAM_SERVER" ]; then
+		stream_conf
+		
 		n=0
-		for i in $(echo "$FCGI_SERVER" |sed 's/;/\n/g'); do
+		for i in $(echo "$STREAM_SERVER" |sed 's/;/\n/g'); do
 			n=$(($n+1))
-			fcgi_server
-			project_name="fcgi"
-			ngx_header="host"
-			basic_settings
+			stream_server
+			stream_other
 		done
-		\rm /usr/local/nginx/conf/vhost/default.conf
+	else
+		http_conf
+
+
+		#FCGI
+		if [ "$FCGI_SERVER" ]; then
+			n=0
+			for i in $(echo "$FCGI_SERVER" |sed 's/;/\n/g'); do
+				n=$(($n+1))
+				fcgi_server
+				project_name="fcgi"
+				ngx_header="host"
+				http_basic
+			done
+			\rm /usr/local/nginx/conf/vhost/default.conf
+		fi
+
+
+		#JAVA_PHP
+		if [ "$JAVA_PHP_SERVER" ]; then
+			n=0
+			for i in $(echo "$JAVA_PHP_SERVER" |sed 's/;/\n/g'); do
+				n=$(($n+1))
+				java_php_server
+				project_name="java-php"
+				ngx_header="host"
+				http_basic
+			done
+			\rm /usr/local/nginx/conf/vhost/default.conf 2>/dev/null |echo
+		fi
+
+
+		#PROXY
+		if [ "$PROXY_SERVER" ]; then
+			n=0
+			for i in $(echo "$PROXY_SERVER" |sed 's/;/\n/g'); do
+				n=$(($n+1))
+				proxy_server
+				project_name="proxy"
+				ngx_header="proxy_host"
+				http_basic
+			done
+			\rm /usr/local/nginx/conf/vhost/default.conf 2>/dev/null |echo
+		fi
+
+
+		#DOMAIN
+		if [ "$DOMAIN_PROXY" ]; then
+			n=0
+			for i in $(echo "$DOMAIN_PROXY" |sed 's/;/\n/g'); do
+				n=$(($n+1))
+				domain_proxy
+				project_name="domain"
+				ngx_header="proxy_host"
+				http_other
+			done
+			\rm /usr/local/nginx/conf/vhost/default.conf 2>/dev/null |echo
+		fi
+
+
+		if [ "$ACCLOG_OFF" ]; then
+			sed -i 's/##acclog_off//' /usr/local/nginx/conf/nginx.conf
+		fi
+
+		if [ "$ERRLOG_OFF" ]; then
+			sed -i 's/##errlog_off//' /usr/local/nginx/conf/nginx.conf
+		fi
+
+		if [ "$DEFAULT_SERVER" ]; then
+			sed -i 's/##default_server//g' /usr/local/nginx/conf/vhost/*.conf
+		fi
+
+		if [ "$NGX_USER" ]; then
+			sed -i 's/##nginx_status//g' /usr/local/nginx/conf/vhost/default.conf
+			echo "$NGX_USER:$(openssl passwd -apr1 $NGX_PASS)" >> /usr/local/nginx/.htpasswd
+			echo "Nginx user AND password: $NGX_USER  $NGX_PASS"
+		fi
 	fi
-
-
-
-	#JAVA_PHP
-	if [ "$JAVA_PHP_SERVER" ]; then
-		n=0
-		for i in $(echo "$JAVA_PHP_SERVER" |sed 's/;/\n/g'); do
-			n=$(($n+1))
-			java_php_server
-			project_name="java-php"
-			ngx_header="host"
-			basic_settings
-		done
-		\rm /usr/local/nginx/conf/vhost/default.conf 2>/dev/null |echo
-	fi
-
-
-
-	#PROXY
-	if [ "$PROXY_SERVER" ]; then
-		n=0
-		for i in $(echo "$PROXY_SERVER" |sed 's/;/\n/g'); do
-			n=$(($n+1))
-			proxy_server
-			project_name="proxy"
-			ngx_header="proxy_host"
-			basic_settings
-		done
-		\rm /usr/local/nginx/conf/vhost/default.conf 2>/dev/null |echo
-	fi
-
-
-
-	#DOMAIN
-	if [ "$DOMAIN_PROXY" ]; then
-		n=0
-		for i in $(echo "$DOMAIN_PROXY" |sed 's/;/\n/g'); do
-			n=$(($n+1))
-			domain_proxy
-			project_name="domain"
-			ngx_header="proxy_host"
-			other_settings
-		done
-		\rm /usr/local/nginx/conf/vhost/default.conf 2>/dev/null |echo
-	fi
-
-
-
-	if [ "$DEFAULT_SERVER" ]; then
-		sed -i 's/##default_server//g' /usr/local/nginx/conf/vhost/*.conf
-	fi
-
-
-	if [ "$NGX_USER" ]; then
-		sed -i 's/##nginx_status//g' /usr/local/nginx/conf/vhost/default.conf
-		echo "$NGX_USER:$(openssl passwd -apr1 $NGX_PASS)" >> /usr/local/nginx/.htpasswd
-		echo "Nginx user AND password: $NGX_USER  $NGX_PASS"
-	fi
-fi
+  fi
 
 	echo "Start ****"
 	exec "$@"
@@ -648,22 +795,30 @@ else
 				-e CACHE_TIME=[8h] \\
 				-e CACHE_SIZE=[4g] \\
 				-e CACHE_MEM=[物理内存的%10] \\
-				-e alias=</boy|/mp4> \\
-				-e root=<wordpress> \\
-				-e http_port=<8080> \\
-				-e https_port=<8443> \\
-				-e crt_key=<jiobxn.crt|jiobxn.key> \\
-				-e full_https=<Y> \\
-				-e charset=<gb2312> \\
-				-e cache=<Y> \\
-				-e header=<host> \\
-				-e ip_hash=<Y> \\
-				-e backend_https=<Y> \\
-				-e dns=<223.5.5.5> \\
-				-e tag=<9999> \\
-				-e error=<https://www.bing.com> \\
-				-e auth=<admin|passwd> \\
-				-e filter=<.google.com|.fqhub.com> \\
+				-e ACCLOG_OFF=<Y> \\
+				-e ERRLOG_OFF=<Y> \\
+				   alias=</boy|/mp4> \\
+				   root=<wordpress> \\
+				   http_port=<8080> \\
+				   https_port=<8443> \\
+				   crt_key=<jiobxn.crt|jiobxn.key> \\
+				   full_https=<Y> \\
+				   charset=<gb2312> \\
+				   cache=<Y> \\
+				   header=<host> \\
+				   http_lb=<ip_hash|hash|least_conn> \\
+				   backend_https=<Y> \\
+				   dns=<223.5.5.5> \\
+				   tag=<9999> \\
+				   error=<https://www.bing.com> \\
+				   auth=<admin|passwd> \\
+				   filter=<.google.com|.fqhub.com> \\
+				   log=<N|Y> \\
+				-e STREAM_SERVER=<3306|192.17.0.6:3306,192.17.0.7:3306[%<Other options>];53|8.8.8.8:53%udp=Y> \\
+				   stream_lb=<hash|least_conn> \\
+				   conn_timeout=[1m] \\
+				   proxy_timeout=[10m] \\
+				   udp=<Y> \\
 				--hostname nginx \\
 				--name nginx nginx
 	" 
