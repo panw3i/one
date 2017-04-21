@@ -229,7 +229,7 @@ proxy_server() {
 	    listen       $HTTPS_PORT ssl;
 	    #server_name#
 
-		##full_https    if (\$scheme = http) { return 301 https://\$host\$request_uri;}
+	##full_https    if (\$scheme = http) { return 301 https://\$host\$request_uri;}
 
 	    ssl_certificate      /usr/local/nginx/conf/server.crt;
 	    ssl_certificate_key  /usr/local/nginx/conf/server.key;
@@ -255,7 +255,7 @@ proxy_server() {
 	        sub_filter_once    off;
 	        sub_filter_types   * ;
 			
-            #sub_filter#
+	        #sub_filter#
 	        sub_filter \$proxy_host \$host;
 			
 	##cache        proxy_cache cache1;
@@ -310,13 +310,13 @@ domain_proxy() {
             #if (\$host ~* "^(.*).$(echo $i |awk -F% '{print $1}')$") {set \$domains \$1;}
             #if (\$host ~* "^(.*)-(.*).$(echo $i |awk -F% '{print $1}')$" ) {set \$domains \$1.\$2;}
             if (\$host ~* "^(.*)$DOMAIN_TAG(.*).$(echo $i |awk -F% '{print $1}')$" ) {set \$domains \$1\$2;}	#host rule
-            if (\$domains = "t66y.com" ) {charset gb2312;}                                    					#t66y charset
+            if (\$domains = "t66y.com" ) {charset gb2312;}                                    			#t66y charset
             
             proxy_pass http://\$domains;
             proxy_http_version 1.1;
             proxy_read_timeout      300;
             proxy_connect_timeout   300;
-	        proxy_set_header   Connection "";
+            proxy_set_header   Connection "";
             proxy_set_header   Host              \$proxy_host;
             proxy_set_header   X-Real-IP         \$remote_addr;
             proxy_set_header   X-Forwarded-Proto \$scheme;
@@ -805,7 +805,7 @@ else
 				   full_https=<Y> \\
 				   charset=<gb2312> \\
 				   cache=<Y> \\
-				   header=<host> \\
+				   header=<host|http_host|proxy_host> \\
 				   http_lb=<ip_hash|hash|least_conn> \\
 				   backend_https=<Y> \\
 				   dns=<223.5.5.5> \\
