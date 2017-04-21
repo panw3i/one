@@ -4,26 +4,26 @@ Nginx
 ## Example:
 ### 七层
 
-    #运行一个FCGI模式实例
-    docker run -d --restart always -p 10080:80 -p 10443:443 -v /docker/www:/usr/local/nginx/html -e FCGI_SERVER="php.redhat.xyz|192.17.0.5:9000" --hostname php --name php nginx
+	#运行一个FCGI模式实例
+	docker run -d --restart always -p 10080:80 -p 10443:443 -v /docker/www:/usr/local/nginx/html -e FCGI_SERVER="php.redhat.xyz|192.17.0.5:9000" --hostname php --name php nginx
 
-    #运行两个JAVA_PHP模式实例
-    docker run -d --restart always -p 10081:80 -p 10441:443 -v /docker/webapps:/usr/local/nginx/html -e JAVA_PHP_SERVER="java.redhat.xyz|172.17.0.6:8080" --hostname java --name java nginx
+	#运行两个JAVA_PHP模式实例
+	docker run -d --restart always -p 10081:80 -p 10441:443 -v /docker/webapps:/usr/local/nginx/html -e JAVA_PHP_SERVER="java.redhat.xyz|172.17.0.6:8080" --hostname java --name java nginx
 
-    docker run -d --restart always -p 10082:80 -p 10442:443 -v /docker/www:/usr/local/nginx/html -e JAVA_PHP_SERVER="apache.redhat.xyz|172.17.0.7" --hostname apache --name apache nginx
+	docker run -d --restart always -p 10082:80 -p 10442:443 -v /docker/www:/usr/local/nginx/html -e JAVA_PHP_SERVER="apache.redhat.xyz|172.17.0.7" --hostname apache --name apache nginx
 
-    #运行一个PROXY模式实例
-    docker run -d --restart always -p 10083:80 -p 10443:443 -e PROXY_SERVER="g.redhat.xyz|www.google.co.id%backend_https=y" --hostname google --name proxy nginx
+	#运行一个PROXY模式实例
+	docker run -d --restart always -p 10083:80 -p 10443:443 -e PROXY_SERVER="g.redhat.xyz|www.google.co.id%backend_https=y" --hostname google --name proxy nginx
 
-    #运行一个DOMAIN模式实例
-    docker run -d --restart always -p 10084:80 -p 10444:443 -e DOMAIN_PROXY="fqhub.com%backend_https=y" --hostname fqhub --name nginx nginx
+	#运行一个DOMAIN模式实例
+	docker run -d --restart always -p 10084:80 -p 10444:443 -e DOMAIN_PROXY="fqhub.com%backend_https=y" --hostname fqhub --name nginx nginx
 
 四种模式可以一起用，需要使用"root=project_directory"区分不同项目目录
 
 ### 四层
 
-    #运行一个TCP模式实例
-    docker run -d --restart always -p 3306:3306 --network=mynetwork --ip=10.0.0.2 -e STREAM_SERVER="3306|10.0.0.61:3306,10.0.0.62:3306,10.0.0.63:3306%stream_lb=least_conn" --hostname nginx-tcp --name nginx-tcp nginx
+	#运行一个TCP模式实例
+	docker run -d --restart always -p 3306:3306 --network=mynetwork --ip=10.0.0.2 -e STREAM_SERVER="3306|10.0.0.61:3306,10.0.0.62:3306,10.0.0.63:3306%stream_lb=least_conn" --hostname nginx-tcp --name nginx-tcp nginx
 
 七层负载均衡和四层负载均衡，在一个容器中只能有一种存在
 
@@ -48,7 +48,7 @@ Nginx
 
 默认选项：
 
-    #HTTP
+	#HTTP
 	DEFAULT_SERVER=<jiobxn.com>						#在多个站点中选择一个默认站点，IP访问的站点
 	NGX_PASS=[jiobxn.com]							# /nginx_status 密码
 	NGX_USER=<nginx>							# /nginx_status 用户名，默认为空
@@ -63,7 +63,7 @@ Nginx
 	CACHE_SIZE=[4g]								#用于缓存的磁盘大小
 	CACHE_MEM=[物理内存的%10]						    #用于缓存的内存大小
 
-    其他选项：作用于四种工作模式，与基本选项之间以"%"为分隔符，选项之间用","为分隔符，参数之间用"|"为分隔符，用于替换某种模式下的默认选项
+	其他选项：作用于四种工作模式，与基本选项之间以"%"为分隔符，选项之间用","为分隔符，参数之间用"|"为分隔符，用于替换某种模式下的默认选项
 
 		alias=</boy|/mp4>						#别名目录，别名/boy 容器目录/mp4，用于FCGI、JAVA_PHP和PROXY
 		root=<wordpress>						#网站根目录，html/wordpress
@@ -82,7 +82,7 @@ Nginx
 		auth=<admin|passwd>						#用户认证，用于PROXY和DOMAIN模式
 		filter=<.google.com|.fqhub.com>					#字符替换，用于PROXY和DOMAIN模式
 
-    #TCP/UDP 其他选项
+	#TCP/UDP 其他选项
 		stream_lb=<hash|least_conn>					#负载均衡模式
 		conn_timeout=[1m]						#后端连接超时，默认1分钟
 		proxy_timeout=[10m]						#空闲超时，默认10分钟
