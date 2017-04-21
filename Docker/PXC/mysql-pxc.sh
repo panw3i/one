@@ -8,7 +8,7 @@ if [ "$1" = 'mysqld_safe' ]; then
 : ${MYSQL_SSTUSER_PASSWORD:=passw0rd}
 : ${MYSQL_REPL_PASSWORD:=123456}
 : ${SYNC_BINLOG:=0}
-: ${MYSQL_MAX_CONN:=1100}
+: ${MYSQL_MAX_CONN:=800}
 
 
 	#Get mysql version
@@ -291,7 +291,7 @@ else
 				-e MYSQL_DATABASE=<zabbix> \\
 				-e MYSQL_USER=<zabbix> \\
 				-e MYSQL_PASSWORD=<zbxpass> \\
-				-e MYSQL_MAX_CONN=[1100] \\
+				-e MYSQL_MAX_CONN=[800] \\
 				-e IPTABLES=<"192.168.10.0/24,10.0.0.0/24"> \\
 				--hostname mysql-pxc \\
 				--name mysql-pxc mysql-pxc
