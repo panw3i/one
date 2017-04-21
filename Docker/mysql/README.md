@@ -26,7 +26,7 @@ MySQL
 				-e MYSQL_PASSWORD=<zbxpass> \\       mysql用户的密码
 				-e MYSQL_BACK=<Y> \\                 开启自动备份数据库，默认只保留3天的备份
 				-e MYSQL_PORT=[3306] \\              mysql服务端口
-				-e MYSQL_MAX_CONN=[10000] \\         mysql最大连接数
+				-e MYSQL_MAX_CONN=[800] \\         mysql最大连接数
 				-e SERVER_ID=<1> \\                  启用mysql主从模式，在主从模式下备份的数据库要想导入，必须设置SERVER ID
 				-e REPL_IPR=<192.168.10.%> \\        允许repl用户从哪些IP地址来连接mysql，如果没有指定REPL_USER用户会自动创建一个repl用户和随机密码
 				-e REPL_USER=<repl> \\               创建repl用户
