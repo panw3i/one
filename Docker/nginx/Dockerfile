@@ -2,7 +2,7 @@ FROM centos:latest
 MAINTAINER "The CentOS Project" <admin@jiobxn.com>
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN yum clean all; yum -y update; yum -y install net-tools bash-completion vim wget make gcc-c++ iptables cronie geoip-devel libxml2-devel libxslt-devel gd-devel; yum clean all
+RUN yum clean all; yum -y update; yum -y install net-tools iproute bash-completion vim wget make gcc-c++ iptables cronie geoip-devel libxml2-devel libxslt-devel gd-devel; yum clean all
 
 RUN cd /usr/local/src \
         && pcre_down="https://sourceforge.net/projects/pcre/files/pcre/" && pcre_v=$(curl -s $pcre_down |grep "tr title" |awk -F\" 'NR==1{print $2}') && wget -c "$pcre_down$pcre_v/pcre-$pcre_v.tar.gz" \
@@ -65,7 +65,7 @@ RUN cd /usr/local/src \
         && rm -rf /usr/local/src/* \
         && ln -s /usr/local/nginx/sbin/* /usr/local/bin/
 
-VOLUME /usr/local/nginx/html /key
+VOLUME /usr/local/nginx/html /key /usr/local/nginx/logs
 
 COPY nginx.sh /nginx.sh
 RUN chmod +x /nginx.sh
