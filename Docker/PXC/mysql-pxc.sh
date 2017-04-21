@@ -8,7 +8,7 @@ if [ "$1" = 'mysqld_safe' ]; then
 : ${MYSQL_SSTUSER_PASSWORD:=passw0rd}
 : ${MYSQL_REPL_PASSWORD:=123456}
 : ${SYNC_BINLOG:=0}
-: ${MYSQL_MAX_CONN:=1000}
+: ${MYSQL_MAX_CONN:=1100}
 
 
 	#Get mysql version
