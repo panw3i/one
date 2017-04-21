@@ -8,6 +8,7 @@ if [ "$1" = 'mysqld_safe' ]; then
 : ${MYSQL_SSTUSER_PASSWORD:=passw0rd}
 : ${MYSQL_REPL_PASSWORD:=123456}
 : ${SYNC_BINLOG:=0}
+: ${MYSQL_MAX_CONN:=1000}
 
 
 	#Get mysql version
@@ -140,7 +141,7 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 	##logbin	innodb_flush_log_at_trx_commit=1
 	##logbin	sync_binlog=$SYNC_BINLOG
 
-	max_connections=10000
+	max_connections=$MYSQL_MAX_CONN
 	datadir=/var/lib/mysql
 	user=mysql
 	log-error=/var/log/mysqld.log
@@ -170,6 +171,9 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 	default_storage_engine=InnoDB
 	# This InnoDB autoincrement locking mode is a requirement for Galera
 	innodb_autoinc_lock_mode=2
+
+        # number of threads that can apply replication transactions in parallel
+        wsrep_slave_threads=$(nproc)
 
 	# 5.5、5.6
 	##5.6	innodb_buffer_pool_size        = 100M
@@ -287,7 +291,7 @@ else
 				-e MYSQL_DATABASE=<zabbix> \\
 				-e MYSQL_USER=<zabbix> \\
 				-e MYSQL_PASSWORD=<zbxpass> \\
-				-e MYSQL_MAX_CONN=[10000] \\
+				-e MYSQL_MAX_CONN=[1000] \\
 				-e IPTABLES=<"192.168.10.0/24,10.0.0.0/24"> \\
 				--hostname mysql-pxc \\
 				--name mysql-pxc mysql-pxc
