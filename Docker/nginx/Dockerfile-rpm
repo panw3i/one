@@ -2,9 +2,9 @@ FROM centos:latest
 MAINTAINER "The CentOS Project" <admin@jiobxn.com>
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN yum clean all; yum -y install epel-release; yum -y update; yum -y install nginx net-tools bash-completion vim wget iptables cronie; yum clean all
+RUN yum clean all; yum -y install epel-release; yum -y update; yum -y install nginx net-tools iproute bash-completion vim wget iptables cronie; yum clean all
 
-VOLUME /usr/share/nginx/html /key
+VOLUME /usr/share/nginx/html /key /var/log/nginx
 
 COPY nginx-rpm.sh /nginx-rpm.sh
 RUN chmod +x /nginx-rpm.sh
