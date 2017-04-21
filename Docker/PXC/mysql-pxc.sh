@@ -291,7 +291,7 @@ else
 				-e MYSQL_DATABASE=<zabbix> \\
 				-e MYSQL_USER=<zabbix> \\
 				-e MYSQL_PASSWORD=<zbxpass> \\
-				-e MYSQL_MAX_CONN=[1000] \\
+				-e MYSQL_MAX_CONN=[1100] \\
 				-e IPTABLES=<"192.168.10.0/24,10.0.0.0/24"> \\
 				--hostname mysql-pxc \\
 				--name mysql-pxc mysql-pxc
