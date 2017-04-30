@@ -1,0 +1,23 @@
+yum clean all; yum -y install epel-release; yum -y update
+yum -y install bash-completion vim aria2 axel wget openssl-devel bind-utils iptables-services iftop net-tools ntp mtr nmap tcpdump pciutils setroubleshoot setools make gcc-c++ autoconf automake unzip bzip2 zip mailx bc at expect telnet git lrzsz lsof bridge-utils dos2unix
+
+systemctl disable NetworkManager firewalld
+\cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+systemctl enable iptables
+
+wget https://github.com/jiobxn/one/raw/master/Script/scan.sh
+chmod u+x /usr/local/sbin/scan.sh
+
+cat >/var/spool/cron/root <<-EOF
+MAILTO=' '
+58 23 * * * /usr/bin/yum update -y
+* * * * * /bin/bash /usr/local/sbin/scan.sh
+* * * * * /usr/bin/echo 3 > /proc/sys/vm/drop_caches
+EOF
+
+yum install python34-setuptools
+easy_install-3.4 pip
+
+curl -s https://download.docker.com/linux/centos/docker-ce.repo -o /etc/yum.repos.d/docker-ce.repo
+yum -y install docker-ce
+systemctl enable docker
