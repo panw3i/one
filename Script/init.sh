@@ -21,3 +21,4 @@ easy_install-3.4 pip
 curl -s https://download.docker.com/linux/centos/docker-ce.repo -o /etc/yum.repos.d/docker-ce.repo
 yum -y install docker-ce
 systemctl enable docker
+echo -e "\n-----> reboot"
