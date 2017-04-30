@@ -15,7 +15,7 @@ MAILTO=' '
 * * * * * /usr/bin/echo 3 > /proc/sys/vm/drop_caches
 EOF
 
-yum install python34-setuptools
+yum -y install python34-setuptools
 easy_install-3.4 pip
 
 curl -s https://download.docker.com/linux/centos/docker-ce.repo -o /etc/yum.repos.d/docker-ce.repo
