@@ -24,3 +24,9 @@ ddos工具
 ***
 ### updatefile.sh
 更新文件脚本
+***
+### scan.sh
+防止ssh扫描
+***
+### init.sh
+VPS初始化
