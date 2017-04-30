@@ -8,6 +8,9 @@ Shadowsocks
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
 
-    SS_PASS=<passwd>       随机密码
-    SS_EMOD=[aes-256-cfb]  加密方式
-    SS_PORT=[8443]         端口
+			docker run -d --restart always \\
+				-p 8443:8443 \
+				-e SS_PASS=[pwmake 64] \\      随机密码
+				-e SS_EMOD=[aes-256-cfb] \\    加密方法
+				-e SS_PORT=[8443] \\           服务端口
+				--hostname shadowsocks --name shadowsocks shadowsocks
