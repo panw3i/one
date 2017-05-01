@@ -5,7 +5,7 @@ systemctl disable NetworkManager firewalld
 \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 systemctl enable iptables
 
-wget https://github.com/jiobxn/one/raw/master/Script/scan.sh
+wget https://github.com/jiobxn/one/raw/master/Script/scan.sh -O /usr/local/sbin/scan.sh
 chmod u+x /usr/local/sbin/scan.sh
 
 cat >/var/spool/cron/root <<-EOF
