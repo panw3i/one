@@ -41,6 +41,8 @@ http_conf() {
 	    worker_connections  $((`nproc`*10240));
 	}
 
+	pid /tmp/nginx.pid;
+
 	http {
 	    include       mime.types;
 	    default_type  application/octet-stream;
