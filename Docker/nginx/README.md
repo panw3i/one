@@ -28,6 +28,12 @@ Nginx
 七层负载均衡和四层负载均衡，在一个容器中只能有一种存在
 
 
+### 高可用
+
+    docker run -d --privileged --network=mynetwork --ip=10.0.0.10 -e PROXY_SERVER="10.0.0.31,10.0.0.32,10.0.0.33,10.0.0.34" -e KP_VIP=10.0.0.1 --name nginx1 nginx
+    docker run -d --privileged --network=mynetwork --ip=10.0.0.20 -e PROXY_SERVER="10.0.0.31,10.0.0.32,10.0.0.33,10.0.0.34" -e KP_VIP=10.0.0.1 --name nginx2 nginx
+
+
 ***
 
 ## Run Defult Parameter
@@ -46,6 +52,9 @@ Nginx
 	#TCP/UDP
 	STREAM_SERVER=<22|102.168.0.242:22;53|8.8.8.8:53%udp=Y>
 
+	#Keepalived
+	KP_VIP=<virtual address>    #要使用keepalived需要root权限 --privileged
+
 默认选项：
 
 	#HTTP
@@ -61,9 +70,12 @@ Nginx
 	NGX_DNS=[8.8.8.8]							#DNS，用于DOMAIN_PROXY模式
 	CACHE_TIME=[8h]								#缓存时间
 	CACHE_SIZE=[4g]								#用于缓存的磁盘大小
-	CACHE_MEM=[物理内存的%10]						    #用于缓存的内存大小
+	CACHE_MEM=[server memory 10%]						#用于缓存的内存大小
+	KP_ETH=[default interface]						#用于组播的网络接口
+	KP_RID=[77]								#路由ID
+	KP_PASS=[Newpa55]							#认证密码
 
-	其他选项：作用于四种工作模式，与基本选项之间以"%"为分隔符，选项之间用","为分隔符，参数之间用"|"为分隔符，用于替换某种模式下的默认选项
+	#HTTP 子选项：作用于四种工作模式，与基本选项之间以"%"为分隔符，各子选项之间用","为分隔符，参数之间用"|"为分隔符，用于替换某种模式下的默认选项
 
 		alias=</boy|/mp4>						#别名目录，别名/boy 容器目录/mp4，用于FCGI、JAVA_PHP和PROXY
 		root=<wordpress>						#网站根目录，html/wordpress
@@ -82,7 +94,7 @@ Nginx
 		auth=<admin|passwd>						#用户认证，用于PROXY和DOMAIN模式
 		filter=<.google.com|.fqhub.com>					#字符替换，用于PROXY和DOMAIN模式
 
-	#TCP/UDP 其他选项
+	#TCP/UDP 子选项
 		stream_lb=<hash|least_conn>					#负载均衡模式
 		conn_timeout=[1m]						#后端连接超时，默认1分钟
 		proxy_timeout=[10m]						#空闲超时，默认10分钟
