@@ -8,9 +8,9 @@ set -e
 : ${HTTPS_PORT:="443"}
 : ${DOMAIN_TAG:="888"}
 : ${EOORO_JUMP:="https://cn.bing.com"}
-: ${NGX_DNS=8.8.8.8}
-: ${CACHE_TIME:=8h}
-: ${CACHE_SIZE:=4g}
+: ${NGX_DNS="8.8.8.8"}
+: ${CACHE_TIME:="8h"}
+: ${CACHE_SIZE:="4g"}
 : ${CACHE_MEM:="$(($(free -m |grep Mem |awk '{print $2}')*10/100))m"}
 
 
@@ -104,6 +104,9 @@ http_conf() {
 	    location / {
 	        root   html;
 	        index  index.html index.htm;
+		
+	##user_auth        auth_basic           "Nginx Auth";
+	##user_auth        auth_basic_user_file /etc/nginx/.htpasswd-tag;
 	    }
 
 	##nginx_status    location ~ /basic_status {
@@ -155,6 +158,9 @@ fcgi_server() {
 	##cache        fastcgi_cache_valid 200      $CACHE_TIME;
 	##cache        fastcgi_cache_key \$host\$request_uri\$cookie_user\$scheme\$proxy_host\$uri\$is_args\$args;
 	##cache        fastcgi_cache_use_stale  error timeout invalid_header updating http_500 http_502 http_503 http_504;
+
+	##user_auth        auth_basic           "Nginx Auth";
+	##user_auth        auth_basic_user_file /etc/nginx/.htpasswd-tag;
 	    }
 
 	##nginx_status    location ~ /basic_status {
@@ -212,6 +218,9 @@ java_php_server() {
 	##cache        proxy_cache_valid 200      $CACHE_TIME;
 	##cache        proxy_cache_key \$host\$request_uri\$cookie_user\$scheme\$proxy_host\$uri\$is_args\$args;
 	##cache        proxy_cache_use_stale  error timeout invalid_header updating http_500 http_502 http_503 http_504;
+
+	##user_auth        auth_basic           "Nginx Auth";
+	##user_auth        auth_basic_user_file /etc/nginx/.htpasswd-tag;
 	    }
 
 	##nginx_status    location ~ /basic_status {
@@ -474,10 +483,10 @@ http_other() {
 		
 		#用户认证
 		if [ -n "$(echo $i |grep 'auth=' |grep '|')" ]; then
-			user="$(echo $i |grep 'error=' |awk -F= '{print $2}' |awk -F'|' '{print $1}')"
-			pass="$(echo $i |grep 'error=' |awk -F= '{print $2}' |awk -F'|' '{print $2}')"
+			user="$(echo $i |grep 'auth=' |awk -F= '{print $2}' |awk -F'|' '{print $1}')"
+			pass="$(echo $i |grep 'auth=' |awk -F= '{print $2}' |awk -F'|' '{print $2}')"
 			
-			echo "$user:$(openssl passwd -apr1 $pass)" > /etc/nginx/.htpasswd-$project_name_$n
+			echo "$user:$(openssl passwd -apr1 $pass)" > /etc/nginx/.htpasswd-${project_name}_$n
 			echo "Nginx user AND password: $user  $pass"
 			
 			sed -i 's/##user_auth//g' /etc/nginx/conf.d/${project_name}_$n.conf
