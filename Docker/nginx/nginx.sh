@@ -8,10 +8,13 @@ set -e
 : ${HTTPS_PORT:="443"}
 : ${DOMAIN_TAG:="888"}
 : ${EOORO_JUMP:="https://cn.bing.com"}
-: ${NGX_DNS=8.8.8.8}
-: ${CACHE_TIME:=8h}
-: ${CACHE_SIZE:=4g}
+: ${NGX_DNS="8.8.8.8"}
+: ${CACHE_TIME:="8h"}
+: ${CACHE_SIZE:="4g"}
 : ${CACHE_MEM:="$(($(free -m |grep Mem |awk '{print $2}')*10/100))m"}
+: ${KP_ETH:="$(route -n |awk '$1=="0.0.0.0"{print $NF }')"}
+: ${KP_RID:="77"}
+: ${KP_PASS:="Newpa55"}
 
 
 
@@ -764,15 +767,41 @@ if [ "$1" = 'nginx' ]; then
 			echo "Nginx user AND password: $NGX_USER  $NGX_PASS"
 		fi
 	fi
+
+	#keepalived
+	\rm /etc/keepalived/keepalived.conf
+	if [ $KP_VIP ]; then
+		cat >/etc/keepalived/keepalived.conf <<-END
+		! Configuration File for keepalived
+		vrrp_instance VI_1 {
+		    state BACKUP
+		    interface $KP_ETH
+		    virtual_router_id $KP_RID
+		    priority 100
+		    advert_int 1
+
+		    authentication {
+		        auth_type PASS
+		        auth_pass $KP_PASS
+		    }
+
+		    virtual_ipaddress {
+		        $KP_VIP
+		    }
+		}
+		END
+	fi
   fi
 
 	echo "Start ****"
+	#Keepalived Need root authority "--privileged"
+	[ -f /etc/keepalived/keepalived.conf ] && keepalived -f /etc/keepalived/keepalived.conf -P -l
 	exec "$@"
 else
 
 	echo -e " 
 	Example:
-				docker run -d --restart always \\
+				docker run -d --restart always [--privileged] \\
 				-v /docker/www:/usr/local/nginx/html \\
 				-v /docker/upload:/mp4 \\
 				-v /docker/key:/key \\
@@ -819,6 +848,10 @@ else
 				   conn_timeout=[1m] \\
 				   proxy_timeout=[10m] \\
 				   udp=<Y> \\
+				-e KP_ETH=[default interface] \\
+				-e KP_RID=[77] \\
+				-e KP_PASS=[Newpa55] \\
+				-e KP_VIP=<virtual address> \\
 				--hostname nginx \\
 				--name nginx nginx
 	" 
