@@ -476,10 +476,10 @@ http_other() {
 		
 		#用户认证
 		if [ -n "$(echo $i |grep 'auth=' |grep '|')" ]; then
-			user="$(echo $i |grep 'error=' |awk -F= '{print $2}' |awk -F'|' '{print $1}')"
-			pass="$(echo $i |grep 'error=' |awk -F= '{print $2}' |awk -F'|' '{print $2}')"
+			user="$(echo $i |grep 'auth=' |awk -F= '{print $2}' |awk -F'|' '{print $1}')"
+			pass="$(echo $i |grep 'auth=' |awk -F= '{print $2}' |awk -F'|' '{print $2}')"
 			
-			echo "$user:$(openssl passwd -apr1 $pass)" > /usr/local/nginx/.htpasswd-$project_name_$n
+			echo "$user:$(openssl passwd -apr1 $pass)" > /usr/local/nginx/.htpasswd-${project_name}_$n
 			echo "Nginx user AND password: $user  $pass"
 			
 			sed -i 's/##user_auth//g' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
