@@ -9,6 +9,7 @@ RUN cd /usr/local/src \
         && openssl_down="ftp://ftp.openssl.org/source/" && openssl_v=$(curl -s $openssl_down |grep "tar.gz$" |egrep -v "pre|fips" |awk 'END{print $NF}') && wget -c "$openssl_down$openssl_v" \
         && wget -c http://zlib.net/$(curl -s http://zlib.net/ |grep "\.tar.gz" |awk -F\" 'NR==1{print $2}') \
         && wget -c $(curl -s http://www.cpan.org/src/ |grep wget |awk -F\" '{print $2}') \
+        && wget -c https://github.com$(curl -s https://github.com/acassen/keepalived/releases |grep tar.gz |awk -F\" 'NR==1{print $2}') \
         && nginx_v=$(curl -s http://nginx.org/ |grep "td class" |awk -F'html' 'NR==1{print $2}' |grep -Po '(?<=\>)[^)]*(?=\<)') && wget -c http://nginx.org/download/$nginx_v.tar.gz
         
 RUN cd /usr/local/src \
@@ -17,6 +18,7 @@ RUN cd /usr/local/src \
         && tar zxf openssl-*.tar.gz \
         && tar zxf zlib-*.tar.gz \
         && tar zxf perl-*.tar.gz \
+        && tar zxf v*.tar.gz \
         && \rm *.tar.gz \
         && mv pcre-* pcre \
         && mv zlib-* zlib \
@@ -28,6 +30,8 @@ RUN cd /usr/local/src \
         && cd /usr/local/src/openssl \
         && ./config --prefix=/usr/local zlib threads shared  && make -j8 && make install \
         && echo "/usr/local/lib64" >> /etc/ld.so.conf && ldconfig \
+        && cd /usr/local/src/keepalived-* \
+        && ./configure --sysconf=/etc && make -j8 && make install \
         && cd /usr/local/src/nginx-* \
         && sed -i 's/\.openssl\/include/include/' auto/lib/openssl/conf \
         && sed -i 's/\.openssl\/lib\///' auto/lib/openssl/conf \
