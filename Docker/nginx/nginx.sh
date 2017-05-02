@@ -823,7 +823,7 @@ else
 				-e NGX_DNS=[8.8.8.8] \\
 				-e CACHE_TIME=[8h] \\
 				-e CACHE_SIZE=[4g] \\
-				-e CACHE_MEM=[物理内存的%10] \\
+				-e CACHE_MEM=[server memory 10%] \\
 				-e ACCLOG_OFF=<Y> \\
 				-e ERRLOG_OFF=<Y> \\
 				   alias=</boy|/mp4> \\
@@ -848,10 +848,10 @@ else
 				   conn_timeout=[1m] \\
 				   proxy_timeout=[10m] \\
 				   udp=<Y> \\
+				-e KP_VIP=<virtual address> \\
 				-e KP_ETH=[default interface] \\
 				-e KP_RID=[77] \\
 				-e KP_PASS=[Newpa55] \\
-				-e KP_VIP=<virtual address> \\
 				--hostname nginx \\
 				--name nginx nginx
 	" 
