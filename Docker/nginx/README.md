@@ -76,7 +76,6 @@ Nginx
 	KP_PASS=[Newpa55]							#认证密码
 
 	#HTTP 子选项：作用于四种工作模式，与基本选项之间以"%"为分隔符，各子选项之间用","为分隔符，参数之间用"|"为分隔符，用于替换某种模式下的默认选项
-
 		alias=</boy|/mp4>						#别名目录，别名/boy 容器目录/mp4，用于FCGI、JAVA_PHP和PROXY
 		root=<wordpress>						#网站根目录，html/wordpress
 		http_port=<8080>						#HTTP端口
@@ -93,6 +92,7 @@ Nginx
 		error=<https://www.bing.com>					#错误跳转，用于DOMAIN模式
 		auth=<admin|passwd>						#用户认证，用于PROXY和DOMAIN模式
 		filter=<.google.com|.fqhub.com>					#字符替换，用于PROXY和DOMAIN模式
+		log=<N|Y>							#使用独立日志文件，或者关闭日志
 
 	#TCP/UDP 子选项
 		stream_lb=<hash|least_conn>					#负载均衡模式
