@@ -151,6 +151,9 @@ fcgi_server() {
 	##cache        fastcgi_cache_valid 200      $CACHE_TIME;
 	##cache        fastcgi_cache_key \$host\$request_uri\$cookie_user\$scheme\$proxy_host\$uri\$is_args\$args;
 	##cache        fastcgi_cache_use_stale  error timeout invalid_header updating http_500 http_502 http_503 http_504;
+
+	##user_auth        auth_basic           "Nginx Auth";
+	##user_auth        auth_basic_user_file /usr/local/nginx/.htpasswd-tag;
 	    }
 
 	##nginx_status    location ~ /basic_status {
@@ -208,6 +211,9 @@ java_php_server() {
 	##cache        proxy_cache_valid 200      $CACHE_TIME;
 	##cache        proxy_cache_key \$host\$request_uri\$cookie_user\$scheme\$proxy_host\$uri\$is_args\$args;
 	##cache        proxy_cache_use_stale  error timeout invalid_header updating http_500 http_502 http_503 http_504;
+
+	##user_auth        auth_basic           "Nginx Auth";
+	##user_auth        auth_basic_user_file /usr/local/nginx/.htpasswd-tag;
 	    }
 
 	##nginx_status    location ~ /basic_status {
