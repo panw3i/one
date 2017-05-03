@@ -71,6 +71,8 @@ Nginx
 	CACHE_TIME=[8h]								#缓存时间
 	CACHE_SIZE=[4g]								#用于缓存的磁盘大小
 	CACHE_MEM=[server memory 10%]						#用于缓存的内存大小
+	ACCLOG_OFF=<Y>								#关闭访问日志记录
+	ERRLOG_OFF=<Y>								#关闭错误日志记录
 	KP_ETH=[default interface]						#用于组播的网络接口
 	KP_RID=[77]								#路由ID
 	KP_PASS=[Newpa55]							#认证密码
