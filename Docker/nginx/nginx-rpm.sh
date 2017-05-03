@@ -104,9 +104,6 @@ http_conf() {
 	    location / {
 	        root   html;
 	        index  index.html index.htm;
-		
-	##user_auth        auth_basic           "Nginx Auth";
-	##user_auth        auth_basic_user_file /etc/nginx/.htpasswd-tag;
 	    }
 
 	##nginx_status    location ~ /basic_status {
