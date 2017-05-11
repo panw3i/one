@@ -7,7 +7,12 @@ if [ "$1" = 'mysqld_safe' ]; then
 
 	if [ -d "$DATADIR/mysql" ]; then
 		echo "$DATADIR/mysql already exists, skip"
-		[ -z "$(grep redhat.xyz /etc/my.cnf)" ] && \cp /usr/local/mysql/data/my-default.cnf /etc/my.cnf
+		[ ! -f /etc/my.cnf ] && cp /usr/local/mysql/support-files/my-default.cnf /etc/my.cnf
+
+		#Server ID
+		if [ -n "$SERVER_ID" -a -z "$(grep ^server-id /etc/my.cnf)" ]; then
+			sed -i '/\[mysqld\]/a log-bin=mysql-bin\nserver-id='$SERVER_ID'\ninnodb_flush_log_at_trx_commit=1\nsync_binlog=1\nlower_case_table_names=1' /etc/my.cnf
+		fi
 	else
 		echo "Initialize MYSQL"
 		sed -i '1 i #redhat.xyz' /etc/my.cnf
@@ -168,8 +173,6 @@ if [ "$1" = 'mysqld_safe' ]; then
 			echo "Repl already exists, skip"
 		fi
 	fi
-
-	[ ! -f /usr/local/mysql/data/my-default.cnf ] && cp /etc/my.cnf /usr/local/mysql/data/my-default.cnf
 
 	#iptables, Need root authority "--privileged"
 	if [ $IPTABLES ]; then
