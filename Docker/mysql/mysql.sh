@@ -7,9 +7,10 @@ if [ "$1" = 'mysqld_safe' ]; then
 
 	if [ -d "$DATADIR/mysql" ]; then
 		echo "$DATADIR/mysql already exists, skip"
-		[ ! -f /etc/my.cnf ] && cp /usr/local/mysql/data/my-default.cnf /etc/my.cnf
+		[ -z "$(grep redhat.xyz /etc/my.cnf)" ] && \cp /usr/local/mysql/data/my-default.cnf /etc/my.cnf
 	else
 		echo "Initialize MYSQL"
+		sed -i '1 i #redhat.xyz' /etc/my.cnf
 		#Initialize MYSQL
 		cp /usr/local/mysql/support-files/my-default.cnf /etc/my.cnf
 		[ ! -f /usr/local/mysql/tmp ] && mkdir /usr/local/mysql/tmp && chown mysql.mysql /usr/local/mysql/tmp
