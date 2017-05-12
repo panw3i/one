@@ -8,7 +8,7 @@ MongoDB
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
 
-				docker run -d --restart always \\
+				docker run -d --restart always [--privileged] \\
 				-v /docker/mongodb:/var/lib/mongo \\
 				-p 27017:27017 \\
 				-p 28017:28017 \\
