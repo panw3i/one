@@ -26,5 +26,5 @@ EXPOSE 27017 28017
 CMD ["mongod", "-f", "/etc/mongod.conf"]
 
 # docker build -t mongodb .
-# docker run -d --restart always -p 27017:27017 -p 28017:28017 -v /docker/mongodb:/var/lib/mongo --hostname mongodb --name mongodb mongodb
+# docker run -d --restart always -p 27017:27017 -p 28017:28017 -v /docker/mongodb:/var/lib/mongo -e MONGO_ROOT_PASS=newpass --hostname mongodb --name mongodb mongodb
 # docker run -it --rm mongodb --help
