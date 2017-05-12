@@ -135,6 +135,7 @@ if [ "$1" = 'mysqld_safe' ]; then
 	#Mysql modify the default port
 	if [ "$MYSQL_PORT" ]; then
 		sed -i '/\[mysqld\]/a port = '$MYSQL_PORT'' /etc/my.cnf
+		sed -i 's/3306/'$MYSQL_PORT'/' /backup.sh
 		echo "MYSQL PORT: $MYSQL_PORT"
 	fi
 
