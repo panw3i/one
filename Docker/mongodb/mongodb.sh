@@ -73,7 +73,9 @@ if [ "$1" = 'mongod' ]; then
 	fi
 	
 	echo "Start MongoDB ****"
+	#[ -f /iptables.sh ] && . /iptables.sh
 	crond
+
 	exec "$@" &>/dev/null
 else
 
