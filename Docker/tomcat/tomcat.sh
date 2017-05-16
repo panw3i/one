@@ -95,7 +95,7 @@ if [ -z "$(grep "redhat.xyz" /usr/local/tomcat/conf/server.xml)" ]; then
 	#JAVA GW
 	if [ $JAVA_GW ]; then
 		sed -i '/# OS/ i CATALINA_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=12345"\n' /usr/local/tomcat/bin/catalina.sh
-		echo -e "iptables -A INPUT -s $JAVA_GW -p tcp -m tcp --dport 12345 -j ACCEPT \niptables -A INPUT -p tcp -m tcp --dport 12345 -j DROP" >/iptables-12345.sh
+		echo -e "iptables -A INPUT -s $JAVA_GW -p tcp -m tcp --dport 12345 -m comment --comment JAVA -j ACCEPT \niptables -A INPUT -p tcp -m tcp --dport 12345 -j DROP" >/iptables.sh
 	fi
 
         #Redis
@@ -119,7 +119,7 @@ if [ -z "$(grep "redhat.xyz" /usr/local/tomcat/conf/server.xml)" ]; then
 fi
 
 	echo "Start ****"
-        [ -f /iptables-12345.sh ] && . /iptables-12345.sh 2>/dev/null
+        [ -f /iptables.sh ] && [ -z "`iptables -S |grep JAVA`" ] && . /iptables.sh 2>/dev/null
 	exec "$@"
 else
 
