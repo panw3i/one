@@ -1,25 +1,19 @@
 FROM centos:latest
 MAINTAINER The CentOS Project <admin@jiobxn.com>
-#http://www.oracle.com/technetwork/cn/java/javase/downloads/jdk7-downloads-1880260.html
 
 ARG TOMCAT="7"
 ARG JDK="7"
 
-#yum install java-1.${JDK}.0-openjdk-devel
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN yum clean all; yum -y update; yum -y install net-tools bash-completion vim wget iptables cronie; yum clean all
+RUN yum clean all; yum -y update; yum -y install java-1.${JDK}.0-openjdk-devel net-tools bash-completion vim wget iptables cronie; yum clean all
 
 RUN cd /usr/local/src \
-        && jdk_down="https://mirror.its.sfu.ca/mirror/CentOS-Third-Party/RCG/common/x86_64/" && jdk_v=$(curl -s $jdk_down |grep jdk-${JDK} |tail -1 |awk -F\" '{print $8}') && wget -c "$jdk_down$jdk_v" \
         && wget -c $(curl -s http://tomcat.apache.org/download-${TOMCAT}0.cgi |grep tar.gz |egrep "v7.0|v8.0" |awk -F\" 'NR==1{print $2}') \
         && tar zxf apache-tomcat-*.tar.gz \
         && \rm apache-tomcat-*.tar.gz \
         && mv apache-tomcat-* /usr/local/tomcat \
         && ln -s /usr/local/tomcat/bin/* /usr/local/bin/ \
-        && rpm -ivh jdk-*-linux-x64.rpm \
-        && ln -s /usr/java/jdk*/bin/* /usr/local/bin/ \
-        && \cp -a /usr/local/tomcat/webapps /mnt/ \
-        && \rm jdk-*
+        && \cp -a /usr/local/tomcat/webapps /mnt/
 
 RUN cd /usr/local/tomcat/lib \
         && wget -c http://cdn.mysql.com//Downloads/Connector-J/$(curl -s https://dev.mysql.com/downloads/connector/j/ |grep tar.gz |head -1 |grep -Po '(?<=\()[^)]*(?=\))') \
