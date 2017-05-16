@@ -196,9 +196,9 @@ if [ -z "$(grep "redhat.xyz" /etc/openvpn/server.conf)" ]; then
 		\cp /etc/openvpn/client.conf /key/client.conf
 
 		echo "squid" >/iptables.sh
-		echo "iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport $PROXY_PORT -j ACCEPT" >>/iptables.sh
+		echo "iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport $PROXY_PORT -m comment --comment OPENVPN -j ACCEPT" >>/iptables.sh
 	else	
-		echo "iptables -I INPUT -p $TCP_UDP -m state --state NEW -m $TCP_UDP --dport $VPN_PORT -j ACCEPT" >/iptables.sh
+		echo "iptables -I INPUT -p $TCP_UDP -m state --state NEW -m $TCP_UDP --dport $VPN_PORT -m comment --comment OPENVPN -j ACCEPT" >/iptables.sh
 	fi
 
 
@@ -217,7 +217,7 @@ if [ -z "$(grep "redhat.xyz" /etc/openvpn/server.conf)" ]; then
 fi
 
 	echo "Start ****"
-	. /iptables.sh
+	[ -z "`iptables -S |grep OPENVPN`" ] && . /iptables.sh
 	exec "$@"
 
 else
