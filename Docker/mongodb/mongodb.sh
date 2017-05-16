@@ -68,12 +68,12 @@ if [ "$1" = 'mongod' ]; then
 		cat > /iptables.sh <<-END
 		iptables -I INPUT -p tcp --dport $MYSQL_PORT -j DROP
 		iptables -I INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-		iptables -I INPUT -s $IPTABLES -p tcp -m state --state NEW -m tcp --dport 27017,28017 -j ACCEPT
+		iptables -I INPUT -s $IPTABLES -p tcp -m state --state NEW -m tcp --dport 27017,28017 -m comment --comment MONGDB -j ACCEPT
 		END
 	fi
 	
 	echo "Start MongoDB ****"
-	#[ -f /iptables.sh ] && . /iptables.sh
+	[ -f /iptables.sh ] && [ -z "`iptables -S |grep MONGDB`" ] && . /iptables.sh
 	crond
 
 	exec "$@" &>/dev/null
