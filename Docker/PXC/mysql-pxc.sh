@@ -263,12 +263,12 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 		cat > /iptables.sh <<-END
 		iptables -I INPUT -p tcp --dport 3306 -j DROP
 		iptables -I INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-		iptables -I INPUT -s $IPTABLES -p tcp -m state --state NEW -m tcp --dport 3306 -j ACCEPT
+		iptables -I INPUT -s $IPTABLES -p tcp -m state --state NEW -m tcp --dport 3306 -m comment --comment PXC -j ACCEPT
 		END
 	fi
 	
 	echo "Start MYSQL ****"
-	#[ -f /iptables.sh ] && . /iptables.sh
+	[ -f /iptables.sh ] && [ -z "`iptables -S |grep PXC`" ] && . /iptables.sh
 	crond
 	
 	exec "$@" &>/dev/null
