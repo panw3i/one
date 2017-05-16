@@ -5,7 +5,7 @@ ARG ZEND="0"
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN epel_url="http://dl.fedoraproject.org/pub/epel/$(awk '{print $4}' /etc/redhat-release |awk -F. '{print $1}')/x86_64/e/" \
-    && rpm -ivh $epel_url$(curl -s $epel_url |grep "epel-release" |awk -F\" '{print $6}')
+        && rpm -ivh $epel_url$(curl -s $epel_url |grep "epel-release" |awk -F\" '{print $6}')
 RUN yum clean all; yum -y update; yum -y install net-tools bash-completion vim wget libnghttp2-devel openssl openssl-devel make gcc-c++ iptables cronie; yum clean all
 
 RUN cd /usr/local/src \
