@@ -113,22 +113,25 @@ if [ -z "$(grep "redhat.xyz" /etc/ocserv/ocserv.conf)" ]; then
 		INFOC="p12 PASS: $P12_PASS"
 	fi
 
-	
+
 	if [ "$GATEWAY_VPN" = "Y" ]; then
 		sed -i "s@# 'default'.@route = default@g" /etc/ocserv/ocserv.conf
 	else
 		sed -i '/# the server/i route = 8.8.8.8/255.255.255.255\nroute = 8.8.4.4/255.255.255.255' /etc/ocserv/ocserv.conf
 	fi
 
-	
+
+	echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+	sysctl -p
+
+
 	# iptables
 	cat > /iptables.sh <<-END
 	iptables -t nat -I POSTROUTING -s $IP_RANGE.0/24 -o $DEV -j MASQUERADE
 	iptables -I FORWARD -s $IP_RANGE.0/24 -j ACCEPT
 	iptables -I FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
-	iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport $VPN_PORT -j ACCEPT
+	iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport $VPN_PORT -m comment --comment OCSERV -j ACCEPT
 	iptables -I INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-	sysctl -w net.ipv4.ip_forward=1
 	END
 
 	echo -e "
@@ -139,7 +142,7 @@ fi
 
 	echo
 	echo "Start ****"
-	. /iptables.sh
+	[ -z "`iptables -S |grep OCSERV`" ] && . /iptables.sh
 	exec "$@"
 
 else
