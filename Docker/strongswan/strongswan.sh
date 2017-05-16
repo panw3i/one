@@ -235,16 +235,18 @@ if [ -z "$(grep "redhat.xyz" /etc/strongswan/ipsec.conf)" ]; then
 	connect-delay 5000
 	END
 
+	echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+	sysctl -p
+
 	# iptables
 	cat > /iptables.sh <<-END
 	iptables -t nat -I POSTROUTING -s $IP_RANGE.0/24 -o $DEV -j MASQUERADE
 	iptables -I FORWARD -s $IP_RANGE.0/24 -j ACCEPT
 	iptables -I FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
-	iptables -I INPUT -p udp -m state --state NEW -m udp --dport 500 -j ACCEPT
-	iptables -I INPUT -p udp -m state --state NEW -m udp --dport 4500 -j ACCEPT
-	iptables -I INPUT -p udp -m state --state NEW -m udp --dport 1701 -j ACCEPT
+	iptables -I INPUT -p udp -m state --state NEW -m udp --dport 500 -m comment --comment IPSEC -j ACCEPT
+	iptables -I INPUT -p udp -m state --state NEW -m udp --dport 4500 -m comment --comment IPSEC -j ACCEPT
+	iptables -I INPUT -p udp -m state --state NEW -m udp --dport 1701 -m comment --comment L2TP -j ACCEPT
 	iptables -I INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-	sysctl -w net.ipv4.ip_forward=1
 	END
 
 	echo -e "
@@ -257,7 +259,7 @@ fi
 
 	echo
 	echo "Start ****"
-	. /iptables.sh
+	[ -z "`iptables -S |grep IPSEC`" ] && . /iptables.sh
 	/usr/sbin/xl2tpd
 	exec "$@"
 
