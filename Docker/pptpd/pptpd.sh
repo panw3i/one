@@ -29,6 +29,9 @@ if [ -z "$(grep "8.8.8.8" /etc/ppp/options.pptpd)" ]; then
 	sed -i 's/#ms-dns 10.0.0.1/ms-dns 8.8.8.8\nms-dns 8.8.4.4/g' /etc/ppp/options.pptpd
 
 	echo "$VPN_USER       pptpd      $VPN_PASS          *" >> /etc/ppp/chap-secrets
+	
+	echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+	sysctl -p
 
 	# iptables
 	cat > /iptables.sh <<-END
@@ -36,9 +39,8 @@ if [ -z "$(grep "8.8.8.8" /etc/ppp/options.pptpd)" ]; then
 	iptables -I FORWARD -s $IP_RANGE.0/24 -j ACCEPT
 	iptables -I FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
 	iptables -I INPUT -p 47 -j ACCEPT
-	iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 1723 -j ACCEPT
+	iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 1723 -m comment --comment PPTPD -j ACCEPT
 	iptables -I INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-	sysctl -w net.ipv4.ip_forward=1
 	END
 
 	echo -e "
@@ -49,7 +51,7 @@ fi
 
 	echo
 	echo "Start ****"
-	. /iptables.sh
+	[ -z "`iptables -S |grep PPTPD`" ] && . /iptables.sh
 	exec "$@"
 
 else
