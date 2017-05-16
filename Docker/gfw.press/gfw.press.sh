@@ -47,7 +47,7 @@ if [ "$1" = 'gfw.press' ]; then
 	fi
 	. /gfw.press/make_user.sh
 	\cp  /gfw.press/user.tx_ /gfw.press/user.txt
-	echo -e "\ngfw.press port and passwd: $(echo $GFW_PORT |sed 's/\.\./-/') \t $GFW_PASS\n" |tee /key/gfw.log
+	echo -e "\ngfw.press port and passwd: \n\n$(cat /gfw.press/user.txt)\n" |tee /key/gfw.log
 	
 	#IPTABLES
 	cat > /iptables.sh <<-END
