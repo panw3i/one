@@ -64,7 +64,7 @@ if [ "$1" = 'gfw.press' ]; then
 	fi
 	
 	[ -z "`iptables -S |grep $(awk 'NR==1{print $13}' /iptables.sh)`" ] && . /iptables.sh || echo
-	MEM="$(($(free -m |grep Mem |awk '{print $2}')*50/100))M"
+	MEM="$(($(free -m |grep Mem |awk '{print $2}')*50/100))m"
 	java -Dfile.encoding=utf-8 -Dsun.jnu.encoding=utf-8 -Duser.timezone=Asia/Shanghai  -Xms$MEM -Xmx$MEM -classpath `find /gfw.press/lib/*.jar | xargs echo | sed 's/ /:/g'`:/gfw.press/bin press.gfw.Server
 
 else
