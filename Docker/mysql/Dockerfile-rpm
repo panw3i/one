@@ -23,6 +23,6 @@ EXPOSE 3306
 CMD ["mysqld", "--user=mysql"]
 
 # docker build --build-arg mysql_v=57 -t mysql-rpm:5.7 .
-# docker run -d --restart always --privileged -p 13306:3306 -v /docker/mysql-rpm:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=newpass -e MYSQL_DATABASE=zabbix -e MYSQL_USER=zabbix -e MYSQL_PASSWORD=newpass -e MYSQL_BACK=Y --hostname mysql --name mysql mysql-rpm:5.7
+# docker run -d --restart always --privileged -p 3306:3306 -v /docker/mysql-rpm:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=newpass -e MYSQL_DATABASE=zabbix -e MYSQL_USER=zabbix -e MYSQL_PASSWORD=newpass -e MYSQL_BACK=Y --hostname mysql --name mysql mysql-rpm:5.7
 # docker logs mysql |grep "PASSWORD"
 # docker run -it --rm mysql-rpm --help
