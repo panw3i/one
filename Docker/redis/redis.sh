@@ -45,7 +45,7 @@ fi
 	sysctl vm.overcommit_memory=1
 	echo never > /sys/kernel/mm/transparent_hugepage/enabled
 	echo 511 > /proc/sys/net/core/somaxconn
-	exec "$@" &>/dev/null
+	exec "$@" 1>/dev/null
 
 else
 	echo -e "
