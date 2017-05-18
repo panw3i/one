@@ -5,7 +5,7 @@ if [ "$1" = 'httpd' ]; then
 
 : ${PHP_PORT:=9000}
 : ${PHP_PATH:=/var/www}
-: ${ZBX_DB_PORT:=13306}
+: ${ZBX_DB_PORT:=3306}
 : ${ZBX_DB_USER:=zabbix}
 : ${ZBX_DB_PASSWORD:=newpass}
 : ${ZBX_DB_DATABASE:=zabbix}
@@ -132,7 +132,7 @@ else
 				-e PHP_PORT=[9000] \\
 				-e PHP_PATH=[/var/www] \\
 				-e ZBX_DB_SERVER=<redhat.xyz> \\
-				-e ZBX_DB_PORT=[13306] \\
+				-e ZBX_DB_PORT=[3306] \\
 				-e ZBX_DB_USER=[zabbix] \\
 				-e ZBX_DB_PASSWORD=[newpass] \\
 				-e ZBX_DB_DATABASE=[zabbix] \\
