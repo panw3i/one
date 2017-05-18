@@ -56,7 +56,7 @@ if [ "$1" = 'mongod' ]; then
 	if [ "$MONGO_BACK" ]; then
 		[ -z "$MONGO_ROOT_PASS" ] && MONGO_ROOT_PASS=$(awk '{print $4}' /var/lib/mongo/root_info)
 		sed -i 's/newpass/'$MONGO_ROOT_PASS'/' /backup.sh
-		echo "0 4 * * * . /etc/profile;/bin/sh /backup.sh >/dev/null  2>&1" >>/var/spool/cron/root
+		echo "0 4 * * * . /etc/profile;/bin/sh /backup.sh &>/dev/null" >>/var/spool/cron/root
 	fi
 		
 	sed -i 's/127.0.0.1/0.0.0.0/' /etc/mongod.conf
