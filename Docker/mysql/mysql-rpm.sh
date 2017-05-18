@@ -133,7 +133,7 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 	if [ "$MYSQL_BACK" ]; then
 		[ -z "$MYSQL_ROOT_PASSWORD" ] && MYSQL_ROOT_PASSWORD=$(awk '{print $4}' $DATADIR/root_info)
 		sed -i 's/newpass/'$MYSQL_ROOT_PASSWORD'/' /backup.sh
-		echo "0 4 * * * . /etc/profile;/bin/sh /backup.sh >/dev/null  2>&1" >>/var/spool/cron/root
+		echo "0 4 * * * . /etc/profile;/bin/sh /backup.sh &>/dev/null" >>/var/spool/cron/root
 	fi
 	
 	#Mysql max connections
