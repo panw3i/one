@@ -198,7 +198,7 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 	
 	if [ "$mysql_V" -eq "56" ]; then
 		sed -i 's/##5.6//g' /etc/my.cnf
-		if [ "$LOG_BIN" == "Y" ]; then
+		if [ "$LOG_BIN" ]; then
 			sed -i 's/##logbin//g' /etc/my.cnf
 		fi
 	fi
@@ -206,7 +206,7 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 	if [ "$mysql_V" -eq "55" ]; then
 		sed -i 's/##5.6//g' /etc/my.cnf
 		sed -i 's/##5.5//g' /etc/my.cnf
-		if [ "$LOG_BIN" == "Y" ]; then
+		if [ "$LOG_BIN" ]; then
 			sed -i 's/##logbin//g' /etc/my.cnf
 		fi
 	fi
@@ -230,7 +230,7 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 	else
 		[ ! -d /var/run/mysqld ] && mkdir /var/run/mysqld && chown mysql.mysql /var/run/mysqld
 	
-		if [ "$XPC_INIT" == "Y" ]; then
+		if [ "$XPC_INIT" ]; then
 			init_mysql
 			init_cnf
 			init_pxc
