@@ -21,11 +21,12 @@ Percona Xtradb Cluster
 				-e MYSQL_SSTUSER_PASSWORD=[passw0rd] \\                 sstuser密码，用于集群数据传输
 				-e MYSQL_REPL_PASSWORD=[123456] \\                      repl密码，用于添加外部slave节点的复制
 				-e REPL_IPR=<"10.0.0.%"> \\                             外部slave节点的IP段
-				-e LOG_BIN=<Y> \\                                       开启集群节点的master功能
-				-e SYNC_BINLOG=[0] \\                                   二进制日志写入磁盘的模式，0 每秒写入、1 每次事物写入
+				-e LOG_BIN=<Y> \\                                       开启集群节点的master功能，用于挂载slave
+				-e SYNC_BINLOG=[0] \\                                   二进制日志写入磁盘的模式，0 每秒写入、1 每次事物写入
 				-e MYSQL_DATABASE=<zabbix> \\                           初始化集群时创建一个数据库
 				-e MYSQL_USER=<zabbix> \\                               初始化集群时创建一个用户
 				-e MYSQL_PASSWORD=<zbxpass> \\                          初始化集群时创建用户的密码
-				-e MYSQL_MAX_CONN=[800] \\                             最大连接数
+				-e MYSQL_MAX_CONN=[800] \\                              最大连接数
+				-e MYSQL_BACK=<Y> \\                                    开启自动备份数据库，默认只保留3天的备份
 				--hostname mysql-pxc \\
 				--name mysql-pxc mysql-pxc
