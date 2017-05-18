@@ -220,7 +220,7 @@ else
 				-e MYSQL_PORT=[3306] \\
 				-e MYSQL_MAX_CONN=[800] \\
 				-e SERVER_ID=<1> \\
-				-e REPL_IPR=<192.168.10.%> \\
+				-e REPL_IPR=<10.0.0.%> \\
 				-e REPL_USER=<repl> \\
 				-e REPL_PASSWORD=<newpass> \\
 				-e MASTER_HOST=<10.0.0.50> \\
