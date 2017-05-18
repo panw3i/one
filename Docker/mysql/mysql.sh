@@ -211,7 +211,7 @@ else
 				-e REPL_PASSWORD=<newpass> \\
 				-e MASTER_HOST=<192.168.10.130> \\
 				-e MASTER_PORT=[3306] \\
-				-e IPTABLES=<"192.168.10.0/24,172.17.0.0/24"> \\
+				-e IPTABLES=<"192.168.10.0/24,10.0.0.0/24"> \\
 				-e MYSQL_GENERAL_LOG=Y \\
 				--hostname mysql \\
 				--name mysql mysql
