@@ -68,7 +68,6 @@ else
     echo -e "
     Example:
 				docker run -d --restart always [--privileged] \\
-				--network=host \\
 				-v /docker/zookeeper:/var/lib/zookeeper \\
 				-p 2181:2181 \\
 				-e ZK_MEM=[2048m] \\
