@@ -259,7 +259,7 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 	
 	#Backup Database
 	if [ "$MYSQL_BACK" ]; then
-	    [ -z "$MYSQL_ROOT_LOCAL_PASSWORD" ] && MYSQL_ROOT_LOCAL_PASSWORD=$(awk '{print $5}' $DATADIR/local_info)
+	    [ -z "$MYSQL_ROOT_LOCAL_PASSWORD" ] && MYSQL_ROOT_LOCAL_PASSWORD=$(awk '{print $5}' /var/lib/mysql/mysql/local_info)
 		sed -i 's/newpass/'$MYSQL_ROOT_LOCAL_PASSWORD'/' /backup.sh
 		echo "0 4 * * * . /etc/profile;/bin/sh /backup.sh &>/dev/null" >>/var/spool/cron/root
 	fi
