@@ -76,7 +76,7 @@ if [ "$1" = 'mongod' ]; then
 	[ -f /iptables.sh ] && [ -z "`iptables -S |grep MONGDB`" ] && . /iptables.sh
 	crond
 
-	exec "$@" &>/dev/null
+	exec "$@" 1>/dev/null
 else
 
     echo -e "
@@ -91,6 +91,7 @@ else
 				-e MONGO_DB=<test> \\
 				-e MONGO_HTTP=<Y> \\
 				-e MONGO_BACK=<Y> \\
+				-e IPTABLES=<"192.168.10.0/24,10.0.0.0/24"> \\
 				--hostname mongodb \\
 				--name mongodb mongodb
 	"
