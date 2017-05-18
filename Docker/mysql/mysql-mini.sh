@@ -211,7 +211,7 @@ else
 				docker run -d --restart always [--privileged] \\
 				-v /docker/mysql-mini:/var/lib/mysql \\
 				-v /docker/sql:/docker-entrypoint-initdb.d \\
-				-p 13306:3306 \\
+				-p 3306:3306 \\
 				-e MYSQL_ROOT_PASSWORD=<newpass> \\
 				-e MYSQL_DATABASE=<zabbix> \\
 				-e MYSQL_USER=<zabbix> \\
@@ -220,10 +220,10 @@ else
 				-e MYSQL_PORT=[3306] \\
 				-e MYSQL_MAX_CONN=[800] \\
 				-e SERVER_ID=<1> \\
-				-e REPL_IPR=<192.168.10.%> \\
+				-e REPL_IPR=<10.0.0.%> \\
 				-e REPL_USER=<repl> \\
 				-e REPL_PASSWORD=<newpass> \\
-				-e MASTER_HOST=<192.168.10.130> \\
+				-e MASTER_HOST=<10.0.0.50> \\
 				-e MASTER_PORT=[3306] \\
 				-e IPTABLES=<"192.168.10.0/24,10.0.0.0/24"> \\
 				-e MYSQL_GENERAL_LOG=Y \\
