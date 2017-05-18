@@ -103,7 +103,7 @@ if [ "$1" = 'mysqld_safe' ]; then
 	#Repl user
 	if [ "$REPL_IPR" ]; then
 		echo "GRANT REPLICATION SLAVE ON *.*  TO 'repl'@'"$REPL_IPR"' IDENTIFIED BY '"$MYSQL_REPL_PASSWORD"' ;" | "${mysql[@]}"
-		echo -e "MYSQL repl PASSWORD: $MYSQL_REPL_PASSWORD"
+		echo -e "MYSQL repl PASSWORD: $MYSQL_REPL_PASSWORD" |tee /var/lib/mysql/mysql/repl_info
 	fi
 	
 	#Import Database
@@ -216,9 +216,9 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 	##init pxc
 	init_pxc() {
 	echo
-	echo "MYSQL root PASSWORD: $MYSQL_ROOT_PASSWORD"
-	echo "MYSQL root LOCAL PASSWORD: $MYSQL_ROOT_LOCAL_PASSWORD"
-	echo "MYSQL sstuser PASSWORD: $MYSQL_SSTUSER_PASSWORD"
+	echo "MYSQL root PASSWORD: $MYSQL_ROOT_PASSWORD" |tee /var/lib/mysql/mysql/root_info
+	echo "MYSQL root LOCAL PASSWORD: $MYSQL_ROOT_LOCAL_PASSWORD" |tee /var/lib/mysql/mysql/local_info
+	echo "MYSQL sstuser PASSWORD: $MYSQL_SSTUSER_PASSWORD" |tee /var/lib/mysql/mysql/sst_info
 	echo
 	mysqld_safe --basedir=/usr --wsrep-new-cluster
 	}
@@ -257,6 +257,12 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 		fi
 	fi
 	
+	#Backup Database
+	if [ "$MYSQL_BACK" ]; then
+	    [ -z "$MYSQL_ROOT_LOCAL_PASSWORD" ] && MYSQL_ROOT_LOCAL_PASSWORD=$(awk '{print $5}' $DATADIR/local_info)
+		sed -i 's/newpass/'$MYSQL_ROOT_LOCAL_PASSWORD'/' /backup.sh
+		echo "0 4 * * * . /etc/profile;/bin/sh /backup.sh &>/dev/null" >>/var/spool/cron/root
+	fi
 	
 	#iptables, Need root authority "--privileged"
 	if [ $IPTABLES ]; then
@@ -264,6 +270,8 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 		iptables -I INPUT -p tcp --dport 3306 -j DROP
 		iptables -I INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 		iptables -I INPUT -s $IPTABLES -p tcp -m state --state NEW -m tcp --dport 3306 -m comment --comment PXC -j ACCEPT
+		iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 4567:4568 -m comment --comment PXC -j ACCEPT
+		iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 4444 -m comment --comment PXC -j ACCEPT
 		END
 	fi
 	
@@ -292,6 +300,7 @@ else
 				-e MYSQL_USER=<zabbix> \\
 				-e MYSQL_PASSWORD=<zbxpass> \\
 				-e MYSQL_MAX_CONN=[800] \\
+				-e MYSQL_BACK=<Y> \\
 				-e IPTABLES=<"192.168.10.0/24,10.0.0.0/24"> \\
 				--hostname mysql-pxc \\
 				--name mysql-pxc mysql-pxc
