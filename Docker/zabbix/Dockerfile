@@ -53,5 +53,5 @@ EXPOSE 80 443
 CMD ["httpd", "-DFOREGROUND"]
 
 # docker build -t zabbix .
-# docker run -d --restart always --privileged -p 11080:80 -p 11443:443 -v /docker/www:/var/www/html -e ZBX_DB_SERVER=redhat.xyz -e ZBX_DB_PORT=13306 --hostname zabbix --name zabbix zabbix
+# docker run -d --restart always --privileged -p 11080:80 -p 11443:443 -v /docker/www:/var/www/html -e ZBX_DB_SERVER=redhat.xyz -e ZBX_DB_PORT=3306 --hostname zabbix --name zabbix zabbix
 # docker run -it --rm zabbix --help
