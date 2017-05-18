@@ -203,7 +203,7 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 	[ -f /iptables.sh ] && [ -z "`iptables -S |grep MYSQL`" ] && . /iptables.sh
 	crond
 
-	exec "$@" &>/dev/null
+	exec "$@" 1>/dev/null
 else
 
     echo -e "
