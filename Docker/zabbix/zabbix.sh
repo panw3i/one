@@ -3,7 +3,7 @@ set -e
 
 if [ "$1" = 'httpd' ]; then
 
-: ${ZBX_DB_PORT:=13306}
+: ${ZBX_DB_PORT:=3306}
 : ${ZBX_DB_USER:=zabbix}
 : ${ZBX_DB_PASSWORD:=newpass}
 : ${ZBX_DB_DATABASE:=zabbix}
@@ -103,7 +103,7 @@ else
 				-p 11080:80 \\
 				-p 11443:443 \\
 				-e ZBX_DB_SERVER=<redhat.xyz> \\
-				-e ZBX_DB_PORT=[13306] \\
+				-e ZBX_DB_PORT=[3306] \\
 				-e ZBX_DB_USER=[zabbix] \\
 				-e ZBX_DB_PASSWORD=[newpass] \\
 				-e ZBX_DB_DATABASE=[zabbix] \\
