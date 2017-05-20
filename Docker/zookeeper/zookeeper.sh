@@ -54,7 +54,7 @@ if [ "$1" = 'bin/zkServer.sh' ]; then
 		done
 		END
 		chmod +x /vip.sh
-		echo "* * * * * . /etc/profile;/bin/bash /vip.sh &>/dev/null" >>/var/spool/cron/root
+		echo "* * * * * . /etc/profile;/bin/sh /vip.sh &>/dev/null" >>/var/spool/cron/root
 	fi
   fi
 
