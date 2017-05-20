@@ -10,7 +10,7 @@ MongoDB
     docker run -d --restart always --privileged --network=mynetwork --ip=10.0.0.81 -v /docker/mongodb1:/var/lib/mongo -e VIP=10.0.0.80 -e IPTABLES="10.0.0.0/24,192.168.10.0/24" --hostname mongodb1 --name mongodb1 mongodb 
     docker run -d --restart always --privileged --network=mynetwork --ip=10.0.0.82 -v /docker/mongodb2:/var/lib/mongo -e VIP=10.0.0.80 -e IPTABLES="10.0.0.0/24,192.168.10.0/24" --hostname mongodb2 --name mongodb2 mongodb  
     docker run -d --restart always --privileged --network=mynetwork --ip=10.0.0.83 -v /docker/mongodb3:/var/lib/mongo -e VIP=10.0.0.80 -e MONGO_SERVER="10.0.0.81,10.0.0.82,10.0.0.83" -e IPTABLES="10.0.0.0/24,192.168.10.0/24" -e MONGO_BACK=Y --hostname mongodb3 --name mongodb3 mongodb
-    #注意：顺序不能错，要先运行其他节点，再启动主节点
+    #注意：顺序不能错，要先运行二级节点，再运行主节点。要添加新节点，先运行一个新的二级节点，再到主节点上 rs.add("newip")
 
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
