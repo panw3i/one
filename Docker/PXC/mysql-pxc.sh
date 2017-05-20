@@ -233,6 +233,7 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 		if [ "$XPC_INIT" ]; then
 			init_mysql
 			init_cnf
+			init_other
 			init_pxc
 		fi
 		
@@ -257,6 +258,7 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 		fi
 	fi
 	
+	init_other() {
 	#Backup Database
 	if [ "$MYSQL_BACK" ]; then
 	    [ -z "$MYSQL_ROOT_LOCAL_PASSWORD" ] && MYSQL_ROOT_LOCAL_PASSWORD=$(awk '{print $5}' /var/lib/mysql/mysql/local_info)
@@ -275,10 +277,12 @@ DATABASE IF NOT EXISTS \`$DB_NAME\` ;" | "${mysql[@]}"; "${mysql[@]}" "$DB_NAME"
 		END
 	fi
 	
-	echo "Start MYSQL ****"
 	[ -f /iptables.sh ] && [ -z "`iptables -S |grep PXC`" ] && . /iptables.sh
 	crond
-	
+	}
+
+	echo "Start MYSQL ****"
+	init_other
 	exec "$@" 1>/dev/null
 else
 
