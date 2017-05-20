@@ -3,7 +3,14 @@ MongoDB
 
 ## Example:
 
-    docker run -d --restart always -p 27017:27017 -p 28017:28017 -v /docker/mongodb:/var/lib/mongo -e MONGO_ROOT_PASS=NewP@ss --hostname mongodb --name mongodb mongodb
+    #运行一个单机版MongoDB
+    docker run -d --restart always -p 27017:27017 -p 28017:28017 -v /docker/mongodb:/var/lib/mongo -e MONGO_ROOT_PASS=NewP@ss --hostname mongodb --name mongodb mongodb
+
+    #运行一个MongoDB副本集
+    docker run -d --restart always --privileged --network=mynetwork --ip=10.0.0.81 -v /docker/mongodb1:/var/lib/mongo -e VIP=10.0.0.80 -e IPTABLES="10.0.0.0/24,192.168.10.0/24" --hostname mongodb1 --name mongodb1 mongodb 
+    docker run -d --restart always --privileged --network=mynetwork --ip=10.0.0.82 -v /docker/mongodb2:/var/lib/mongo -e VIP=10.0.0.80 -e IPTABLES="10.0.0.0/24,192.168.10.0/24" --hostname mongodb2 --name mongodb2 mongodb  
+    docker run -d --restart always --privileged --network=mynetwork --ip=10.0.0.83 -v /docker/mongodb3:/var/lib/mongo -e VIP=10.0.0.80 -e MONGO_SERVER="10.0.0.81,10.0.0.82,10.0.0.83" -e IPTABLES="10.0.0.0/24,192.168.10.0/24" -e MONGO_BACK=Y --hostname mongodb3 --name mongodb3 mongodb
+    #注意：顺序不能错，要先运行其他节点，再启动主节点
 
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
@@ -18,5 +25,9 @@ MongoDB
 				-e MONGO_DB=<test> \\              创建的数据库名称，为空则与用户同名
 				-e MONGO_HTTP=<Y> \\               开启HTTP功能
 				-e MONGO_BACK=<Y> \\               开启自动备份数据库，默认只保留3天的备份
+				-e MONGO_ID=[rs0] \\               副本集名称
+				-e VIP=<10.0.0.80>                 PRIMARY IP Addr，需要 --privileged
+				-e MONGO_SERVER=<10.0.0.81,10.0.0.82,10.0.0.83>   集群节点数建议大于或等于3
+				-e IPTABLES=<"192.168.10.0/24,10.0.0.0/24"> \\    防火墙，需要 --privileged
 				--hostname mongodb \\
 				--name mongodb mongodb
