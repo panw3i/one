@@ -3,8 +3,8 @@ MongoDB
 
 ## Example:
 
-    #运行一个单机版MongoDB
-    docker run -d --restart always -p 27017:27017 -p 28017:28017 -v /docker/mongodb:/var/lib/mongo -e MONGO_ROOT_PASS=NewP@ss --hostname mongodb --name mongodb mongodb
+    #运行一个单机版MongoDB
+    docker run -d --restart always -p 27017:27017 -p 28017:28017 -v /docker/mongodb:/var/lib/mongo -e MONGO_ROOT_PASS=NewP@ss --hostname mongodb --name mongodb mongodb
 
     #运行一个MongoDB副本集
     docker run -d --restart always --privileged --network=mynetwork --ip=10.0.0.81 -v /docker/mongodb1:/var/lib/mongo -e VIP=10.0.0.80 -e IPTABLES="10.0.0.0/24,192.168.10.0/24" --hostname mongodb1 --name mongodb1 mongodb 
