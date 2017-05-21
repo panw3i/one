@@ -1,5 +1,5 @@
 #!/bin/bash
-PASS="newpass"
+PASS=
 BDAY=3
 
 [ ! -d "/var/lib/mongo/mongo_back" ] && mkdir "/var/lib/mongo/mongo_back"
