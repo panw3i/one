@@ -126,7 +126,6 @@ if [ "$1" = 'mongod' ]; then
 	mongo_other() {
 	#Backup Database
 	if [ "$MONGO_BACK" ]; then
-		[ -z "$MONGO_ROOT_PASS" ] && MONGO_ROOT_PASS=$(awk '{print $4}' /var/lib/mongo/root_info)
 		echo "0 4 * * * . /etc/profile;/bin/sh /backup.sh &>/dev/null" >>/var/spool/cron/root
 	fi
 
