@@ -75,7 +75,7 @@ if [ "$1" = 'mongod' ]; then
 		#!/bin/bash
 		PASS="$AUTH"
 		if [ ! -f "/var/lib/mongo/myid" ]; then
-		for i in \$(echo 'rs.status()' |/usr/local/bin/mongo $PASS |grep '"name"' |awk -F\" '{print \$4}' |awk -F: '{print \$1}'); do
+		for i in \$(echo 'rs.status()' |/usr/local/bin/mongo \$PASS |grep '"name"' |awk -F\" '{print \$4}' |awk -F: '{print \$1}'); do
 			for ip in \$(ifconfig |grep netmask |awk '{print \$2}'); do
 				[ "\$ip" == "\$i" ] && echo \$ip >/var/lib/mongo/myid
 			done
