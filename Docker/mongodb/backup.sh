@@ -1,11 +1,11 @@
 #!/bin/bash
-PASS=newpass
+PASS="newpass"
 BDAY=3
 
 [ ! -d "/var/lib/mongo/mongo_back" ] && mkdir "/var/lib/mongo/mongo_back"
 
 cd "/var/lib/mongo/mongo_back"
-/usr/local/bin/mongodump -u root -p "$PASS" -o "$(date +%F)" 2>/dev/null
+/usr/local/bin/mongodump $PASS -o "$(date +%F)" 2>/dev/null
 tar czf "$(date +%F)".tar.gz "$(date +%F)"
 rm -rf "$(date +%F)"
 
