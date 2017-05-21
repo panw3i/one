@@ -1,29 +1,30 @@
 #!/bin/bash
 set -e
 
-: ${MONGO_ROOT_PASS:="newpass"}
 : ${MONGO_ID:="rs0"}
 
 if [ "$1" = 'mongod' ]; then
 	##USER
 	mongo_user() {
 	#Create root
-	cat >admin.json<<-END
-	use admin
-	db.createUser(
-	  {
-		user: "root",
-		pwd: "$MONGO_ROOT_PASS",
-		roles: [ { role: "userAdminAnyDatabase", db: "admin" },
-		         { role: "backup", db: "admin" },
-		         { role: "restore", db: "admin" } ]
-	  }
-	)
-	END
+	if [ -n "$MONGO_ROOT_PASS" ]; then
+		cat >admin.json<<-END
+		use admin
+		db.createUser(
+		  {
+			user: "root",
+			pwd: "$MONGO_ROOT_PASS",
+			roles: [ { role: "userAdminAnyDatabase", db: "admin" },
+			         { role: "backup", db: "admin" },
+			         { role: "restore", db: "admin" } ]
+		  }
+		)
+		END
 
-	mongo <admin.json &>/dev/null
-	echo
-	echo "MongoDB ROOT PASSWORD: $MONGO_ROOT_PASS" |tee /var/lib/mongo/root_info
+		mongo <admin.json &>/dev/null
+		echo "MongoDB ROOT PASSWORD: $MONGO_ROOT_PASS" |tee /var/lib/mongo/root_info
+		AUTH="-u root -p $MONGO_ROOT_PASS --authenticationDatabase admin"
+	fi
 
 	#Create a database and database user
 	if [ -n "$MONGO_USER" -a -n "$MONGO_PASS" ]; then
@@ -61,18 +62,19 @@ if [ "$1" = 'mongod' ]; then
 
 	##Clustered
 	mongo_gluster() {
-	if [ $VIP ]; then
+	if [ "$VIP" ]; then
 		sed -i 's/#replication:/replication:/' /etc/mongod.conf
 		sed -i '/replication:/ a \  replSetName: '$MONGO_ID'' /etc/mongod.conf
 		sed -i 's/127.0.0.1/0.0.0.0/' /etc/mongod.conf
 		[ "$MONGO_HTTP" ] && sed -i '/net:/ a \  http:\n \    enabled: true' /etc/mongod.conf
-		[ $MONGO_SERVER ] && /usr/local/bin/mongod -f /etc/mongod.conf &>/dev/null
+		[ "$MONGO_SERVER" ] && /usr/local/bin/mongod -f /etc/mongod.conf &>/dev/null
 		sed -i 's/fork: true/#fork: true/' /etc/mongod.conf
 
 		cat >/vip.sh<<-END
 		#!/bin/bash
+		PASS="$AUTH"
 		if [ ! -f "/var/lib/mongo/myid" ]; then
-		for i in \$(echo 'rs.status()' |/usr/local/bin/mongo |grep '"name"' |awk -F\" '{print \$4}' |awk -F: '{print \$1}'); do
+		for i in \$(echo 'rs.status()' |/usr/local/bin/mongo $PASS |grep '"name"' |awk -F\" '{print \$4}' |awk -F: '{print \$1}'); do
 			for ip in \$(ifconfig |grep netmask |awk '{print \$2}'); do
 				[ "\$ip" == "\$i" ] && echo \$ip >/var/lib/mongo/myid
 			done
@@ -80,7 +82,7 @@ if [ "$1" = 'mongod' ]; then
 		fi
 
 		for i in {1..29}; do
-		if [ "\$(echo 'rs.status()' |/usr/local/bin/mongo |grep -A 3 "\"name\" : \"\$(cat /var/lib/mongo/myid):27017\"" |awk -F\" 'END{print \$4}')" == "PRIMARY" ]; then
+		if [ "\$(echo 'rs.status()' |/usr/local/bin/mongo $PASS |grep -A 3 "\"name\" : \"\$(cat /var/lib/mongo/myid):27017\"" |awk -F\" 'END{print \$4}')" == "PRIMARY" ]; then
 		    if [ -z "\$(ifconfig |grep $VIP)" ]; then
 		        ifconfig lo:0 $VIP broadcast $VIP netmask 255.255.255.255 up || echo
 		    fi
@@ -124,7 +126,7 @@ if [ "$1" = 'mongod' ]; then
 	#Backup Database
 	if [ "$MONGO_BACK" ]; then
 		[ -z "$MONGO_ROOT_PASS" ] && MONGO_ROOT_PASS=$(awk '{print $4}' /var/lib/mongo/root_info)
-		sed -i 's/newpass/'$MONGO_ROOT_PASS'/' /backup.sh
+		sed -i 's/newpass/'$AUTH'/' /backup.sh
 		echo "0 4 * * * . /etc/profile;/bin/sh /backup.sh &>/dev/null" >>/var/spool/cron/root
 	fi
 
@@ -171,7 +173,7 @@ else
 				-v /docker/mongodb:/var/lib/mongo \\
 				-p 27017:27017 \\
 				-p 28017:28017 \\
-				-e MONGO_ROOT_PASS=[newpass] \\
+				-e MONGO_ROOT_PASS=<newpass> \\
 				-e MONGO_USER=<user1> \\
 				-e MONGO_PASS=<newpass> \\
 				-e MONGO_DB=<test> \\
