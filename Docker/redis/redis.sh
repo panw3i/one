@@ -41,7 +41,7 @@ if [ "$1" = 'redis-server' ]; then
 		PASS="$AUTH"
 
 		for i in {1..29}; do
-		if [ "\$(echo info |redis-cli \$PASS |grep "role:" |awk -F: '{print \$2}')" == "master" ]; then
+		if [ "\$(echo info |/usr/local/bin/redis-cli \$PASS |grep "role:" |awk -F: '{print \$2}')" == "master" ]; then
 		    if [ -z "\$(ifconfig |grep $VIP)" ]; then
 		        ifconfig lo:0 $VIP broadcast $VIP netmask 255.255.255.255 up || echo
 		    fi
