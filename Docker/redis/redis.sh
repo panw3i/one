@@ -32,6 +32,7 @@ if [ "$1" = 'redis-server' ]; then
 	#master pass
 	if [ $MASTER_PASS ]; then
 		echo "masterauth $MASTER_PASS" >>/usr/local/redis/redis.conf
+		AUTH="-a $MASTER_PASS"
 	fi
 
 	#VIP
