@@ -24,6 +24,7 @@ if [ "$1" = 'mongod' ]; then
 		mongo <admin.json &>/dev/null
 		echo "MongoDB ROOT PASSWORD: $MONGO_ROOT_PASS" |tee /var/lib/mongo/root_info
 		AUTH="-u root -p $MONGO_ROOT_PASS --authenticationDatabase admin"
+		sed -i 's/PASS=/PASS="'$AUTH'"/' /backup.sh
 	fi
 
 	#Create a database and database user
@@ -126,7 +127,6 @@ if [ "$1" = 'mongod' ]; then
 	#Backup Database
 	if [ "$MONGO_BACK" ]; then
 		[ -z "$MONGO_ROOT_PASS" ] && MONGO_ROOT_PASS=$(awk '{print $4}' /var/lib/mongo/root_info)
-		sed -i 's/newpass/'$AUTH'/' /backup.sh
 		echo "0 4 * * * . /etc/profile;/bin/sh /backup.sh &>/dev/null" >>/var/spool/cron/root
 	fi
 
