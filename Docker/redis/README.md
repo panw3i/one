@@ -10,7 +10,7 @@ Redis
 
     #运行一个redis主从
     docker run -d --restart always --privileged --network=mynetwork --ip=10.0.0.91 -v /docker/redis1:/usr/local/redis/data -e LOCAL_STROGE=Y -e REDIS_PASS=bigpass -e VIP=10.0.0.90 --hostname redis --name redis redis
-    docker run -d --restart always --privileged --network=mynetwork --ip=10.0.0.92 -v /docker/redis2:/usr/local/redis/data -e LOCAL_STROGE=Y -e REDIS_MASTER=10.0.0.91 -e VIP=10.0.0.90 -e MASTER_PASS=bigpass --hostname redis --name redis redis
+    docker run -d --restart always --privileged --network=mynetwork --ip=10.0.0.92 -v /docker/redis2:/usr/local/redis/data -e LOCAL_STROGE=Y -e REDIS_PASS=bigpass -e REDIS_MASTER=10.0.0.91 -e VIP=10.0.0.90 -e MASTER_PASS=bigpass --hostname redis --name redis redis
 
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
