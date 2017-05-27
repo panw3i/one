@@ -25,7 +25,7 @@ MongoDB
 				-e MONGO_DB=<test> \\              创建的数据库名称，为空则与用户同名
 				-e MONGO_HTTP=<Y> \\               开启HTTP功能
 				-e MONGO_BACK=<Y> \\               开启自动备份数据库，默认只保留3天的备份
-				-e MONGO_ID=[rs0] \\               副本集名称
+				-e REPL_NAME=[rs0] \\              副本集名称
 				-e VIP=<10.0.0.80>                 PRIMARY IP Addr，需要 --privileged
 				-e MONGO_SERVER=<10.0.0.81,10.0.0.82,10.0.0.83>   集群节点数建议大于或等于3
 				-e IPTABLES=<"192.168.10.0/24,10.0.0.0/24"> \\    防火墙，需要 --privileged
