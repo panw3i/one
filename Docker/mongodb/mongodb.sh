@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-: ${MONGO_ID:="rs0"}
+: ${REPL_NAME:="rs0"}
 
 if [ "$1" = 'mongod' ]; then
 	##USER
@@ -65,7 +65,7 @@ if [ "$1" = 'mongod' ]; then
 	mongo_gluster() {
 	if [ "$VIP" ]; then
 		sed -i 's/#replication:/replication:/' /etc/mongod.conf
-		sed -i '/replication:/ a \  replSetName: '$MONGO_ID'' /etc/mongod.conf
+		sed -i '/replication:/ a \  replSetName: '$REPL_NAME'' /etc/mongod.conf
 		sed -i 's/127.0.0.1/0.0.0.0/' /etc/mongod.conf
 		[ "$MONGO_HTTP" ] && sed -i '/net:/ a \  http:\n \    enabled: true' /etc/mongod.conf
 		[ "$MONGO_SERVER" ] && /usr/local/bin/mongod -f /etc/mongod.conf &>/dev/null
@@ -178,7 +178,7 @@ else
 				-e MONGO_DB=<test> \\
 				-e MONGO_HTTP=<Y> \\
 				-e MONGO_BACK=<Y> \\
-				-e MONGO_ID=[rs0] \\
+				-e REPL_NAME=[rs0] \\
 				-e VIP=<10.0.0.80>
 				-e MONGO_SERVER=<10.0.0.81,10.0.0.82,10.0.0.83>
 				-e IPTABLES=<"192.168.10.0/24,10.0.0.0/24"> \\
