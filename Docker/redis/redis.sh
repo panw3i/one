@@ -3,6 +3,10 @@ set -e
 
 if [ "$1" = 'redis-server' ]; then
 
+: ${MASTER_NAME:="mymaster"}
+: ${SLAVE_QUORUM:="2"}
+: ${DOWN_TIME:="6000"}
+
   if [ -z "$(grep "redhat.xyz" /usr/local/redis/redis.conf)" ]; then
 	echo "Initialize redis"
 	sed -i '1 i #redhat.xyz' /usr/local/redis/redis.conf
@@ -25,17 +29,36 @@ if [ "$1" = 'redis-server' ]; then
 
 	#redis master
 	if [ $REDIS_MASTER ]; then
-		[ -z "$MASTER_PORT" ] && MASTER_PORT=6379
-		echo "slaveof $REDIS_MASTER $MASTER_PORT" >>/usr/local/redis/redis.conf
+		echo "slaveof $REDIS_MASTER 6379" >>/usr/local/redis/redis.conf
+		
+		#sentinel
+		cat >/sentinel.txt<<-END
+		port 26379
+		dir /tmp
+		protected-mode no
+		sentinel monitor $MASTER_NAME $REDIS_MASTER 6379 $SLAVE_QUORUM
+		sentinel down-after-milliseconds $MASTER_NAME $DOWN_TIME
+		sentinel parallel-syncs $MASTER_NAME 1
+		sentinel failover-timeout $MASTER_NAME 180000
+		#daemonize yes
+		END
 	fi
 
 	#master pass
 	if [ $MASTER_PASS ]; then
 		echo "masterauth $MASTER_PASS" >>/usr/local/redis/redis.conf
+		echo "sentinel auth-pass $MASTER_NAME $MASTER_PASS" >>/sentinel.txt
+		
+		if [ -z "$(grep "^requirepass" /usr/local/redis/redis.conf)" ]; then
+			echo "requirepass $MASTER_PASS" >>/usr/local/redis/redis.conf
+			echo "Redis password: $MASTER_PASS" |tee /usr/local/redis/data/info
+			AUTH="-a $MASTER_PASS"
+		fi
 	fi
 
-	#VIP
+	#VIP, Need root authority "--privileged"
 	if [ $VIP ]; then
+		#vip
 		cat >/vip.sh<<-END
 		#!/bin/bash
 		PASS="$AUTH"
@@ -56,40 +79,47 @@ if [ "$1" = 'redis-server' ]; then
 		END
 		chmod +x /vip.sh
 		echo "* * * * * . /etc/profile;/bin/sh /vip.sh &>/dev/null" >>/var/spool/cron/root
+
+		if [ $REDIS_MASTER ]; then
+			\cp /sentinel.txt /usr/local/redis/sentinel.conf
+			echo -e "/usr/local/redis/bin/redis-server /usr/local/redis/redis.conf\n/usr/local/redis/bin/redis-server /usr/local/redis/sentinel.conf --sentinel" >/sentinel.sh
+			sed -i 's/daemonize no/daemonize yes/' /usr/local/redis/redis.conf
+		fi
 	fi
 
 	#iptables, Need root authority "--privileged"
 	if [ $IPTABLES ]; then
 		cat > /iptables.sh <<-END
-		iptables -I INPUT -p tcp -m multiport --dport 6379 -j DROP
+		iptables -I INPUT -p tcp -m multiport --dport 6379,26379 -j DROP
 		iptables -I INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-		iptables -I INPUT -s $IPTABLES -p tcp -m state --state NEW -m tcp --dport 6379 -m comment --comment MONGDB -j ACCEPT
+		iptables -I INPUT -s $IPTABLES -p tcp -m state --state NEW -m tcp --dport 6379 -m comment --comment REDIS -j ACCEPT
+		iptables -I INPUT -s $IPTABLES -p tcp -m state --state NEW -m tcp --dport 26379 -m comment --comment REDIS -j ACCEPT
 		END
 	fi
-	
-	[ -f /iptables.sh ] && [ -z "`iptables -S |grep MONGDB`" ] && . /iptables.sh || echo
-
-	echo "vm.overcommit_memory = 1" >>/etc/sysctl.conf
   fi
 
+	echo
 	echo "Start Redis ****"
 	crond
-	sysctl vm.overcommit_memory=1
-	echo never > /sys/kernel/mm/transparent_hugepage/enabled
-	echo 511 > /proc/sys/net/core/somaxconn
+	[ -f /iptables.sh ] && [ -z "`iptables -S |grep REDIS`" ] && . /iptables.sh || echo
+	[ -f /sentinel.sh ] && . /sentinel.sh
+
 	exec "$@" 1>/dev/null
 
 else
 	echo -e "
 	Example
-					docker run -d --restart always --privileged \\
+					docker run -d --restart always [--privileged] \\
 					-v /docker/redis:/usr/local/redis/data \\
 					-p 6379:6379 \\
 					-e REDIS_PASS=<bigpass> \\
 					-e LOCAL_STROGE=<Y> \\
-					-e REDIS_MASTER=<redhat.xyz> \\
+					-e REDIS_MASTER=<10.0.0.91> \\
 					-e MASTER_PASS=<bigpass> \\
 					-e VIP=<10.0.0.90> \\
+					-e MASTER_NAME=[mymaster] \\
+					-e SLAVE_QUORUM=[2] \\
+					-e DOWN_TIME=[6000] \\
 					-e IPTABLES=<"192.168.10.0/24,10.0.0.0/24"> \\
 					--hostname redis \\
 					--name redis redis
