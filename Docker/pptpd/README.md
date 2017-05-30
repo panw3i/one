@@ -3,7 +3,7 @@ PPTPD
 
 ## Example:
 
-    docker run -d --restart always --privileged --network=host -e VPN_PASS=123456 --hostname=pptpd --name=pptpd pptpd
+    docker run -d --restart always --privileged --network=host -e VPN_PASS=123456 --hostname=pptpd --name=pptpd jiobxn/pptpd
 
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
