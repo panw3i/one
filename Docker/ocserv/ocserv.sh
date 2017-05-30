@@ -143,7 +143,8 @@ fi
 	echo
 	echo "Start ****"
 	[ -z "`iptables -S |grep OCSERV`" ] && . /iptables.sh
-	exec "$@"
+
+	exec "$@" &>/dev/null
 
 else
 	echo -e "
