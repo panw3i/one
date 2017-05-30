@@ -801,9 +801,11 @@ if [ "$1" = 'nginx' ]; then
 	fi
   fi
 
+	echo
 	echo "Start ****"
 	#Keepalived Need root authority "--privileged"
 	[ -f /etc/keepalived/keepalived.conf ] && keepalived -f /etc/keepalived/keepalived.conf -P -l
+
 	exec "$@"
 else
 
