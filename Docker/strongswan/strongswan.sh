@@ -261,7 +261,7 @@ fi
 	[ -z "`iptables -S |grep IPSEC`" ] && . /iptables.sh
 	/usr/sbin/xl2tpd
 	
-	exec "$@"
+	exec "$@" &>/dev/null
 
 else
 
