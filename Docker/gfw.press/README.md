@@ -4,7 +4,7 @@ GFW.Press
 
 ## Example:
 
-    docker run -d --restart always --privileged --network=host -v /docker/gfw.press:/key --hostname gfw.press --name gfw.press gfw.press
+    docker run -d --restart always --privileged --network=host -v /docker/gfw.press:/key --hostname gfw.press --name gfw.press jiobxn/gfw.press
     docker logs gfw.press
 
 ## Run Defult Parameter
