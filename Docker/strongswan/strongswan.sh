@@ -11,7 +11,6 @@ if [ "$1" = 'strongswan' ]; then
 : ${CLIENT_CN:="strongSwan VPN"}
 : ${CA_CN:="strongSwan CA"}
 
-
 	
 if [ -z "$(grep "redhat.xyz" /etc/strongswan/ipsec.conf)" ]; then
 	# Get ip address
@@ -261,6 +260,7 @@ fi
 	echo "Start ****"
 	[ -z "`iptables -S |grep IPSEC`" ] && . /iptables.sh
 	/usr/sbin/xl2tpd
+	
 	exec "$@"
 
 else
