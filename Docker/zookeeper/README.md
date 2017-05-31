@@ -23,3 +23,15 @@ ZooKeeprt
 				-e IPTABLES=<"192.168.10.0/24,10.0.0.0/24"> \\        防火墙(2181)，需要 --privileged
 				--hostname zookeeper \\
 				--name zookeeper zookeeper
+
+## 补充
+查看集群状态：
+
+    zkServer.sh status
+
+Zookeeper中角色：
+
+    领导者(Leader)：领导者负责进行投票的发起和决议，更新系统状态，处理写请求
+    跟随者(Follwer)：Follower用于接收客户端的读写请求并向客户端返回结果，在选主过程中参与投票
+    观察者（Observer）：观察者可以接收客户端的读写请求，并将写请求转发给Leader，但Observer节点不参与投票过程，只同步leader状态，Observer的目的是为了，扩展系统，提高读取速度。
+    客户端(Client)： 执行读写请求的发起方
