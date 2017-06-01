@@ -9,9 +9,9 @@ Redis
     docker run -d --restart always --privileged -v /docker/redis:/usr/local/redis/data -p 6379:6379 -e LOCAL_STROGE=Y -e REDIS_PASS=bigpass --hostname redis --name redis redis
 
     #运行一个redis主从
-    docker run -d --restart always --privileged --network=mynetwork --ip=10.99.0.101 -e VIP=10.99.0.110 -e REDIS_PASS=bigpass --hostname redis1 --name redis1 redis
-    docker run -d --restart always --privileged --network=mynetwork --ip=10.99.0.102 -e REDIS_MASTER=10.99.0.101 -e VIP=10.99.0.110 -e MASTER_PASS=bigpass --hostname redis2 --name redis2 redis 
-    docker run -d --restart always --privileged --network=mynetwork --ip=10.99.0.103 -e REDIS_MASTER=10.99.0.101 -e VIP=10.99.0.110 -e MASTER_PASS=bigpass --hostname redis3 --name redis3 redis
+    docker run -d --restart always --privileged --network=mynetwork --ip=10.0.0.91 -e VIP=10.0.0.90 -e REDIS_PASS=bigpass --hostname redis1 --name redis1 redis
+    docker run -d --restart always --privileged --network=mynetwork --ip=10.0.0.92 -e REDIS_MASTER=10.0.0.91 -e VIP=10.0.0.90 -e MASTER_PASS=bigpass --hostname redis2 --name redis2 redis 
+    docker run -d --restart always --privileged --network=mynetwork --ip=10.0.0.93 -e REDIS_MASTER=10.0.0.91 -e VIP=10.0.0.90 -e MASTER_PASS=bigpass --hostname redis3 --name redis3 redis
 
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
