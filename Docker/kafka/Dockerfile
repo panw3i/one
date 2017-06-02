@@ -27,5 +27,4 @@ CMD ["bin/kafka-server-start.sh", "config/server.properties"]
 
 # docker build -t kafka .
 # docker run -d --restart always -p 9092:9092 -v /docker/kafka:/var/lib/kafka-logs -e KK_TOPIC=test:1:1 --hostname kafka --name kafka kafka
-# docker logs kafka
 # docker run -it --rm kafka --help
