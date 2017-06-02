@@ -1,5 +1,7 @@
 Kafka
 ===
+## 简介
+* **Apache Kafka** 是由Apache软件基金会开发的一个开源消息中间件项目，由Scala写成。Kafka最初是由LinkedIn开发，并于2011年初开源。2012年10月从Apache Incubator毕业。该项目的目标是为处理实时数据提供一个统一、高吞吐、低延迟的平台。
 > * 快速开始：https://kafka.apache.org/quickstart
 > * 深度解析：http://www.jasongj.com/tags/Kafka/
 > * 简单示例：https://www.netkiller.cn/developer/mqueue/kafka.html
