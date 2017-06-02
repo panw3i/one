@@ -1,11 +1,13 @@
 #!/bin/bash
 set -e
 
-: ${ZK_MEM:="$(($(free -m |grep Mem |awk '{print $2}')*70/100))m"}
+: ${ZK_MEM:="1G"}
 
 if [ "$1" = 'bin/zkServer.sh' ]; then
-  if [ ! -d /var/lib/zookeeper/version-2 ]; then
+  if [ -z "$(grep "redhat.xyz" /usr/local/zookeeper/conf/zoo.cfg 2>/dev/null)" ]; then
+	echo "Initialize zookeeper"
 	cp /usr/local/zookeeper/conf/zoo_sample.cfg /usr/local/zookeeper/conf/zoo.cfg
+	sed -i '1 i #redhat.xyz' /usr/local/zookeeper/conf/zoo.cfg
 	sed -i 's#/tmp/zookeeper#/var/lib/zookeeper#' /usr/local/zookeeper/conf/zoo.cfg
 	sed -i 's/#maxClientCnxns=60/maxClientCnxns=0/' /usr/local/zookeeper/conf/zoo.cfg
 	sed -i 's/syncLimit=5/syncLimit=2/' /usr/local/zookeeper/conf/zoo.cfg
@@ -70,7 +72,7 @@ else
 				docker run -d --restart always [--privileged] \\
 				-v /docker/zookeeper:/var/lib/zookeeper \\
 				-p 2181:2181 \\
-				-e ZK_MEM=[2048m] \\
+				-e ZK_MEM=[1G] \\
 				-e ZK_SERVER=<"10.0.0.71,10.0.0.72,10.0.0.73"> \\
 				-e VIP=<10.0.0.70> \\
 				-e IPTABLES=<"192.168.10.0/24,10.0.0.0/24"> \\
