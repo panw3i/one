@@ -1,5 +1,8 @@
 Kafka
 ===
+> * 快速开始：https://kafka.apache.org/quickstart
+> * 深度解析：http://www.jasongj.com/tags/Kafka/
+> * 简单示例：https://www.netkiller.cn/developer/mqueue/kafka.html
 
 ## Example:
 
@@ -30,13 +33,16 @@ Kafka
 				--name kafka kafka
 
 ## 补充
-查看集群状态：
+查看topic状态：
 
-    kafka-topics.sh --describe --zookeeper 10.0.0.70:2181 --topic test1
+    /usr/local/kafka/bin/kafka-topics.sh --describe --zookeeper 10.0.0.70:2181 --topic test1
+
+通过ZK查看
+
+    echo -e "ls /brokers/ids\nls /brokers/topics" | /usr/local/zookeeper/bin/zkCli.sh |tail -6 && echo
 
 Kafka一些概念：
 
     topic：一个话题，相当于一个漏斗名称
-    replication-factor：topic副本数。例如一个3节点集群，test1:3:1，就表示test1在3个节点上有副本，每个副本存储在1一个分区(文件夹)
-    partitions：分区数。例如一个3节点集群，test1:3:4，就表示test1在3个节点上有副本，每个副本存储在4个分区(文件夹)
-
+    replication-factor：topic副本数。例如一个3节点集群，test1:3:1，就表示将test1复制到三个节点，其中一个是节点是Leader，另外两个节点是Replicas
+    partitions：分区数。例如一个3节点集群，test1:3:4，就表示将test1切分成四个分区后再复制到三个节点，每一个分区有一个Leader和2个Replicas
