@@ -37,6 +37,6 @@ Kafka
 Kafka一些概念：
 
     topic：一个话题，相当于一个漏斗名称
-    replication-factor：topic副本数。例如一个3节点集群，test1:3:1，就表示test1在3个节点上有副本，每个副本分存储在1一个分区(文件夹)
-    partitions：分区数。例如一个3节点集群，test1:3:4，就表示test1在3个节点上有副本，每个副本在4个分区(文件夹)
+    replication-factor：topic副本数。例如一个3节点集群，test1:3:1，就表示test1在3个节点上有副本，每个副本存储在1一个分区(文件夹)
+    partitions：分区数。例如一个3节点集群，test1:3:4，就表示test1在3个节点上有副本，每个副本存储在4个分区(文件夹)
 
