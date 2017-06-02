@@ -26,5 +26,5 @@ EXPOSE 9092
 CMD ["bin/kafka-server-start.sh", "config/server.properties"]
 
 # docker build -t kafka .
-# docker run -d --restart always -p 9092:9092 -v /docker/kafka:/var/lib/kafka-logs -e KK_TOPIC=test:1:1 --hostname kafka --name kafka kafka
+# docker run -d --restart always --network=mynetwork --ip=10.0.0.100 -p 9092:9092 -v /docker/kafka:/var/lib/kafka-logs -e ZK_SERVER=10.0.0.70:2181 -e KK_TOPIC=test:1:1 --hostname kafka --name kafka kafka
 # docker run -it --rm kafka --help
