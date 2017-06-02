@@ -17,8 +17,8 @@ ZooKeeprt
 				docker run -d --restart always [--privileged] \\
 				-v /docker/zookeeper:/var/lib/zookeeper \\
 				-p 2181:2181 \\
-				-e ZK_MEM=[2048m] \\                                  默认为物理内存的%70
-				-e ZK_SERVER=<"10.0.0.71,10.0.0.72,10.0.0.73"> \\     集群节点数建议大于或等于3
+				-e ZK_MEM=[1G] \\                                     默认内存大小1G
+				-e ZK_SERVER=<"10.0.0.71,10.0.0.72,10.0.0.73"> \\     集群节点数建议大于或等于3
 				-e VIP=<10.0.0.70> \\                                 leader IP Addr，需要 --privileged
 				-e IPTABLES=<"192.168.10.0/24,10.0.0.0/24"> \\        防火墙(2181)，需要 --privileged
 				--hostname zookeeper \\
