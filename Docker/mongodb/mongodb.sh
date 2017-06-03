@@ -180,7 +180,7 @@ if [ "$1" = 'mongod' ]; then
 
 
 	echo "Start MongoDB ****"
-	[ -f /iptables.sh ] && [ -z "`iptables -S |grep MONGDB`" ] && . /iptables.sh || echo
+	[ -f /iptables.sh ] && [ -z "`iptables -S |grep MONGDB`" ] && . /iptables.sh
 	crond
 	exec "$@" 1>/dev/null
 
