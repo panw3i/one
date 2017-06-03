@@ -62,7 +62,7 @@ if [ "$1" = 'bin/zkServer.sh' ]; then
 
 	echo "Start ZooKeeper ****"
 	crond
-	[ -f /iptables.sh ] && [ -z "`iptables -S |grep ZOOKEEPER`" ] && . /iptables.sh || echo
+	[ -f /iptables.sh ] && [ -z "`iptables -S |grep ZOOKEEPER`" ] && . /iptables.sh
 	exec "$@" 1>/dev/null
 
 else
