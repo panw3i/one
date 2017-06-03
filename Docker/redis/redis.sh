@@ -101,7 +101,7 @@ if [ "$1" = 'redis-server' ]; then
 	echo
 	echo "Start Redis ****"
 	crond
-	[ -f /iptables.sh ] && [ -z "`iptables -S |grep REDIS`" ] && . /iptables.sh || echo
+	[ -f /iptables.sh ] && [ -z "`iptables -S |grep REDIS`" ] && . /iptables.sh
 	[ -f /sentinel.sh ] && . /sentinel.sh
 
 	exec "$@" 1>/dev/null
