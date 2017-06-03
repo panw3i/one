@@ -119,7 +119,7 @@ if [ -z "$(grep "redhat.xyz" /usr/local/tomcat/conf/server.xml)" ]; then
 fi
 
 	echo "Start ****"
-        [ -f /iptables.sh ] && [ -z "`iptables -S |grep JAVA`" ] && . /iptables.sh 2>/dev/null
+        [ -f /iptables.sh ] && [ -z "`iptables -S |grep JAVA`" ] && . /iptables.sh
 	exec "$@"
 else
 
