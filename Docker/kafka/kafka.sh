@@ -80,7 +80,7 @@ if [ "$1" = 'bin/kafka-server-start.sh' ]; then
   fi
 
 	echo "Start Kafka ****"
-	[ -f /iptables.sh ] && [ -z "`iptables -S |grep KAFKA`" ] && . /iptables.sh || echo
+	[ -f /iptables.sh ] && [ -z "`iptables -S |grep KAFKA`" ] && . /iptables.sh
 	exec "$@" 1>/dev/null
 
 else
