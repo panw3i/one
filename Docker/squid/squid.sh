@@ -70,9 +70,6 @@ if [ -z "$(grep "redhat.xyz" /etc/squid/squid.conf)" ]; then
 							sed -i '/http_port/ a cache_peer  '$x'  parent  80  0  originserver  name=proxy'$n'' /etc/squid/squid.conf
 						fi
 					done
-				else
-					echo "Example: PROXY_SERVER='redhat.xyz|10.0.0.8'"
-					exit 1
 				fi
 			done
 			sed -i 's/http_port '$HTTP_PORT'/http_port '$HTTP_PORT' vhost/' /etc/squid/squid.conf
@@ -97,7 +94,7 @@ esle
 			-e SQD_USER=<jiobxn> \\
 			-e SQD_PASS=<123456> \\
 			-e MAX_AUTH=[5] \\
-			-e PROXY_SERVER=<"10.0.0.2,10.0.0.3"|"www.redhat.xyz|10.0.0.4;redhat.xyz|10.0.0.5"> \\
+			-e PROXY_SERVER=<"10.0.0.2,10.0.0.3" | "www.redhat.xyz|10.0.0.4;redhat.xyz|10.0.0.5"> \\
 			-e PROXY_HTTPS=<Y> \\
 			--hostname squid \\
 			--name squid squid
