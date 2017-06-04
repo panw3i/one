@@ -4,6 +4,7 @@ set -e
 : ${GFW_PORT:="10001..10005"}
 : ${GFW_PASS:="$(pwmake 64)"}
 : ${GFW_EMOD:="squid"}
+: ${SQUID_PASS:="$(pwmake 64)"}
 
 if [ "$1" = 'gfw.press' ]; then
   if [ ! -f /iptables.sh ]; then
@@ -18,6 +19,21 @@ if [ "$1" = 'gfw.press' ]; then
 		logfile_rotate 0
 		cache deny all
 		END
+	fi
+
+	if [ $SQUID_USER ]; then
+		cat >>/squid-auth.txt <<-END
+		auth_param basic program /usr/lib64/squid/basic_ncsa_auth /etc/squid/passwd 
+		auth_param basic realm Squid proxy-caching web server 
+		auth_param basic credentialsttl 2 hours 
+		auth_param basic casesensitive off 
+		acl authuser proxy_auth REQUIRED 
+		http_access allow authuser
+		END
+	
+		sed -i '/# Recommended minimum configuration:/ r /squid-auth.txt' /etc/squid/squid.conf
+		echo "$SQUID_USER:$(openssl passwd -apr1 $SQUID_PASS)" > /etc/squid/passwd
+		echo "Squid user AND password: $SQUID_USER  $SQUID_PASS" |tee /key/squid_info
 	fi
 	
 	DEV=$(route -n |awk '$1=="0.0.0.0"{print $NF }')
@@ -56,6 +72,7 @@ if [ "$1" = 'gfw.press' ]; then
 	END
   fi
 
+	echo
 	echo "Start GFW ****"
 	if [ "$GFW_EMOD" == "sockd" ]; then
 		/usr/local/sbin/sockd -D
@@ -63,6 +80,7 @@ if [ "$1" = 'gfw.press' ]; then
 		/usr/sbin/squid -f /etc/squid/squid.conf
 	fi
 	
+	[ -f /gfw.press/server.lock ] && \rm /gfw.press/server.lock
 	[ -z "`iptables -S |grep $(awk 'NR==1{print $13}' /iptables.sh)`" ] && . /iptables.sh || echo
 	MEM="$(($(free -m |grep Mem |awk '{print $2}')*50/100))m"
 	java -Dfile.encoding=utf-8 -Dsun.jnu.encoding=utf-8 -Duser.timezone=Asia/Shanghai  -Xms$MEM -Xmx$MEM -classpath `find /gfw.press/lib/*.jar | xargs echo | sed 's/ /:/g'`:/gfw.press/bin press.gfw.Server
@@ -78,6 +96,8 @@ else
 				-e GFW_PORT=["10001..10005"] \\
 				-e GFW_PASS=[newpass|N] \\
 				-e GFW_EMOD=[squid|sockd] \\
+				-e SQUID_USER=<jiobxn> \\
+				-e SQUID_PASS=<123456> \\
 				--hostname gfw.press \\
 				--name gfw.press gfw.press
 	"
