@@ -14,5 +14,5 @@ EXPOSE 3128 43128
 CMD ["squid", "-N", "-f", "/etc/squid/squid.conf"]
 
 # docker build -t squid .
-# docker run -d --restart always -p 8081:3128 -p 8082:3129 -e SQD_USER=jiobxn -e SQD_PASS=123456 --hostname squid --name squid squid
+# docker run -d --restart always -p 8081:3128 -p 8082:3129 -e SQUID_USER=jiobxn -e SQUID_PASS=123456 --hostname squid --name squid squid
 # docker run -it --rm squid --help
