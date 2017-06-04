@@ -88,7 +88,7 @@ fi
 esle
 	echo -e "
 	Example
-			docker run -d --restart always --privileged \\
+			docker run -d --restart always \\
 			-p 8080:3128 \\
 			-p 8443:43128 \\
 			-e SQD_USER=<jiobxn> \\
