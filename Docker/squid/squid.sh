@@ -3,7 +3,7 @@ set -e
 
 if [ "$1" = 'squid' ]; then
 
-: ${SQD_PASS:=$(pwmake 64)}
+: ${SQUID_PASS:=$(pwmake 64)}
 : ${MAX_AUTH:=5}
 : ${HTTP_PORT=3128}
 : ${HTTPS_PORT=43128}
@@ -21,7 +21,7 @@ if [ -z "$(grep "redhat.xyz" /etc/squid/squid.conf)" ]; then
 		openssl x509 -req -days 3650 -in /etc/squid/server.csr -signkey /etc/squid/server.key -out /etc/squid/server.crt 2>/dev/null
 	fi
 	
-	if [ "$SQD_USER" ]; then
+	if [ "$SQUID_USER" ]; then
 		cat >>/squid-auth.txt <<-END
 		auth_param basic program /usr/lib64/squid/basic_ncsa_auth /etc/squid/passwd 
 		auth_param basic children $MAX_AUTH 
@@ -33,8 +33,8 @@ if [ -z "$(grep "redhat.xyz" /etc/squid/squid.conf)" ]; then
 		END
 	
 		sed -i '/# Recommended minimum configuration:/ r /squid-auth.txt' /etc/squid/squid.conf
-		echo "$SQD_USER:$(openssl passwd -apr1 $SQD_PASS)" > /etc/squid/passwd
-		echo "Squid user AND password: $SQD_USER  $SQD_PASS"
+		echo "$SQUID_USER:$(openssl passwd -apr1 $SQUID_PASS)" > /etc/squid/passwd
+		echo "Squid user AND password: $SQUID_USER  $SQUID_PASS"
 	else
 		sed -i '1 i http_access allow all' /etc/squid/squid.conf
 	fi
@@ -91,8 +91,8 @@ esle
 			docker run -d --restart always \\
 			-p 8080:3128 \\
 			-p 8443:43128 \\
-			-e SQD_USER=<jiobxn> \\
-			-e SQD_PASS=<123456> \\
+			-e SQUID_USER=<jiobxn> \\
+			-e SQUID_PASS=<123456> \\
 			-e MAX_AUTH=[5] \\
 			-e PROXY_SERVER=<"10.0.0.2,10.0.0.3" | "www.redhat.xyz|10.0.0.4;redhat.xyz|10.0.0.5"> \\
 			-e PROXY_HTTPS=<Y> \\
