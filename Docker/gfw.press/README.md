@@ -17,6 +17,8 @@ GFW.Press
 				-e GFW_PORT=[10001..10005] \\          默认开启5个端口，例如想要100个端口: GFW_PORT=10001..10100
 				-e GFW_PASS=[newpass|N] \\             默认是使用相同的随机密码，可自定义密码，不要太简单，如果想每个端口的密码不一样: GFW_PASS=N
 				-e GFW_EMOD=[squid|sockd] \\           默认使用squid，如果想使用socks5: GFW_EMOD=sockd
+				-e SQUID_USER=<jiobxn> \\              squid用户名
+				-e SQUID_PASS=<123456> \\              squid密码
 				--hostname gfw.press \\
 				--name gfw.press gfw.press
 
