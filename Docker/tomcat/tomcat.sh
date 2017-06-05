@@ -8,7 +8,7 @@ if [ "$1" = 'catalina.sh' ]; then
 : ${WWW_ROOT:=ROOT}
 : ${HTTP_PORT:=8080}
 : ${HTTPS_PORT:=8443}
-: ${REDIS_PORT:=16379}
+: ${REDIS_PORT:=6379}
 : ${REDIS_DB:=0}
 : ${SESSION_TTL:=30}
 : ${MAX_MEM=$(($(free -m |grep Mem |awk '{print $2}')*70/100))}
@@ -143,7 +143,7 @@ else
 					-e SERVER_NAME=<redhat.xyz,www.redhat.xyz> \\
 					-e JAVA_GW=<redhat.xyz> \\
 					-e REDIS_SERVER=<redhat.xyz> \\
-					-e REDIS_PORT=[16379] \\
+					-e REDIS_PORT=[6379] \\
 					-e REDIS_PASS=<bigpass> \\
 					-e REDIS_DB=[0] \\
 					-e SESSION_TTL=[30] \\
