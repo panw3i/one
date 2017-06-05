@@ -9,7 +9,7 @@ set -e
 : ${DOMAIN_TAG:="888"}
 : ${EOORO_JUMP:="https://cn.bing.com"}
 : ${NGX_DNS="8.8.8.8"}
-: ${CACHE_TIME:="8h"}
+: ${CACHE_TIME:="30m"}
 : ${CACHE_SIZE:="4g"}
 : ${CACHE_MEM:="$(($(free -m |grep Mem |awk '{print $2}')*10/100))m"}
 : ${KP_ETH:="$(route -n |awk '$1=="0.0.0.0"{print $NF }')"}
