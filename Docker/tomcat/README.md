@@ -7,7 +7,7 @@ Tomcat
         JDK="7"
 
     #例如要构建一个tomcat8
-    docker build --build-arg TOMCAT=8 -t tomcat .
+    docker build --build-arg TOMCAT=8 --build-arg JDK=8 -t tomcat .
 
 ## Example:
 
@@ -31,7 +31,7 @@ Tomcat
 					-e SERVER_NAME=<redhat.xyz,www.redhat.xyz> \\  绑定主机名
 					-e JAVA_GW=<redhat.xyz> \\    用于监控tomcat，一般是指定为zabbix服务器地址
 					-e REDIS_SERVER=<redhat.xyz> \\   redis服务器地址
-					-e REDIS_PORT=[16379] \\          redis服务端口
+					-e REDIS_PORT=[6379] \\           redis服务端口
 					-e REDIS_PASS=<bigpass> \\        redis密码
 					-e REDIS_DB=[0] \\                redis数据库
 					-e SESSION_TTL=[30] \\            session过期时间
