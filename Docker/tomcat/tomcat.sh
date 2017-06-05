@@ -128,7 +128,7 @@ else
 
 	echo -e "
 	Example:
-					docker run -d --restart always --privileged \\
+					docker run -d --restart always [--privileged] \\
 					-v /docker/webapps:/usr/local/tomcat/webapps \\
 					-v /docker/upload:/upload \\
 					-p 18080:8080 \\
