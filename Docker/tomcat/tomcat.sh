@@ -114,7 +114,7 @@ if [ "$1" = 'catalina.sh' ]; then
 		if [ -z "$REDIS_PASS" ]; then sed -i '/password/d' /tomcat-redis.txt; fi
 		sed -i '/<Context>/ r /tomcat-redis.txt' /usr/local/tomcat/conf/context.xml
         fi
-echo 0000
+
         #Session TTL
         if [ "$SESSION_TTL" -ne 30 ]; then
         	sed -i 's@<session-timeout>30</session-timeout>@<session-timeout>'$SESSION_TTL'</session-timeout>@' /usr/local/tomcat/conf/web.xml
