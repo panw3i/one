@@ -13,7 +13,7 @@ if [ "$1" = 'catalina.sh' ]; then
 : ${SESSION_TTL:=30}
 : ${MAX_MEM=$(($(free -m |grep Mem |awk '{print $2}')*70/100))}
 
-if [ -z "$(grep "redhat.xyz" /usr/local/tomcat/conf/server.xml)" ]; then
+  if [ -z "$(grep "redhat.xyz" /usr/local/tomcat/conf/server.xml)" ]; then
 	echo "Initialize tomcat"
 	sed -i '2 i <!-- redhat.xyz -->' /usr/local/tomcat/conf/server.xml
 
@@ -32,7 +32,7 @@ if [ -z "$(grep "redhat.xyz" /usr/local/tomcat/conf/server.xml)" ]; then
 	sed -i '/A "Connector" using the shared thread pool/ r /tomcat-ssl.txt' /usr/local/tomcat/conf/server.xml
 	
 	#gzip
-	sed -i '/Connector port="8080"/ a \               acceptCount="'$((`nproc`*10240))'" maxThreads="'$((`nproc`*10240))'" \n\               compression="on" disableUploadTimeout="true" URIEncoding='\"$TOM_CHARSET\"' /usr/local/tomcat/conf/server.xml
+	sed -i '/Connector port="8080"/ a \               acceptCount="'$((`nproc`*10240))'" maxThreads="'$((`nproc`*10240))'" \n\               compression="on" disableUploadTimeout="true" URIEncoding='\"$TOM_CHARSET\"'' /usr/local/tomcat/conf/server.xml
 
 	#server name
 	if [ "$SERVER_NAME" ]; then
@@ -75,7 +75,9 @@ if [ -z "$(grep "redhat.xyz" /usr/local/tomcat/conf/server.xml)" ]; then
 	
 	
 	#index
-	if [ ! -d /usr/local/tomcat/webapps/ROOT ]; then \cp -a /mnt/webapps/* /usr/local/tomcat/webapps/; fi
+	if [ ! -d /usr/local/tomcat/webapps/ROOT ]; then
+		\cp -a /mnt/webapps/* /usr/local/tomcat/webapps/
+	fi
 	
 	#http port
 	if [ $HTTP_PORT -ne 8080 ];then
@@ -98,8 +100,8 @@ if [ -z "$(grep "redhat.xyz" /usr/local/tomcat/conf/server.xml)" ]; then
 		echo -e "iptables -A INPUT -s $JAVA_GW -p tcp -m tcp --dport 12345 -m comment --comment JAVA -j ACCEPT \niptables -A INPUT -p tcp -m tcp --dport 12345 -j DROP" >/iptables.sh
 	fi
 
-        #Redis
-        if [ $REDIS_SERVER ]; then
+	#Redis
+	if [ $REDIS_SERVER ]; then
 		cat >/tomcat-redis.txt <<-END
 		    <Valve className="com.orangefunction.tomcat.redissessions.RedisSessionHandlerValve" />
 		    <Manager className="com.orangefunction.tomcat.redissessions.RedisSessionManager"
@@ -108,15 +110,16 @@ if [ -z "$(grep "redhat.xyz" /usr/local/tomcat/conf/server.xml)" ]; then
         	   password="$REDIS_PASS"
         	   database="$REDIS_DB" />
 		END
+
 		if [ -z "$REDIS_PASS" ]; then sed -i '/password/d' /tomcat-redis.txt; fi
 		sed -i '/<Context>/ r /tomcat-redis.txt' /usr/local/tomcat/conf/context.xml
         fi
-
+echo 0000
         #Session TTL
         if [ "$SESSION_TTL" -ne 30 ]; then
         	sed -i 's@<session-timeout>30</session-timeout>@<session-timeout>'$SESSION_TTL'</session-timeout>@' /usr/local/tomcat/conf/web.xml
         fi
-fi
+  fi
 
 	echo "Start ****"
         [ -f /iptables.sh ] && [ -z "`iptables -S |grep JAVA`" ] && . /iptables.sh
