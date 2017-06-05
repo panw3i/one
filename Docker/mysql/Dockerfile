@@ -43,6 +43,6 @@ EXPOSE 3306
 CMD ["mysqld_safe", "--federated"]
 
 # docker build -t mysql .
-# docker run -d --restart always --privileged -p 3306:3306 -v /docker/mysql:/usr/local/mysql/data -e MYSQL_ROOT_PASSWORD=newpass -e MYSQL_DATABASE=zabbix -e MYSQL_USER=zabbix -e MYSQL_PASSWORD=newpass -e MYSQL_BACK=Y --hostname mysql --name mysql mysql
+# docker run -d --restart always -p 3306:3306 -v /docker/mysql:/usr/local/mysql/data -e MYSQL_ROOT_PASSWORD=newpass -e MYSQL_DATABASE=zabbix -e MYSQL_USER=zabbix -e MYSQL_PASSWORD=newpass -e MYSQL_BACK=Y --hostname mysql --name mysql mysql
 # docker logs mysql |grep "PASSWORD"
 # docker run -it --rm mysql --help
