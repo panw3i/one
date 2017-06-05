@@ -42,6 +42,6 @@ EXPOSE 8080 8443 12345
 
 CMD ["catalina.sh", "run"]
 
-# docker build --build-arg TOMCAT=8 -t tomcat .
+# docker build --build-arg TOMCAT=8 --build-arg TOMCAT=8 -t tomcat .
 # docker run -d --restart always --privileged -v /docker/webapps:/usr/local/tomcat/webapps -p 18080:8080 -p 18443:8443 -e TOM_USER=tom -e TOM_PASS=pass -e REDIS_SERVER=redhat.xyz --hostname tomcat --name tomcat tomcat
 # docker run -it --rm tomcat --help
