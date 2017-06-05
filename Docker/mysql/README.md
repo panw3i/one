@@ -4,13 +4,13 @@ MySQL
 ## Example:
 
     #为zabbix运行一个mysql实例
-    docker run -d --restart always --privileged -p 3306:3306 -v /docker/mysql-mini:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=newpass -e MYSQL_DATABASE=zabbix -e MYSQL_USER=zabbix -e MYSQL_PASSWORD=newpass -e MYSQL_BACK=Y --hostname mysql --name mysql mysql-mini
+    docker run -d --restart always -p 3306:3306 -v /docker/mysql-mini:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=newpass -e MYSQL_DATABASE=zabbix -e MYSQL_USER=zabbix -e MYSQL_PASSWORD=newpass -e MYSQL_BACK=Y --hostname mysql --name mysql mysql-mini
 
     #运行一个master实例
-    docker run -d --restart always --privileged --network=mynetwork --ip=10.0.0.50 -v /docker/mysql-master:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=newpass -e SERVER_ID=1 -e REPL_IPR=10.0.0.% -e REPL_USER=repl -e REPL_PASSWORD=123456 --hostname mysql-master --name mysql-msater mysql-mini
+    docker run -d --restart always --network=mynetwork --ip=10.0.0.50 -v /docker/mysql-master:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=newpass -e SERVER_ID=1 -e REPL_IPR=10.0.0.% -e REPL_USER=repl -e REPL_PASSWORD=123456 --hostname mysql-master --name mysql-msater mysql-mini
 
     #运行一个slave实例，MYSQL_ROOT_PASSWORD要和Master一致
-    docker run -d --restart always --privileged --network=mynetwork --ip=10.0.0.51 -v /docker/mysql-slave:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=newpass -e SERVER_ID=2 -e MASTER_HOST=10.0.0.50 -e MASTER_PORT=3306 -e REPL_USER=repl -e REPL_PASSWORD=123456 --hostname mysql-slave --name mysql-slave mysql-mini
+    docker run -d --restart always --network=mynetwork --ip=10.0.0.51 -v /docker/mysql-slave:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=newpass -e SERVER_ID=2 -e MASTER_HOST=10.0.0.50 -e MASTER_PORT=3306 -e REPL_USER=repl -e REPL_PASSWORD=123456 --hostname mysql-slave --name mysql-slave mysql-mini
 
 
 ## Run Defult Parameter
