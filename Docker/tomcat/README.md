@@ -11,12 +11,12 @@ Tomcat
 
 ## Example:
 
-    docker run -d --restart always --privileged -v /docker/webapps:/usr/local/tomcat/webapps -p 18080:8080 -p 18443:8443 -e TOM_USER=tom -e TOM_PASS=pass -e REDIS_SERVER=redhat.xyz --hostname tomcat --name tomcat tomcat
+    docker run -d --restart always -v /docker/webapps:/usr/local/tomcat/webapps -p 18080:8080 -p 18443:8443 -e TOM_USER=tom -e TOM_PASS=pass -e REDIS_SERVER=redhat.xyz --hostname tomcat --name tomcat tomcat
 
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
 
-					docker run -d --restart always --privileged \\
+					docker run -d --restart always [--privileged] \\
 					-v /docker/webapps:/usr/local/tomcat/webapps \\
 					-v /docker/upload:/upload \\  alias目录，在集群环境中通常挂载到分布式存储用于存储图片
 					-p 18080:8080 \\
