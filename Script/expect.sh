@@ -46,7 +46,7 @@ expect {
 "
 
 
-for i in $(cat /tmp/hosts.txt); do
+for i in $(cat ~/.hosts.txt); do
 	IP=$(echo "$i"|cut -f3 -d":")
 	PORT=$(echo "$i"|cut -f4 -d":")
 	USER=$(echo "$i"|cut -f2 -d":")
@@ -70,7 +70,7 @@ done
 
 
 SSHALL() {
-for i in $(cat /tmp/hosts.txt); do
+for i in $(cat ~/.hosts.txt); do
 	IP=$(echo "$i"|cut -f3 -d":")
 	PORT=$(echo "$i"|cut -f4 -d":")
 	USER=$(echo "$i"|cut -f2 -d":")
@@ -96,7 +96,7 @@ done
 
 
 SCP() {
-for i in $(cat /tmp/hosts.txt); do
+for i in $(cat ~/.hosts.txt); do
 	IP=$(echo "$i"|cut -f3 -d":")
 	PORT=$(echo "$i"|cut -f4 -d":")
 	if [ -z "$USER" ]; then USER=root; fi
@@ -112,7 +112,7 @@ done
 
 
 PCS() {
-for i in $(cat /tmp/hosts.txt); do
+for i in $(cat ~/.hosts.txt); do
 	IP=$(echo "$i"|cut -f3 -d":")
 	PORT=$(echo "$i"|cut -f4 -d":")
 	if [ -z "$USER" ]; then USER=root; fi
@@ -128,7 +128,7 @@ done
 
 
 COMM() {
-for i in $(cat /tmp/hosts.txt); do
+for i in $(cat ~/.hosts.txt); do
 	IP=$(echo "$i"|cut -f3 -d":")
 	PORT=$(echo "$i"|cut -f4 -d":")
 	if [ -z "$USER" ]; then USER=root; fi
@@ -144,7 +144,7 @@ done
 
 
 PKGS() {
-for i in $(cat /tmp/hosts.txt); do
+for i in $(cat ~/.hosts.txt); do
 	IP=$(echo "$i"|cut -f3 -d":")
 	PORT=$(echo "$i"|cut -f4 -d":")
 	if [ -z "$USER" ]; then USER=root; fi
@@ -162,7 +162,7 @@ done
 
 
 CLEAN() {
-for i in $(cat /tmp/hosts.txt); do
+for i in $(cat ~/.hosts.txt); do
 	IP=$(echo "$i"|cut -f3 -d":")
 	PORT=$(echo "$i"|cut -f4 -d":")
 	USER=$(echo "$i"|cut -f2 -d":")
@@ -180,18 +180,19 @@ for i in $(cat /tmp/hosts.txt); do
 	}
 	"
 done
+\rm ~/.ssh/*
 }
 
 
 ################################################# 第三部分 ###############################################
 
 if [ "${1:0:2}" == '-m' ]; then
-	awk -F: '{if($1~/'${2:0:99}'/) print}' ./hosts.txt >/tmp/hosts.txt && chmod 600 /tmp/hosts.txt
+	awk -F: '{if($1~/'${2:0:99}'/) print}' ./hosts.txt >~/.hosts.txt && chmod 600 ~/.hosts.txt
 	ACMD="$3"
 	CMD=$4
 	FILE=$4
 else
-	cat ./hosts.txt >/tmp/hosts.txt
+	cat ./hosts.txt >~/.hosts.txt
 	ACMD="$1"
 	CMD=$2
 	FILE=$2
