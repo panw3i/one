@@ -22,8 +22,8 @@ if [ "$(ls /usr/bin/ |egrep -c '^at$|^crontab$|^scp$|^expect$')"  -ne 4 ]; then
 	$install expect at cronie openssh-clients
 fi
 
-if [ ! -f ./hosts.txt ]; then
-	echo -e "You must first Add hosts.txt, Format: \"MARK:USER:IP:PORT:PASS\"\nExample: echo 'node5:root:10.0.0.5:22:password' >>./hosts.txt"
+if [ ! -f ~/hosts.txt ]; then
+	echo -e "You must first Add hosts.txt, Format: \"MARK:USER:IP:PORT:PASS\"\nExample: echo 'node5:root:10.0.0.5:22:password' >>~/hosts.txt"
 	exit 0
 fi
 
@@ -80,7 +80,7 @@ for i in $(cat ~/.hosts.txt); do
 	if [ -z "$(ip addr |grep $IP)" ]; then
 		#5.添加所有主机相互认证
 		scp -P $PORT $0 $USER@$IP:~/expect.sh
-		scp -P $PORT ./hosts.txt $USER@$IP:~
+		scp -P $PORT ~/hosts.txt $USER@$IP:~
 
 		#ssh -p $PORT $USER@$IP "nohup /bin/sh ~/expect.sh SSH &"                        #这一条会在当前窗口执行完所有
 		ssh -p $PORT $USER@$IP '[ -z "$(ps -ef |grep crond |grep -v grep)" ] && crond'   #启动CROND
@@ -187,12 +187,12 @@ done
 ################################################# 第三部分 ###############################################
 
 if [ "${1:0:2}" == '-m' ]; then
-	awk -F: '{if($1~/'${2:0:99}'/) print}' ./hosts.txt >~/.hosts.txt && chmod 600 ~/.hosts.txt
+	awk -F: '{if($1~/'${2:0:99}'/) print}' ~/hosts.txt >~/.hosts.txt && chmod 600 ~/.hosts.txt
 	ACMD="$3"
 	CMD=$4
 	FILE=$4
 else
-	cat ./hosts.txt >~/.hosts.txt
+	cat ~/hosts.txt >~/.hosts.txt
 	ACMD="$1"
 	CMD=$2
 	FILE=$2
@@ -231,7 +231,7 @@ case $ACMD in
     ;;
 
        *)   echo -e "Usage: 
-	    File hosts.txt Format: \"MARK:USER:IP:PORT:PASS\". example: echo 'node5:root:10.0.0.5:22:password' >>./hosts.txt
+	    File hosts.txt Format: \"MARK:USER:IP:PORT:PASS\". example: echo 'node5:root:10.0.0.5:22:password' >>~/hosts.txt
 	    You must first Establish SSH Trust: $0 SSH \nExample: 
 	    SSH Trust: $0 SSH
 	    ALL SSH Trust: $0 SSHALL
