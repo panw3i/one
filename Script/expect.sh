@@ -95,7 +95,7 @@ done
 }
 
 
-SCP() {
+PUSH() {
 for i in $(cat ~/.hosts.txt); do
 	IP=$(echo "$i"|cut -f3 -d":")
 	PORT=$(echo "$i"|cut -f4 -d":")
@@ -104,14 +104,14 @@ for i in $(cat ~/.hosts.txt); do
 	
 	if [ -z "$(ip addr |grep $IP)" ]; then
 		echo "------------> $IP <-------------------"
-		scp -rpC -P $PORT $FILE $USER@$IP:~
+		scp -rpC -P $PORT $FILE $USER@$IP:$DEST
 		echo
 	fi
 done
 }
 
 
-PCS() {
+PULL() {
 for i in $(cat ~/.hosts.txt); do
 	IP=$(echo "$i"|cut -f3 -d":")
 	PORT=$(echo "$i"|cut -f4 -d":")
@@ -120,7 +120,7 @@ for i in $(cat ~/.hosts.txt); do
 	
 	if [ -z "$(ip addr |grep $IP)" ]; then
 		echo "------------> $IP <-------------------"
-		scp -rpC -P $PORT $USER@$IP:$FILE ~
+		scp -rpC -P $PORT $USER@$IP:$FILE $DEST
 		echo
 	fi
 done
@@ -191,11 +191,13 @@ if [ "${1:0:2}" == '-m' ]; then
 	ACMD="$3"
 	CMD=$4
 	FILE=$4
+	[ $5 ] && DEST=$5 || DEST=~/
 else
 	cat ~/hosts.txt >~/.hosts.txt
 	ACMD="$1"
 	CMD=$2
 	FILE=$2
+	[ $3 ] && DEST=$3 || DEST=~/
 fi
 
 
@@ -218,12 +220,12 @@ case $ACMD in
             PKGS
     ;;
 
-    SCP)
-            SCP
+    PUSH)
+            PUSH
     ;;
 
-    PCS)
-            PCS
+    PULL)
+            PULL
     ;;
 
     CLEAN)
@@ -237,8 +239,8 @@ case $ACMD in
 	    ALL SSH Trust: $0 SSHALL
 	    RUN Command: $0 [-m mark] COMM <'ls && crond'>
 	    Package management: $0 [-m mark] PKGS <'install openssh-clients -y'>
-	    SCP copy local file to remote user home: $0 [-m mark] SCP <file.txt>
-	    PCS copy remote file to local user home: $0 [-m mark] PCS <file.txt>
+	    PUSH copy local file to remote user home: $0 [-m mark] PUSH <file.txt> [~/]
+	    PULL copy remote file to local user home: $0 [-m mark] PULL <file.txt> [~/]
 	    Clean SSH key: $0 [-m mark] CLEAN
 	    MARK: -m '^nodeN$'"
     ;;
