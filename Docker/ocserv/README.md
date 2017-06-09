@@ -41,5 +41,5 @@ OCSERV
 ### Windows Client:
 
     1.浏览器打开ftp://ftp.noao.edu/pub/grandi/ 下载 anyconnect-win-x.x.msi 并安装
-    2.运行certmgr.msc命令，打开证书管理器，导入 ca.crt 和 ocserv.p12
-    3.在连接时候要取消选中 Block connections to untusted server
+    2.导入 ca.crt 和 ocserv.p12证书，打开证书管理器 运行certmgr.msc命令
+    3.在连接时候要取消选中 Block connections to untusted server
