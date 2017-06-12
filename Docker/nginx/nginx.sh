@@ -339,7 +339,6 @@ domain_proxy() {
             #sub_filter#
             sub_filter https:// http://;
             sub_filter .ytimg.com .yt${DOMAIN_TAG}img.com.\$domain;
-	    sub_filter .ggpht.com .gg${DOMAIN_TAG}pht.com.\$domain;
             sub_filter .googlevideo.com .goog${DOMAIN_TAG}levideo.com.\$domain;
             sub_filter .ggpht.com .gg${DOMAIN_TAG}pht.com.\$domain;
             sub_filter .twimg.com .tw${DOMAIN_TAG}img.com.\$domain;
