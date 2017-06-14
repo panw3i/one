@@ -1,5 +1,6 @@
 FROM centos:latest
 MAINTAINER "The CentOS Project" <admin@jiobxn.com>
+ARG LATEST="0"
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN yum clean all; yum -y update; yum -y install squid java-1.8.0-openjdk-devel make gcc-c++ git net-tools bash-completion vim wget cronie iptables; yum clean all
@@ -29,4 +30,3 @@ CMD ["gfw.press"]
 # docker build -t gfw.press .
 # docker run -d --restart always --privileged --network=host -v /docker/gfw.press:/key -e GFW_PASS=newpass -e GFW_EMOD=squid --hostname gfw.press --name gfw.press gfw.press
 # docker logs gfw.press
-# docker run -it --rm gfw.press --help
