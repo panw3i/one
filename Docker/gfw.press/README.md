@@ -7,6 +7,9 @@ GFW.Press
     docker run -d --restart always --privileged --network=host -v /docker/gfw.press:/key --hostname gfw.press --name gfw.press jiobxn/gfw.press
     docker logs gfw.press
 
+    # update build
+    docker build --build-arg LATEST=1 -t gfw.press .
+
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
 
