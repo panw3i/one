@@ -28,5 +28,5 @@ EXPOSE 10001 10005
 CMD ["gfw.press"]
 
 # docker build -t gfw.press .
-# docker run -d --restart always --privileged --network=host -v /docker/gfw.press:/key -e GFW_PASS=newpass -e GFW_EMOD=squid --hostname gfw.press --name gfw.press gfw.press
+# docker run -d --restart always --privileged --network=host -e GFW_PASS=newpass -e GFW_EMOD=squid --hostname gfw.press --name gfw.press gfw.press
 # docker logs gfw.press
