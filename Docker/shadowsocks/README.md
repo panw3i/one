@@ -4,16 +4,16 @@ Shadowsocks
 ## Example:
 
     #运行一个SS服务器
-    docker run -d --restart always -p 8443:8443 -e SS_PASS=MyPassw01d --hostname ss --name ss jiobxn/shadowsocks
+    docker run -d --restart always -p 8443:8443 -e SS_PASS=MyPassw01d --name ss jiobxn/shadowsocks
 
     #运行一个SSR服务器
-    docker run -d --restart always -p 8444:8443 -e SS_PASS=MyPassw01d -e SSR=Y --hostname ssr --name ssr jiobxn/shadowsocks
+    docker run -d --restart always -p 8444:8443 -e SS_PASS=MyPassw01d -e SSR=Y --name ssr jiobxn/shadowsocks
 
     #运行一个SS客户端
-    docker run -d --restart always --network=host -e SS_ADDR=<server ip> -e SS_PORT=8443 -e SS_PASS=MyPassw01d -e SL_ADDR=0.0.0.0 --hostname ss --name ss jiobxn/shadowsocks
+    docker run -d --restart always --network=host -e SS_ADDR=<server ip> -e SS_PORT=8443 -e SS_PASS=MyPassw01d -e SL_ADDR=0.0.0.0 --name ss jiobxn/shadowsocks
 
     #运行一个SSR客户端
-    docker run -d --restart always --network=host -e SS_ADDR=<server ip> -e SS_PORT=8444 -e SS_PASS=MyPassw01d -e SSR=Y -e SL_ADDR=0.0.0.0 --hostname ssr --name ssr jiobxn/shadowsocks
+    docker run -d --restart always --network=host -e SS_ADDR=<server ip> -e SS_PORT=8444 -e SS_PASS=MyPassw01d -e SSR=Y -e SL_ADDR=0.0.0.0 --name ssr jiobxn/shadowsocks
 
     # update build
     docker build --build-arg LATEST=1 -t shadowsocks .
