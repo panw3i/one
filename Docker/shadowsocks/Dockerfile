@@ -1,9 +1,19 @@
-FROM centos:latest
-MAINTAINER "The CentOS Project" <admin@jiobxn.com>
+FROM alpine:latest
+MAINTAINER "The Alpine Project" <admin@jiobxn.com>
+ARG LATEST="0"
 
+RUN apk update && apk add python2 curl openssl libsodium tzdata bash && rm -rf /var/cache/apk/*
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN yum -y install epel-release; yum -y update; yum -y install python34-setuptools net-tools; yum clean all
-RUN easy_install-3.4 pip; pip3.4 install --upgrade pip; pip3.4 install shadowsocks
+
+#Use pip to install: apk add py2-pip && pip install shadowsocks
+RUN cd / \
+    && wget -c https://github.com/$(curl -s https://github.com/shadowsocks/shadowsocks/releases |grep tar.gz |awk -F\" 'NR==1{print $2}') -O /shadowsocks.tar.gz \
+    && wget -c https://github.com/$(curl -s https://github.com/shadowsocksr/shadowsocksr/releases |grep tar.gz |awk -F\" 'NR==1{print $2}') -O /shadowsocksr.tar.gz \
+    && tar zxf shadowsocks.tar.gz \
+    && tar zxf shadowsocksr.tar.gz \
+    && mv shadowsocks-* shadowsocks \
+    && mv shadowsocksr-* shadowsocksr \
+    && \rm *.tar.gz
 
 COPY ssserver.sh /ssserver.sh
 RUN chmod +x /ssserver.sh
