@@ -15,6 +15,8 @@ Shadowsocks
     #运行一个SSR客户端
     docker run -d --restart always --network=host -e SS_ADDR=<server ip> -e SS_PORT=8444 -e SS_PASS=MyPassw01d -e SSR=Y -e SL_ADDR=0.0.0.0 --hostname ssr --name ssr jiobxn/shadowsocks
 
+    # update build
+    docker build --build-arg LATEST=1 -t shadowsocks .
 
 ****
 
