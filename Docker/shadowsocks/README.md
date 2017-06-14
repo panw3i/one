@@ -16,6 +16,8 @@ Shadowsocks
     docker run -d --restart always --network=host -e SS_ADDR=<server ip> -e SS_PORT=8444 -e SS_PASS=MyPassw01d -e SSR=Y -e SL_ADDR=0.0.0.0 --hostname ssr --name ssr jiobxn/shadowsocks
 
 
+****
+
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
 
@@ -31,6 +33,8 @@ Shadowsocks
 				-e SL_ADDR=[127.0.0.1] \\    本地监听地址
 				-e SL_PORT=[1080] \\         本地监听端口
 				--hostname shadowsocks --name shadowsocks shadowsocks
+
+****
 
 ## 在终端中使用代理
 
@@ -64,6 +68,8 @@ Shadowsocks
     使用https代理+用户名密码认证：export https_proxy=user:pass@192.168.1.100:3128   #待验证
     白名单：export no_proxy="*.aiezu.com,10.*.*.*,192.168.*.*,*.local,localhost,127.0.0.1"
     默认是sock4：export http_proxy=socks://192.168.1.1:1080
+
+****
 
 ## 客户端下载
 https://github.com/shadowsocks/shadowsocks/wiki/Ports-and-Clients  
