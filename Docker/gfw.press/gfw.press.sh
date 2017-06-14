@@ -33,7 +33,7 @@ if [ "$1" = 'gfw.press' ]; then
 	
 		sed -i '/# Recommended minimum configuration:/ r /squid-auth.txt' /etc/squid/squid.conf
 		echo "$SQUID_USER:$(openssl passwd -apr1 $SQUID_PASS)" > /etc/squid/passwd
-		echo "Squid user AND password: $SQUID_USER  $SQUID_PASS" |tee /key/squid_info
+		echo "Squid user AND password: $SQUID_USER  $SQUID_PASS"
 	fi
 	
 	DEV=$(route -n |awk '$1=="0.0.0.0"{print $NF }')
@@ -63,7 +63,7 @@ if [ "$1" = 'gfw.press' ]; then
 	fi
 	. /gfw.press/make_user.sh
 	\cp  /gfw.press/user.tx_ /gfw.press/user.txt
-	echo -e "\ngfw.press port and passwd: \n\n$(cat /gfw.press/user.txt)\n" |tee /key/gfw.log
+	echo -e "\ngfw.press port and passwd: \n\n$(cat /gfw.press/user.txt)\n"
 	
 	#IPTABLES
 	cat > /iptables.sh <<-END
@@ -91,7 +91,6 @@ else
     Example:
 				docker run -d --restart always --privileged \\
 				--network=host \\
-				-v /docker/gfw.press:/key \\
 				-p 8080:10005 \\
 				-e GFW_PORT=["10001..10005"] \\
 				-e GFW_PASS=[newpass|N] \\
