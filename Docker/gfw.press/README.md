@@ -16,7 +16,7 @@ GFW.Press
 				docker run -d --restart always --privileged \\
 				--network=host \\
 				-v /docker/gfw.press:/key \\
-				-p 8080:10005 \\                       如果你不想使用 --privileged --network=host ，那就用用端口映射
+				-p 8080:10005 \\                       如果你不需要自动添加iptables规则(--privileged --network=host)，那就用用端口映射
 				-e GFW_PORT=[10001..10005] \\          默认开启5个端口，例如想要100个端口: GFW_PORT=10001..10100
 				-e GFW_PASS=[newpass|N] \\             默认是使用相同的随机密码，可自定义密码，不要太简单，如果想每个端口的密码不一样: GFW_PASS=N
 				-e GFW_EMOD=[squid|sockd] \\           默认使用squid，如果想使用socks5: GFW_EMOD=sockd
