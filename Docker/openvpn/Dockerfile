@@ -10,6 +10,8 @@ RUN \cp -R /usr/share/easy-rsa/ /etc/openvpn/ \
         && \cp /mnt/usr/share/doc/openvpn-*/sample/sample-config-files/{server.conf,client.conf} /etc/openvpn/ \
         && rm -rf /mnt/*
 
+RUN /var/run/openvpn
+
 VOLUME /key
 
 COPY openvpn.sh /openvpn.sh
