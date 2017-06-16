@@ -23,6 +23,6 @@ Registry Proxy
 				-e NGX_SERVER=[local address] \\        Nginx IP 地址，https证书需要
 				-e REG_SERVER=[127.0.0.1:5000] \\       Registry服务器地址和端口，多个用","分隔
 				-e NGX_USER=<nginx> \\                  登陆用户名
-				-e NGX_PASS=[jiobxn.com] \\             登陆秘密
+				-e NGX_PASS=[jiobxn.com] \\             登陆密码
 				--hostname registry-proxy \\
 				--name registry-proxy registry-proxy
