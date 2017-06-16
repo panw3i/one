@@ -4,7 +4,7 @@ Registry Proxy
 ## Example:
 
     #运行一个单机版registry代理
-    docker run -d --restart=always -p 5000:5000 -v /docker/registry:/var/lib/registry --name registry registry
+    docker run -d --restart always -p 5000:5000 -v /docker/registry:/var/lib/registry --name registry registry
     docker run -d --restart always --network host -v /docker/registry-lb:/key -e NGX_USER=admin -e NGX_PASS=123456 -e REG_SERVER=127.0.0.1:5000 --name=registry-proxy registry-proxy
 
     #运行一个registry负载均衡
