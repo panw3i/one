@@ -18,5 +18,5 @@ ENTRYPOINT ["/nginx.sh"]
 CMD ["nginx"]
 
 # docker build -t registry-lb .
-# docker run -d --restart always --network host -e NGX_USER=admin -e NGX_PASS=123456 --name=registry-proxy registry-lb
+# docker run -d --restart always --network host -e NGX_USER=admin -e NGX_PASS=123456 -e REG_SERVER=127.0.0.1:5000 --name=registry-proxy registry-lb
 # docker logs registry-lb
