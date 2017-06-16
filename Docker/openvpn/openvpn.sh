@@ -212,7 +212,6 @@ if [ -z "$(grep "redhat.xyz" /etc/openvpn/server.conf)" ]; then
 	END
 
 	echo -e "$(openvpn --help |awk 'NR==1{print $1"-"$2}')" |tee /key/openvpn.log
-	[ ! -d "/var/run/openvpn/" ] && mkdir /var/run/openvpn
 	echo $VPN_INFO |tee -a /key/openvpn.log
 	echo $SQUID_INFO |tee -a /key/openvpn.log
 fi
