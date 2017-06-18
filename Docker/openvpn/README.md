@@ -7,7 +7,7 @@ OpenVPN
     docker run -d --restart always --privileged -v /docker/openvpn:/key -p 1194:1194 --hostname openvpn --name openvpn openvpn
 
     #运行一个http代理的openvpn
-    docker run -d --restart always --privileged -v /docker/openvpn:/key -p 8080:8080 -e PROXY_PORT=8080 -e PROXY_USER=jiobxn -e PROXY_PASS=123456 --hostname openvpn --name openvpn openvpn
+    docker run -d --restart always --privileged -v /docker/openvpn:/key -p 8080:8080 -e PROXY_PORT=8080 -e PROXY_USER=jiobxn --hostname openvpn --name openvpn openvpn
     
 
 ## Run Defult Parameter
