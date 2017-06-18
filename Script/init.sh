@@ -5,6 +5,8 @@ systemctl disable NetworkManager firewalld
 \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 systemctl enable iptables
 
+sed -i 's/#UseDNS yes/UseDNS no/' /etc/ssh/sshd_config
+
 wget https://github.com/jiobxn/one/raw/master/Script/scan.sh -O /usr/local/sbin/scan.sh
 chmod u+x /usr/local/sbin/scan.sh
 
