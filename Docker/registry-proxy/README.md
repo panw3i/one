@@ -31,8 +31,8 @@ Registry Proxy
 
     mkdir -p /etc/docker/certs.d/10.0.0.100
     cp /docker/registry-lb/ca.crt /etc/docker/certs.d/10.0.0.100/
-    
+
     docker login 10.0.0.100
-    docker pull alpine:latest
+    docker pull alpine:latest
     docker tag alpine:latest 10.0.0.100/alpine:latest
     docker push 10.0.0.100/alpine:latest
