@@ -6,11 +6,12 @@ set -e
 : ${FCGI_PATH:="/var/www"}
 : ${HTTP_PORT:="80"}
 : ${HTTPS_PORT:="443"}
+: ${SSL_CACHE:="10m"}
 : ${DOMAIN_TAG:="888"}
 : ${EOORO_JUMP:="https://cn.bing.com"}
 : ${NGX_DNS="8.8.8.8"}
-: ${CACHE_TIME:="30m"}
-: ${CACHE_SIZE:="4g"}
+: ${CACHE_TIME:="10m"}
+: ${CACHE_SIZE:="2g"}
 : ${CACHE_MEM:="$(($(free -m |grep Mem |awk '{print $2}')*10/100))m"}
 
 
@@ -95,7 +96,7 @@ http_conf() {
 
 	    ssl_certificate      /etc/nginx/server.crt;
 	    ssl_certificate_key  /etc/nginx/server.key;
-	    ssl_session_cache shared:SSL:1m;
+	    ssl_session_cache shared:SSL:$SSL_CACHE;
 	    ssl_session_timeout  5m;
 	    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	    ssl_ciphers  HIGH:!aNULL:!MD5;
@@ -128,7 +129,7 @@ fcgi_server() {
 
 	    ssl_certificate      /etc/nginx/server.crt;
 	    ssl_certificate_key  /etc/nginx/server.key;
-	    ssl_session_cache shared:SSL:1m;
+	    ssl_session_cache shared:SSL:$SSL_CACHE;
 	    ssl_session_timeout  5m;
 	    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	    ssl_ciphers  HIGH:!aNULL:!MD5;
@@ -186,7 +187,7 @@ java_php_server() {
 
 	    ssl_certificate      /etc/nginx/server.crt;
 	    ssl_certificate_key  /etc/nginx/server.key;
-	    ssl_session_cache shared:SSL:1m;
+	    ssl_session_cache shared:SSL:$SSL_CACHE;
 	    ssl_session_timeout  5m;
 	    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	    ssl_ciphers  HIGH:!aNULL:!MD5;
@@ -246,7 +247,7 @@ proxy_server() {
 
 	    ssl_certificate      /etc/nginx/server.crt;
 	    ssl_certificate_key  /etc/nginx/server.key;
-	    ssl_session_cache shared:SSL:1m;
+	    ssl_session_cache shared:SSL:$SSL_CACHE;
 	    ssl_session_timeout  5m;
 	    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	    ssl_ciphers  HIGH:!aNULL:!MD5;
@@ -305,7 +306,7 @@ domain_proxy() {
 
 	    ssl_certificate      /etc/nginx/server.crt;
 	    ssl_certificate_key  /etc/nginx/server.key;
-	    ssl_session_cache shared:SSL:1m;
+	    ssl_session_cache shared:SSL:$SSL_CACHE;
 	    ssl_session_timeout  5m;
 	    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	    ssl_ciphers  HIGH:!aNULL:!MD5;
@@ -411,6 +412,11 @@ http_other() {
 			sed -i 's/server.key;/'$key';/' /etc/nginx/conf.d/${project_name}_$n.conf
 		fi
 		
+		#HTTP2
+		if [ -n "$(echo $i |grep 'http2=')" ]; then
+			sed -i 's/ssl;/ssl http2;/' /etc/nginx/conf.d/${project_name}_$n.conf
+		fi
+		
 		#全站HTTPS
 		if [ -n "$(echo $i |grep 'full_https=')" ]; then
 			sed -i 's/##full_https//' /etc/nginx/conf.d/${project_name}_$n.conf
@@ -444,7 +450,7 @@ http_other() {
 			fi
 		
 			if [ "$http_lb" == "hash" ]; then
-				sed -i '/upstream '$project_name'-lb-'$n'/ a \        hash $remote_addr;' /etc/nginx/nginx.conf
+				sed -i '/upstream '$project_name'-lb-'$n'/ a \        hash $remote_addr consistent;' /etc/nginx/nginx.conf
 			fi
 		
 			if [ "$http_lb" == "least_conn" ]; then
@@ -688,6 +694,7 @@ else
 				-e NGX_CHARSET=[utf-8] \\
 				-e FCGI_PATH=[/var/www] \\
 				-e HTTP_PORT=[80] \\
+				-e SSL_CACHE=[10m] \\
 				-e HTTPS_PORT=[443] \\
 				-e DOMAIN_TAG=[888] \\
 				-e EOORO_JUMP=[https://cn.bing.com] \\
