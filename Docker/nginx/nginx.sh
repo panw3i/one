@@ -93,7 +93,7 @@ http_conf() {
 
 	    ssl_certificate      /usr/local/nginx/conf/server.crt;
 	    ssl_certificate_key  /usr/local/nginx/conf/server.key;
-	    ssl_session_cache shared:SSL:1m;
+	    ssl_session_cache shared:SSL:10m;
 	    ssl_session_timeout  5m;
 	    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	    ssl_ciphers  HIGH:!aNULL:!MD5;
@@ -126,7 +126,7 @@ fcgi_server() {
 
 	    ssl_certificate      /usr/local/nginx/conf/server.crt;
 	    ssl_certificate_key  /usr/local/nginx/conf/server.key;
-	    ssl_session_cache shared:SSL:1m;
+	    ssl_session_cache shared:SSL:10m;
 	    ssl_session_timeout  5m;
 	    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	    ssl_ciphers  HIGH:!aNULL:!MD5;
@@ -184,7 +184,7 @@ java_php_server() {
 
 	    ssl_certificate      /usr/local/nginx/conf/server.crt;
 	    ssl_certificate_key  /usr/local/nginx/conf/server.key;
-	    ssl_session_cache shared:SSL:1m;
+	    ssl_session_cache shared:SSL:10m;
 	    ssl_session_timeout  5m;
 	    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	    ssl_ciphers  HIGH:!aNULL:!MD5;
@@ -244,7 +244,7 @@ proxy_server() {
 
 	    ssl_certificate      /usr/local/nginx/conf/server.crt;
 	    ssl_certificate_key  /usr/local/nginx/conf/server.key;
-	    ssl_session_cache shared:SSL:1m;
+	    ssl_session_cache shared:SSL:10m;
 	    ssl_session_timeout  5m;
 	    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	    ssl_ciphers  HIGH:!aNULL:!MD5;
@@ -303,7 +303,7 @@ domain_proxy() {
 
 	    ssl_certificate      /usr/local/nginx/conf/server.crt;
 	    ssl_certificate_key  /usr/local/nginx/conf/server.key;
-	    ssl_session_cache shared:SSL:1m;
+	    ssl_session_cache shared:SSL:10m;
 	    ssl_session_timeout  5m;
 	    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	    ssl_ciphers  HIGH:!aNULL:!MD5;
