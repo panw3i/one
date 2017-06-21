@@ -834,6 +834,7 @@ else
 				-e FCGI_PATH=[/var/www] \\
 				-e HTTP_PORT=[80] \\
 				-e HTTPS_PORT=[443] \\
+				-e SSL_CACHE=[10m] \\
 				-e DOMAIN_TAG=[888] \\
 				-e EOORO_JUMP=[https://cn.bing.com] \\
 				-e NGX_DNS=[8.8.8.8] \\
