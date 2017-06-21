@@ -6,6 +6,7 @@ set -e
 : ${FCGI_PATH:="/var/www"}
 : ${HTTP_PORT:="80"}
 : ${HTTPS_PORT:="443"}
+: ${SSL_CACHE:="10m"}
 : ${DOMAIN_TAG:="888"}
 : ${EOORO_JUMP:="https://cn.bing.com"}
 : ${NGX_DNS="8.8.8.8"}
@@ -93,7 +94,7 @@ http_conf() {
 
 	    ssl_certificate      /usr/local/nginx/conf/server.crt;
 	    ssl_certificate_key  /usr/local/nginx/conf/server.key;
-	    ssl_session_cache shared:SSL:10m;
+	    ssl_session_cache shared:SSL:$SSL_CACHE;
 	    ssl_session_timeout  5m;
 	    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	    ssl_ciphers  HIGH:!aNULL:!MD5;
@@ -126,7 +127,7 @@ fcgi_server() {
 
 	    ssl_certificate      /usr/local/nginx/conf/server.crt;
 	    ssl_certificate_key  /usr/local/nginx/conf/server.key;
-	    ssl_session_cache shared:SSL:10m;
+	    ssl_session_cache shared:SSL:$SSL_CACHE;
 	    ssl_session_timeout  5m;
 	    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	    ssl_ciphers  HIGH:!aNULL:!MD5;
@@ -184,7 +185,7 @@ java_php_server() {
 
 	    ssl_certificate      /usr/local/nginx/conf/server.crt;
 	    ssl_certificate_key  /usr/local/nginx/conf/server.key;
-	    ssl_session_cache shared:SSL:10m;
+	    ssl_session_cache shared:SSL:$SSL_CACHE;
 	    ssl_session_timeout  5m;
 	    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	    ssl_ciphers  HIGH:!aNULL:!MD5;
@@ -244,7 +245,7 @@ proxy_server() {
 
 	    ssl_certificate      /usr/local/nginx/conf/server.crt;
 	    ssl_certificate_key  /usr/local/nginx/conf/server.key;
-	    ssl_session_cache shared:SSL:10m;
+	    ssl_session_cache shared:SSL:$SSL_CACHE;
 	    ssl_session_timeout  5m;
 	    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	    ssl_ciphers  HIGH:!aNULL:!MD5;
@@ -303,7 +304,7 @@ domain_proxy() {
 
 	    ssl_certificate      /usr/local/nginx/conf/server.crt;
 	    ssl_certificate_key  /usr/local/nginx/conf/server.key;
-	    ssl_session_cache shared:SSL:10m;
+	    ssl_session_cache shared:SSL:$SSL_CACHE;
 	    ssl_session_timeout  5m;
 	    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	    ssl_ciphers  HIGH:!aNULL:!MD5;
