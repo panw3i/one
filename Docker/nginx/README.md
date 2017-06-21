@@ -65,11 +65,12 @@ Nginx
 	FCGI_PATH=[/var/www]							#fcgi工作目录
 	HTTP_PORT=[80]								#http端口
 	HTTPS_PORT=[443]							#https端口
+	SSL_CACHE=[10m]								#ssl session缓存大小(1m是4000连接)
 	DOMAIN_TAG=[888]							#域名混淆字符，用于DOMAIN_PROXY模式
 	EOORO_JUMP=[https://cn.bing.com]					#错误跳转，用于DOMAIN_PROXY模式
 	NGX_DNS=[8.8.8.8]							#DNS，用于DOMAIN_PROXY模式
-	CACHE_TIME=[30m]							#缓存时间，默认30分钟
-	CACHE_SIZE=[4g]								#用于缓存的磁盘大小
+	CACHE_TIME=[10m]							#缓存时间，默认10分钟
+	CACHE_SIZE=[2g]								#用于缓存的磁盘大小
 	CACHE_MEM=[server memory 10%]						#用于缓存的内存大小
 	ACCLOG_OFF=<Y>								#关闭访问日志记录
 	ERRLOG_OFF=<Y>								#关闭错误日志记录
@@ -83,6 +84,7 @@ Nginx
 		http_port=<8080>						#HTTP端口
 		https_port=<8443>						#HTTPS端口
 		crt_key=<jiobxn.crt|jiobxn.key>					#SSL证书，在/key目录下
+		http2=<Y>							#启用http2
 		full_https=<Y>							#全站HTTPS，http跳转到https
 		charset=<gb2312>						#字符集
 		cache=<Y>							#启用缓存
