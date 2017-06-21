@@ -1,5 +1,6 @@
 FROM centos:latest
 MAINTAINER "The CentOS Project" <admin@jiobxn.com>
+ARG LATEST="0"
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN yum clean all; yum -y update; yum -y install net-tools iproute bash-completion vim wget make gcc-c++ iptables cronie geoip-devel libxml2-devel libxslt-devel gd-devel; yum clean all
