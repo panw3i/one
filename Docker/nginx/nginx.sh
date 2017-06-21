@@ -9,8 +9,8 @@ set -e
 : ${DOMAIN_TAG:="888"}
 : ${EOORO_JUMP:="https://cn.bing.com"}
 : ${NGX_DNS="8.8.8.8"}
-: ${CACHE_TIME:="30m"}
-: ${CACHE_SIZE:="4g"}
+: ${CACHE_TIME:="10m"}
+: ${CACHE_SIZE:="2g"}
 : ${CACHE_MEM:="$(($(free -m |grep Mem |awk '{print $2}')*10/100))m"}
 : ${KP_ETH:="$(route -n |awk '$1=="0.0.0.0"{print $NF }')"}
 : ${KP_RID:="77"}
@@ -409,6 +409,11 @@ http_other() {
 			sed -i 's/server.key;/'$key';/' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
 		fi
 		
+		#HTTP2
+		if [ -n "$(echo $i |grep 'http2=')" ]; then
+			sed -i 's/ssl;/ssl http2;/' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
+		fi
+		
 		#全站HTTPS
 		if [ -n "$(echo $i |grep 'full_https=')" ]; then
 			sed -i 's/##full_https//' /usr/local/nginx/conf/vhost/${project_name}_$n.conf
@@ -442,7 +447,7 @@ http_other() {
 			fi
 		
 			if [ "$http_lb" == "hash" ]; then
-				sed -i '/upstream '$project_name'-lb-'$n'/ a \        hash $remote_addr;' /usr/local/nginx/conf/nginx.conf
+				sed -i '/upstream '$project_name'-lb-'$n'/ a \        hash $remote_addr consistent;' /usr/local/nginx/conf/nginx.conf
 			fi
 		
 			if [ "$http_lb" == "least_conn" ]; then
@@ -655,7 +660,7 @@ stream_other() {
 			stream_lb="$(echo $i |grep 'stream_lb=' |awk -F= '{print $2}')"
 		
 			if [ "$stream_lb" == "hash" ]; then
-				sed -i '/upstream backend-lb-'$n'/ a \        hash $remote_addr;' /usr/local/nginx/conf/nginx.conf
+				sed -i '/upstream backend-lb-'$n'/ a \        hash $remote_addr consistent;' /usr/local/nginx/conf/nginx.conf
 			fi
 			
 			if [ "$stream_lb" == "least_conn" ]; then
