@@ -6,7 +6,7 @@ if [ "$1" = 'dnscrypt' ]; then
 : ${CERT_DAY:="365"}
 : ${SERVER_DOMAIN:="jiobxn.com"}
 : ${SERVER_LISTEN:="0.0.0.0:5443"}
-: ${CLIENT_LISTEN:="0.0.0.0:55"}
+: ${CLIENT_LISTEN:="0.0.0.0:53"}
 : ${BIND_VERSION:="windows 2003 DNS"}
 : ${BIND_LOG_SIZE:="100m"}
 : ${BIND_LISTEN:="any;"}
@@ -52,27 +52,20 @@ if [ ! -f /usr/bin/dnscrypt ]; then
 		echo "dnscrypt-wrapper --resolver-address=$SERVER_UPSTREAM --listen-address=$SERVER_LISTEN --provider-name=2.dnscrypt-cert.$SERVER_DOMAIN --crypt-secretkey-file=dnscrypt.key --provider-cert-file=dnscrypt.cert" >/usr/bin/dnscrypt
 	fi
 
-
 	#client
 	if [ "$CLIENT_UPSTREAM" -a "$PROVIDER_KEY" ]; then
 		BIND_FORWARDERS="$(echo $CLIENT_LISTEN |sed 's/0.0.0.0/127.0.0.1/' |awk -F: '{print $1}');"
 		echo "dnscrypt-proxy --local-address=$CLIENT_LISTEN --resolver-address=$CLIENT_UPSTREAM --provider-name=2.dnscrypt-cert.$SERVER_DOMAIN --provider-key=$PROVIDER_KEY" >/usr/bin/dnscrypt
 	fi
 
-
 	#default
 	if [ -z "$SERVER_UPSTREAM" -a -z "$CLIENT_UPSTREAM" ]; then
 		echo "/usr/sbin/named -u named -c /etc/named.conf -f" >/usr/bin/dnscrypt
 	fi
 
-
 	#bind
-	[ -n "$SERVER_UPSTREAM" ] || [ -n "$CLIENT_UPSTREAM" ] && sed -i '1i /usr/sbin/named -u named -c /etc/named.conf' /usr/bin/dnscrypt
-
-
-	#proxy is client
-	if [ -n "$CLIENT_UPSTREAM" -a "$(echo $CLIENT_LISTEN |grep ":53")" ]; then
-		sed -i '/named/ d' /usr/bin/dnscrypt
+	if [ -n "$SERVER_UPSTREAM" ]; then
+		sed -i '1i /usr/sbin/named -u named -c /etc/named.conf' /usr/bin/dnscrypt
 	fi
 
 	init_bind
@@ -88,12 +81,13 @@ else
 				-v /docker/dnscrypt:/key \\
 				-v /docker/bind_log:/var/named/data \\
 				-p 5443:5443 \\
+				-p 5443:5443/udp \\
 				-p 53:53/udp \\
 				-e CERT_DAY=[365] \\
 				-e SERVER_DOMAIN=[jiobxn.com] \\
 				-e SERVER_LISTEN=[0.0.0.0:5443] \\
 				-e SERVER_UPSTREAM=<8.8.8.8:53> \\
-				-e CLIENT_LISTEN=[0.0.0.0:55] \\
+				-e CLIENT_LISTEN=[0.0.0.0:53] \\
 				-e CLIENT_UPSTREAM=<server address> \\
 				-e PROVIDER_KEY=<Provider public key>
 				-e BIND_VERSION=["windows 2003 DNS"] \\
