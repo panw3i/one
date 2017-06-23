@@ -36,7 +36,7 @@ WORKDIR /key
 
 ENTRYPOINT ["/dnscrypt.sh"]
 
-EXPOSE 5443 53/udp
+EXPOSE 5443 5443/udp 53/udp
 
 CMD ["dnscrypt"]
 
