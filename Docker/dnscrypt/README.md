@@ -33,7 +33,7 @@ DNSCrypt
 				-v /docker/dnscrypt:/key \\
 				-v /docker/bind_log:/var/named/data \\
 				-p 5443:5443 \\
-        -p 5443:5443/udp \\
+				-p 5443:5443/udp \\
 				-p 53:53/udp \\
 				-e CERT_DAY=[365] \\                         证书有效期(天)
 				-e SERVER_DOMAIN=[jiobxn.com] \\             服务器域名，可以任意指定，但是客户端与服务器必须相同
