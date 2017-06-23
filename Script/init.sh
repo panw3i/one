@@ -3,7 +3,7 @@ yum -y install bash-completion vim aria2 axel wget openssl-devel bind-utils ipta
 
 systemctl disable NetworkManager firewalld
 \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-systemctl enable iptables
+systemctl enable iptables ntpd
 
 sed -i 's/#UseDNS yes/UseDNS no/' /etc/ssh/sshd_config
 
@@ -19,6 +19,7 @@ EOF
 
 yum -y install python34-setuptools
 easy_install-3.4 pip
+pip install --upgrade youtube-dl you-get
 
 curl -s https://download.docker.com/linux/centos/docker-ce.repo -o /etc/yum.repos.d/docker-ce.repo
 yum -y install docker-ce
