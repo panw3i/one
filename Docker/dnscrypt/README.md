@@ -24,6 +24,9 @@ DNSCrypt
     #运行一个dnscrypt客户端，连接到cisco的公共DNS服务器(标准端口443)
     docker run -d --restart unless-stopped -p 53:53/udp -e CLIENT_UPSTREAM=208.67.220.220 -e SERVER_DOMAIN=opendns.com -e PROVIDER_KEY=B735:1140:206F:225D:3E2B:D822:D7FD:691E:A1C3:3CC8:D666:8D0C:BE04:BFAB:CA43:FB79 --name dns jiobxn/dnscrypt 
 
+    #在Windows上运行一个dnscrypt客户端(将本地DNS改为127.0.0.1)
+    ./dnscrypt-proxy.exe --local-address=0.0.0.0:53  --resolver-address=208.67.220.220 --provider-name=2.dnscrypt-cert.opendns.com --provider-key=B735:1140:206F:225D:3E2B:D822:D7FD:691E:A1C3:3CC8:D666:8D0C:BE04:BFAB:CA43:FB79
+
     #测试
     docker exec -it dns dig @27.0.0.1 google.com
 
