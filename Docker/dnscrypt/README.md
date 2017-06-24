@@ -10,20 +10,20 @@ DNSCrypt
 ## Example:
 
     #运行一个bind服务器
-    docker run -d --restart unless-stopped -p 53:53/udp --name dns dnscrypt
+    docker run -d --restart unless-stopped -p 53:53/udp --name dns jiobxn/dnscrypt
 
     #运行一个dnscrypt服务器
-    docker run -d --restart unless-stopped -p 5443:5443 -p 5443:5443/udp -e SERVER_UPSTREAM=8.8.8.8:53 -e SERVER_DOMAIN=jiobxn.com --name dns dnscrypt
+    docker run -d --restart unless-stopped -p 5443:5443 -p 5443:5443/udp -e SERVER_UPSTREAM=8.8.8.8:53 -e SERVER_DOMAIN=jiobxn.com --name dns jiobxn/dnscrypt
     docker logs dns
 
     #运行一个dnscrypt客户端
-    docker run -d --restart unless-stopped -p 53:53/udp -e CLIENT_UPSTREAM=jiobxn.com:5443 -e SERVER_DOMAIN=jiobxn.com -e PROVIDER_KEY=<Provider public key> --name dns dnscrypt 
+    docker run -d --restart unless-stopped -p 53:53/udp -e CLIENT_UPSTREAM=jiobxn.com:5443 -e SERVER_DOMAIN=jiobxn.com -e PROVIDER_KEY=<Provider public key> --name dns jiobxn/dnscrypt 
 
     #运行一个dnscrypt客户端，连接到cisco的公共DNS服务器(标准端口443)
-    docker run -d --restart unless-stopped -p 53:53/udp -e CLIENT_UPSTREAM=208.67.220.220 -e SERVER_DOMAIN=opendns.com -e PROVIDER_KEY=B735:1140:206F:225D:3E2B:D822:D7FD:691E:A1C3:3CC8:D666:8D0C:BE04:BFAB:CA43:FB79 --name dns dnscrypt 
+    docker run -d --restart unless-stopped -p 53:53/udp -e CLIENT_UPSTREAM=208.67.220.220 -e SERVER_DOMAIN=opendns.com -e PROVIDER_KEY=B735:1140:206F:225D:3E2B:D822:D7FD:691E:A1C3:3CC8:D666:8D0C:BE04:BFAB:CA43:FB79 --name dns jiobxn/dnscrypt 
 
     #测试
-    dig @27.0.0.1 google.com
+    docker exec -it dns dig @27.0.0.1 google.com
 
 
 ## Run Defult Parameter
