@@ -3,9 +3,11 @@ DNSCrypt
 ## 简介
 * **DNSCrypt** 是一种用于保护客户端和DNS解析器之间的通信的协议，使用高速高安全性的椭圆曲线加密技术。
 > * 服务器项目：https://github.com/Cofyc/dnscrypt-wrapper
-> * 客户端休眠：https://github.com/jedisct1/dnscrypt-proxy
+> * 客户端项目：https://github.com/jedisct1/dnscrypt-proxy
 > * 公共DNS列表：https://github.com/jedisct1/dnscrypt-proxy/blob/master/dnscrypt-resolvers.csv
 > * BIND ebook：http://www.zytrax.com/books/dns/
+> * 客户端下载：[Windows 32](https://codeload.github.com/lixuy/dnscrypt-winclient/zip/master) 、 [Windows 32](https://download.dnscrypt.org/dnscrypt-proxy/LATEST-win32-full.zip) 、 [Windows 64](https://download.dnscrypt.org/dnscrypt-proxy/LATEST-win64-full.zip)
+
 
 ## Example:
 
