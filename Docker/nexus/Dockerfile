@@ -16,8 +16,6 @@ RUN useradd -r -d /usr/local/sonatype-work -s /sbin/nologin nexus \
 
 VOLUME /usr/local/sonatype-work
 
-RUN chown -R nexus.nexus /usr/local/sonatype-work
-
 COPY nexus.sh /nexus.sh
 RUN chmod +x /nexus.sh
 
