@@ -3,6 +3,8 @@ set -e
 
 if [ "$4" = 'bin/nexus' ]; then
 
+[ "$(ls -ld /usr/local/sonatype-work |egrep -o nexus |wc -l)" -lt 2 ] && chown -R nexus.nexus /usr/local/sonatype-work
+
 if [ -z "$(grep redhat.xyz /usr/local/nexus/etc/nexus-default.properties)" ]; then
 	sed -i '1i #redhat.xyz' /usr/local/nexus/etc/nexus-default.properties
 
