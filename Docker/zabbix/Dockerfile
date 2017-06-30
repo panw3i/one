@@ -10,12 +10,10 @@ RUN yum clean all; yum -y install epel-release; yum -y update \
 
 RUN useradd -r -s /sbin/nologin zabbix \
         && cd /usr/local/src \
-        && zabbix_down="https://sourceforge.net/projects/zabbix/files/ZABBIX%20Latest%20Stable/" \
-        && zabbix_v=$(curl -s $zabbix_down |grep "tr title" |head |awk -F\" '{print $2}' |sort -n |tail -1) \
-        && wget -c "$zabbix_down$zabbix_v/zabbix-$zabbix_v.tar.gz"
+        && wget -c https://sourceforge.net/projects/zabbix/files/latest/download?source=files -O zabbix.tar.gz
 
 RUN cd /usr/local/src \
-        && tar zxf zabbix-*.tar.gz \
+        && tar zxf zabbix.tar.gz \
         && cd /usr/local/src/zabbix-* \
         && ./configure --prefix=/usr/local/zabbix \
            --enable-server \
