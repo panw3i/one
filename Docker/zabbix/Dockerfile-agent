@@ -6,9 +6,7 @@ RUN yum clean all; yum -y update; yum -y install sudo net-tools bash-completion 
 
 RUN useradd -r -s /sbin/nologin zabbix \
         && cd /usr/local/src \
-        && zabbix_down="https://sourceforge.net/projects/zabbix/files/ZABBIX%20Latest%20Stable/" \
-        && zabbix_v=$(curl -s $zabbix_down |grep "tr title" |head -1 |awk -F\" '{print $2}') \
-        && wget -c "$zabbix_down$zabbix_v/zabbix-$zabbix_v.tar.gz"
+        && wget -c https://sourceforge.net/projects/zabbix/files/latest/download?source=files
 
 RUN cd /usr/local/src \
         && tar zxf zabbix-*.tar.gz \
