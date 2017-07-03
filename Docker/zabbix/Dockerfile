@@ -36,11 +36,7 @@ RUN cd /usr/local/src \
         && cp -a frontends/php /usr/local/zabbix/php \
         && rm -rf /usr/local/src/* \
         && ln -s /usr/local/zabbix/sbin/zabbix_* /usr/local/bin/ \
-        && ln -s /usr/local/zabbix/bin/* /usr/local/bin/ \
-        && cd /usr/local/zabbix/etc \
-        && wget -c https://github.com/monitoringartist/zabbix-docker-monitoring/raw/gh-pages/centos7/3.2/zabbix_module_docker.so \
-        && echo -e "LoadModulePath=/usr/local/zabbix/etc\nLoadModule=zabbix_module_docker.so" >>/usr/local/zabbix/etc/zabbix_agentd.conf \
-        && chmod +x /usr/local/zabbix/etc/zabbix_module_docker.so
+        && ln -s /usr/local/zabbix/bin/* /usr/local/bin/
 
 VOLUME /var/www/html /usr/local/zabbix/etc
 
