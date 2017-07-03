@@ -9,7 +9,7 @@ Zabbix
     #运行一个zabbix客户端
     docker run -d --restart always --privileged --network host --name zabbix-agent zabbix-agent <zabbix-server-ip>
 
-    #访问zabbix示例 http://redhat.xyz:11080/zabbix   用户名/密码：admin/zabbix
+    #访问zabbix示例 http://<zabbix-server-ip>:11080/zabbix   用户名/密码：admin/zabbix
 
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
@@ -68,3 +68,10 @@ Zabbix
 	  -e ZA_Server=<zabbix-server-ip> \
 	  -e ZA_ServerActive=<zabbix-server-ip> \
 	  monitoringartist/dockbix-agent-xxl-limited
+
+**添加中文显示支持**
+
+    docker exec -it zabbix-server bash
+    yum -y install wqy-zenhei-fonts.noarch
+    \cp /usr/share/fonts/wqy-zenhei/wqy-zenhei.ttc /usr/local/src/zabbix/frontends/php/fonts/DejaVuSans.ttf
+    docker restart zabbix-server
