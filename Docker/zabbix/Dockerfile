@@ -39,7 +39,7 @@ RUN cd /usr/local/src \
         && ln -s /usr/local/zabbix/bin/* /usr/local/bin/ \
         && cd /usr/local/zabbix/etc \
         && wget -c https://github.com/monitoringartist/zabbix-docker-monitoring/raw/gh-pages/centos7/3.2/zabbix_module_docker.so \
-        && echo -e "LoadModulePath=/usr/local/zabbix/etc\nLoadModule=zabbix_module_docker.so\nLoadModule=zabbix_module_stress.so" >>/usr/local/zabbix/etc/zabbix_agentd.conf \
+        && echo -e "LoadModulePath=/usr/local/zabbix/etc\nLoadModule=zabbix_module_docker.so" >>/usr/local/zabbix/etc/zabbix_agentd.conf \
         && chmod +x /usr/local/zabbix/etc/zabbix_module_docker.so
 
 VOLUME /var/www/html /usr/local/zabbix/etc
