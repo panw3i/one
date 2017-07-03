@@ -15,7 +15,11 @@ RUN cd /usr/local/src \
         && make install \
         && rm -rf /usr/local/src/* \
         && ln -s /usr/local/zabbix/sbin/zabbix_* /usr/bin/ \
-        && ln -s /usr/local/zabbix/bin/* /usr/bin/
+        && ln -s /usr/local/zabbix/bin/* /usr/bin/ \
+        && cd /usr/local/zabbix/etc \
+        && wget -c https://github.com/monitoringartist/zabbix-docker-monitoring/raw/gh-pages/centos7/3.2/zabbix_module_docker.so \
+        && wget -c https://github.com/monitoringartist/zabbix-server-stress-test/raw/gh-pages/centos7/zabbix_module_stress.so \
+        && echo -e "LoadModulePath=/usr/local/zabbix/etc\nLoadModule=zabbix_module_docker.so\nLoadModule=zabbix_module_stress.so" >>/usr/local/zabbix/etc/zabbix_agentd.conf
 
 RUN echo -e '#!/bin/bash\nsed -i "s/=127.0.0.1/='\$1'/g" /usr/local/zabbix/etc/zabbix_agentd.conf 2>/dev/null\nexec sudo -u zabbix -H zabbix_agentd -f' >/zabbix.sh \
         && chmod +x /zabbix.sh
