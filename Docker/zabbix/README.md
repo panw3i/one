@@ -4,10 +4,10 @@ Zabbix
 ## Example:
 
     #运行一个zabbix服务器
-    docker run -d --restart always --privileged -p 11080:80 -p 11443:443 -v /docker/www:/var/www/html -e PHP_SERVER=redhat.xyz -e ZBX_DB_SERVER=redhat.xyz --hostname zabbix --name zabbix zabbix-httpd
+    docker run -d --restart always --privileged -p 11080:80 -p 11443:443 -v /docker/www:/var/www/html -e PHP_SERVER=<php-server-ip> -e ZBX_DB_SERVER=<mysql-server-ip> --hostname zabbix --name zabbix-server zabbix-httpd
 
     #运行一个zabbix客户端
-    docker run -d --restart always --privileged --network=host --name zabbix-agent zabbix-agent 192.168.10.100
+    docker run -d --restart always --privileged --network host --name zabbix-agent zabbix-agent <zabbix-server-ip>
 
     #访问zabbix示例 http://redhat.xyz:11080/zabbix   用户名/密码：admin/zabbix
 
@@ -30,3 +30,41 @@ Zabbix
 				--name zabbix-httpd zabbix-httpd
 
 提示：zabbix默认使用 被动模式，即 server --> agent，agent要开放10050端口 。主动模式是 agent --> server 。
+
+****
+
+## zabbix-docker-monitoring
+> * 项目地址：https://github.com/monitoringartist/zabbix-docker-monitoring
+
+	docker run -d \
+		--name zabbix-db \
+		--net=host \
+		-p 3306:3306 \
+		-v /backups:/backups \
+		-v /etc/localtime:/etc/localtime:ro \
+		-v /docker/zabbix-db\
+		-e MARIADB_USER=zabbix \
+		-e MARIADB_PASS=my_password \
+		monitoringartist/zabbix-db-mariadb
+
+	docker run -d \
+		--name zabbix-server \
+		--net=host \
+		-p 80:80 \
+		-p 10051:10051 \
+		-v /etc/localtime:/etc/localtime:ro \
+		-e ZS_DBHost=<zabbix-db-ip> \
+		-e ZS_DBUser=zabbix \
+		-e ZS_DBPassword=my_password \
+		monitoringartist/zabbix-xxl
+
+	docker run -d \
+	  --name=zabbix-docker-agent \
+	  --net=host \
+	  --privileged \
+	  -v /:/rootfs \
+	  -v /var/run:/var/run \
+	  --restart unless-stopped \
+	  -e ZA_Server=<zabbix-server-ip> \
+	  -e ZA_ServerActive=<zabbix-server-ip> \
+	  monitoringartist/dockbix-agent-xxl-limited
