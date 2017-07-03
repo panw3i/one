@@ -10,12 +10,10 @@ RUN yum clean all; yum -y install epel-release; yum -y update \
 
 RUN useradd -r -s /sbin/nologin zabbix \
         && cd /usr/local/src \
-        && zabbix_down="https://sourceforge.net/projects/zabbix/files/ZABBIX%20Latest%20Stable/" \
-        && zabbix_v=$(curl -s $zabbix_down |grep "tr title" |head |awk -F\" '{print $2}' |sort -n |tail -1) \
-        && wget -c "$zabbix_down$zabbix_v/zabbix-$zabbix_v.tar.gz"
+        && wget -c https://sourceforge.net/projects/zabbix/files/latest/download?source=files -O zabbix.tar.gz
 
 RUN cd /usr/local/src \
-        && tar zxf zabbix-*.tar.gz \
+        && tar zxf zabbix.tar.gz \
         && cd /usr/local/src/zabbix-* \
         && ./configure --prefix=/usr/local/zabbix \
            --enable-server \
@@ -37,9 +35,12 @@ RUN cd /usr/local/src \
         && cp -a frontends/php /usr/local/zabbix/php \
         && rm -rf /usr/local/src/* \
         && ln -s /usr/local/zabbix/sbin/zabbix_* /usr/local/bin/ \
-        && ln -s /usr/local/zabbix/bin/* /usr/local/bin/
+        && ln -s /usr/local/zabbix/bin/* /usr/local/bin/ \
+        && wget -c https://github.com/monitoringartist/zabbix-docker-monitoring/raw/gh-pages/centos7/3.2/zabbix_module_docker.so \
+        && wget -c https://github.com/monitoringartist/zabbix-server-stress-test/raw/gh-pages/centos7/zabbix_module_stress.so \
+        && echo -e "LoadModulePath=/usr/local/zabbix/etc\nLoadModule=zabbix_module_docker.so\nLoadModule=zabbix_module_stress.so" >>/usr/local/zabbix/etc/zabbix_agentd.conf
 
-VOLUME /var/www/html
+VOLUME /var/www/html /usr/local/zabbix/etc
 
 COPY zabbix-httpd.sh /zabbix.sh
 RUN chmod +x /zabbix.sh
