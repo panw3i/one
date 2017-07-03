@@ -35,9 +35,13 @@ RUN cd /usr/local/src \
         && cp -a frontends/php /usr/local/zabbix/php \
         && rm -rf /usr/local/src/* \
         && ln -s /usr/local/zabbix/sbin/zabbix_* /usr/local/bin/ \
-        && ln -s /usr/local/zabbix/bin/* /usr/local/bin/
+        && ln -s /usr/local/zabbix/bin/* /usr/local/bin/ \
+        && cd /usr/local/zabbix/etc \
+        && wget -c https://github.com/monitoringartist/zabbix-docker-monitoring/raw/gh-pages/centos7/3.2/zabbix_module_docker.so \
+        && wget -c https://github.com/monitoringartist/zabbix-server-stress-test/raw/gh-pages/centos7/zabbix_module_stress.so \
+        && echo -e "LoadModulePath=/usr/local/zabbix/etc\nLoadModule=zabbix_module_docker.so\nLoadModule=zabbix_module_stress.so" >>/usr/local/zabbix/etc/zabbix_agentd.conf
 
-VOLUME /var/www/html
+VOLUME /var/www/html /usr/local/zabbix/etc
 
 COPY zabbix.sh /zabbix.sh
 RUN chmod +x /zabbix.sh
