@@ -39,3 +39,8 @@ Tomcat
 					--hostname tomcat \\
 					--name tomcat tomcat
 
+****
+
+**关于日志记录客户端真实IP(nginx proxy)**
+
+    sed -i 's/%h/%{X-Forwarded-For}i/g' /usr/local/tomcat/conf/server.xml
