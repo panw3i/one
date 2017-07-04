@@ -30,3 +30,9 @@ ddos工具
 ***
 ### init.sh
 VPS初始化
+***
+### show_veth.sh
+查看容器在宿主机对应的网络接口
+***
+### clean_item.sh
+清除zabbix主机不支持的监控项(主要用于docker环境)
