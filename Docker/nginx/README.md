@@ -103,3 +103,9 @@ Nginx
 		conn_timeout=[1m]						#后端连接超时，默认1分钟
 		proxy_timeout=[10m]						#空闲超时，默认10分钟
 		udp=<Y>								#UDP
+
+****
+
+关于日志记录客户端真实IP(nginx proxy)
+
+    sed -i 's/$remote_addr/$proxy_add_x_forwarded_for/' /etc/nginx/nginx.conf
