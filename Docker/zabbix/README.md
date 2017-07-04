@@ -69,7 +69,11 @@ Zabbix
 	  -e ZA_ServerActive=<zabbix-server-ip> \
 	  monitoringartist/dockbix-agent-xxl-limited
 
-**导入提供的模板**  
+监控容器需要做的两件事：1.运行一个dockbix-agent-xxl-limited客户端。2.导入监控模板
+
+****
+
+**导入监控模板**  
 [Zabbix-Template-App-Docker.xml](https://raw.githubusercontent.com/monitoringartist/zabbix-docker-monitoring/master/template/Zabbix-Template-App-Docker.xml) -标准(推荐)模板  
 [Zabbix-Template-App-Docker-active.xml](https://raw.githubusercontent.com/monitoringartist/zabbix-docker-monitoring/master/template/Zabbix-Template-App-Docker-active.xml)标准模板与自动发现
 
@@ -80,3 +84,9 @@ Zabbix
     yum -y install wqy-zenhei-fonts.noarch
     \cp /usr/share/fonts/wqy-zenhei/wqy-zenhei.ttc /usr/local/src/zabbix/frontends/php/fonts/DejaVuSans.ttf
     docker restart zabbix-server
+
+**查看容器在宿主机对应的网络接口**  
+https://github.com/jiobxn/one/blob/master/Script/show_veth.sh
+
+**清除zabbix主机不支持的监控项**  
+https://github.com/jiobxn/one/blob/master/Script/clean_item.sh
