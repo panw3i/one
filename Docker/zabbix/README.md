@@ -78,7 +78,7 @@ Zabbix
 [Zabbix-Template-App-Docker-active.xml](https://raw.githubusercontent.com/monitoringartist/zabbix-docker-monitoring/master/template/Zabbix-Template-App-Docker-active.xml) -标准模板与自动发现
 
 
-**添加中文显示支持**
+**添加中文显示支持(zabbix-xxl)**
 
     docker exec -it zabbix-server bash
     yum -y install wqy-zenhei-fonts.noarch
