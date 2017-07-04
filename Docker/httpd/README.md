@@ -29,3 +29,7 @@ HTTPD
 				-e APC_PASS=<123456> \\     默认随机密码
 				--hostname httpd \\
 				--name httpd httpd
+
+**关于日志记录客户端真实IP(nginx proxy)**
+
+    sed -i 's/%h/%{X-Forwarded-For}i/g' /etc/httpd/conf/httpd.conf
