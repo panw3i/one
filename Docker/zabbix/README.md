@@ -14,7 +14,7 @@ Zabbix
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
 
-				docker run -d --restart always --privileged \\
+				docker run -d --restart always [--privileged] \\
 				-v /docker/www:/var/www/html \\
 				-p 11080:80 \\
 				-p 11443:443 \\
@@ -68,6 +68,11 @@ Zabbix
 	  -e ZA_Server=<zabbix-server-ip> \
 	  -e ZA_ServerActive=<zabbix-server-ip> \
 	  monitoringartist/dockbix-agent-xxl-limited
+
+**导入提供的模板**  
+[Zabbix-Template-App-Docker.xml](https://raw.githubusercontent.com/monitoringartist/zabbix-docker-monitoring/master/template/Zabbix-Template-App-Docker.xml) -标准(推荐)模板  
+[Zabbix-Template-App-Docker-active.xml](https://raw.githubusercontent.com/monitoringartist/zabbix-docker-monitoring/master/template/Zabbix-Template-App-Docker-active.xml)标准模板与自动发现
+
 
 **添加中文显示支持**
 
