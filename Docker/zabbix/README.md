@@ -90,3 +90,7 @@ https://github.com/jiobxn/one/blob/master/Script/show_veth.sh
 
 **清除zabbix主机不支持的监控项**  
 https://github.com/jiobxn/one/blob/master/Script/clean_item.sh
+
+**Zabbix API使用**  
+1.API文档：https://www.zabbix.com/documentation/3.2/manual/api  
+2.参考浏览器的URL
