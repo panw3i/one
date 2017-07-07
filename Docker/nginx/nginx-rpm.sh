@@ -438,7 +438,7 @@ http_other() {
 		if [ -n "$(echo $i |grep 'header=')" ]; then
 			header="$(echo $i |grep 'header=' |awk -F= '{print $2}')"
 			
-			sed -i '/'$NGX_HEADER';/'$header';/g' /etc/nginx/conf.d/${project_name}_$n.conf
+			sed -i 's/'$ngx_header';/'$header';/' /etc/nginx/conf.d/${project_name}_$n.conf
 		fi
 		
 		#负载均衡
