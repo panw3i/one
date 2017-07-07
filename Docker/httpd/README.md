@@ -32,4 +32,4 @@ HTTPD
 
 **关于日志记录客户端真实IP(nginx proxy)**
 
-    sed -i 's/%h/%{X-Forwarded-For}i/g' /etc/httpd/conf/httpd.conf
+    log_format 参数：$http_x_forwarded_for
