@@ -52,5 +52,5 @@ SVN
 
 更新
 
-    svn update
+    svn up
 
