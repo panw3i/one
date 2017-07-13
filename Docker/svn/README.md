@@ -34,8 +34,8 @@ SVN
 
 添加文件
 
-    cd repos
-    touch aaa
+    cd repos
+    touch aaa
     svn add aaa
 
 提交
