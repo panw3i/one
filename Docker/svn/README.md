@@ -10,12 +10,12 @@ SVN
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
 
-        docker run -d \\
+        docker run -d --restart unless-stopped \\
 				-v /docker/svn:/home/svn \\
 				-v /docker/key:/key \\
 				-p 10080:80 \\
 				-p 10443:443 \\
-				-p 13690:3690 \\
+				-e REPOS=[repos] \\
 				-e ADMIN=[admin] \\
 				-e USER=[user1] \\
 				-e ADMIN_PASS=[passwd0] \\
