@@ -3,6 +3,7 @@ set -e
 
 if [ "$1" = 'httpd' ]; then
 
+: ${REPOS:=repos}
 : ${ADMIN:=admin}
 : ${USER:=user1}
 : ${ADMIN_PASS:=passwd0}
@@ -59,8 +60,8 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 
 	cat >/home/authz.txt<<-END
 	[groups]
-	manager=admin
-	users=user1,user2
+	manager=$ADMIN
+	users=$USER
 
 	[/]
 	@manager=rw
@@ -75,7 +76,7 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 	if [ ! -d /home/svn/conf ]; then
 		echo "create default repository"
 		mkdir -p /home/svn/conf
-		[ ! -d /home/svn/repos ] && svnadmin create /home/svn/repos
+		[ ! -d /home/svn/$REPOS ] && svnadmin create /home/svn/$REPOS && chown -R apache.apache /home/svn/$REPOS
 
 		echo "$ADMIN:$(openssl passwd -apr1 $ADMIN_PASS)" > /home/svn/conf/htpasswd
 		echo "$USER:$(openssl passwd -apr1 $USER_PASS)" >> /home/svn/conf/htpasswd
@@ -87,11 +88,11 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 		if [ -f /home/svn/conf/authz ]; then 
 			echo "authz exist"
 			for i in $(grep : /home/svn/conf/authz |grep -Po '(?<=\[)[^)]*(?=\])' |awk -F: '{print $1}'); do
-				[ ! -d "/home/svn/$i" ] && svnadmin create /home/svn/$i && echo "create $i repository"
+				[ ! -d "/home/svn/$i" ] && svnadmin create /home/svn/$i && chown -R apache.apache /home/svn/$i && echo "create $i repository"
 			done
 		else
 			\cp /home/authz.txt /home/svn/conf/authz
-			[ ! -d /home/svn/repos ] && svnadmin create /home/svn/repos && echo "create default repository"
+			[ ! -d /home/svn/$REPOS ] && svnadmin create /home/svn/$REPOS && chown -R apache.apache /home/svn/$REPOS && echo "create default repository"
 		fi
 	
 		if [ -f /home/svn/conf/passwd ]; then
@@ -111,7 +112,6 @@ if [ -z "$(grep "redhat.xyz" /etc/httpd/conf/httpd.conf)" ]; then
 	fi
 fi
 	echo "Start ****"
-	svnserve -d -r /home/svn
 	exec "$@"
 else
 
@@ -122,7 +122,7 @@ else
 				-v /docker/key:/key \\
 				-p 10080:80 \\
 				-p 10443:443 \\
-				-p 13690:3690 \\
+				-e REPOS=[repos] \\
 				-e ADMIN=[admin] \\
 				-e USER=[user1] \\
 				-e ADMIN_PASS=[passwd0] \\
