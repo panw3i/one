@@ -54,3 +54,8 @@ SVN
 
     svn up --username admin --password passwd0
 
+
+**自动构建与部署**
+
+svn提交后会自动执行(如果存在)hooks/post-commit文件  
+参考：http://qicheng0211.blog.51cto.com/3958621/1563159
