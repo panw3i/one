@@ -1,5 +1,6 @@
 FROM centos:latest
 MAINTAINER "The CentOS Project" <admin@jiobxn.com>
+ARG LATEST="0"
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN yum clean all; yum -y update; yum -y install net-tools bash-completion vim wget make gcc-c++ iptables cronie autoconf zlib-devel openssl-devel bison; yum clean all
@@ -14,11 +15,9 @@ RUN cd /usr/local/src \
         && cd /usr/local/src/ruby-* \
         && autoconf && ./configure --disable-install-rdoc \
         && make -j8 && make install \
-        && `#gem sources -r http://rubygems.org/ -a https://gems.ruby-china.org/` \
         && gem install json_pure \
         && gem update --system \
         && gem install bundler \
-        && `#bundle config mirror.https://rubygems.org https://gems.ruby-china.org` \
         && gem install redis \
         && cd /usr/local/src/redis-* \
         && make -j8 PREFIX=/usr/local/redis \
