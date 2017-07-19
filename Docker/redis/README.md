@@ -1,8 +1,6 @@
 Redis
 ===
 
-    在国内的网络环境Build很容易失败，在Dockerfile开启更换Gem源
-
 ## Example:
 
     #运行一个单机版redis
