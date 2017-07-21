@@ -1,5 +1,5 @@
 yum clean all; yum -y install epel-release; yum -y update
-yum -y install bash-completion vim aria2 axel wget openssl-devel bind-utils iptables-services iftop net-tools ntp mtr nmap tcpdump pciutils setroubleshoot setools make gcc-c++ autoconf automake unzip bzip2 zip mailx bc at expect telnet git lrzsz lsof bridge-utils dos2unix
+yum -y install bash-completion vim aria2 axel wget openssl-devel bind-utils iptables-services iftop nethogs net-tools ntp mtr nmap tcpdump pciutils setroubleshoot setools make gcc-c++ autoconf automake unzip bzip2 zip mailx bc at expect telnet git lrzsz lsof bridge-utils dos2unix
 
 systemctl disable NetworkManager firewalld
 \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
