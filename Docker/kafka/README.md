@@ -35,6 +35,10 @@ Kafka
 				--name kafka kafka
 
 ## 补充
+手动创建1个"一副本四分区"的队列
+
+    bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 4 --topic test1
+
 查看topic状态：
 
     /usr/local/kafka/bin/kafka-topics.sh --describe --zookeeper 10.0.0.70:2181 --topic test1
