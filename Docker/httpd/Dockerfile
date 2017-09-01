@@ -1,5 +1,5 @@
 FROM centos:latest
-MAINTAINER The CentOS Project <admin@jiobxn.com>
+MAINTAINER "The CentOS Project" <admin@jiobxn.com>
 ARG LATEST="0"
 ARG ZEND="0"
 
