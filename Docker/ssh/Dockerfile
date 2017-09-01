@@ -1,9 +1,10 @@
 FROM centos:latest
-MAINTAINER The CentOS Project <admin@jiobxn.com>
+MAINTAINER "The CentOS Project" <admin@jiobxn.com>
+ARG LATEST="0"
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN yum clean all; yum -y install epel-release; yum -y update \
-        && yum -y install openssh-server bash-completion vim wget initscripts iptables bind-utils iftop iproute net-tools ntp cronie psmisc mtr nmap tcpdump openssl make gcc-c++ unzip bzip2 mailx bc at telnet git lsof
+        && yum -y install openssh-server bash-completion vim wget initscripts iptables bind-utils iftop iproute net-tools ntp cronie psmisc mtr nmap tcpdump openssl make gcc-c++ unzip bzip2 mailx bc at telnet git lsof \
         && yum clean all
 
 COPY ssh.sh /ssh.sh
