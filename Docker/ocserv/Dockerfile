@@ -1,5 +1,6 @@
 FROM centos:latest
 MAINTAINER "The CentOS Project" <admin@jiobxn.com>
+ARG LATEST="0"
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN yum -y install epel-release; yum -y update; yum -y install ocserv iptables cronie net-tools bash-completion vim; yum clean all
