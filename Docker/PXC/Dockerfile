@@ -1,6 +1,6 @@
 FROM centos:latest
 MAINTAINER "The CentOS Project" <admin@jiobxn.com>
-
+ARG LATEST="0"
 ARG mysql_v="57"
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
