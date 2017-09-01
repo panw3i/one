@@ -5,7 +5,7 @@ ARG ZEND="0"
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN yum clean all; yum -y install epel-release; yum -y update \
-        && yum clean all; yum -y update; yum -y install net-tools bash-completion vim wget libnghttp2-devel openssl openssl-devel make gcc-c++ iptables cronie
+        && yum clean all; yum -y update; yum -y install net-tools bash-completion vim wget libnghttp2-devel openssl openssl-devel make gcc-c++ iptables cronie \
         && yum clean all
 
 RUN cd /usr/local/src \
