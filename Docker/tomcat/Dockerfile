@@ -1,6 +1,6 @@
 FROM centos:latest
 MAINTAINER The CentOS Project <admin@jiobxn.com>
-
+ARG LATEST="0"
 ARG TOMCAT="7"
 ARG JDK="7"
 
