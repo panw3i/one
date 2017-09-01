@@ -3,7 +3,7 @@ MAINTAINER "The CentOS Project" <admin@jiobxn.com>
 ARG LATEST="0"
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN yum clean all; yum -y update; yum -y install sudo net-tools bash-completion vim wget make gcc libevent-devel; yum clean all
+RUN yum clean all; yum -y update; yum -y install sudo net-tools bash-completion vim wget make gcc pcre-devel; yum clean all
 
 RUN useradd -r -s /sbin/nologin zabbix \
         && cd /usr/local/src \
