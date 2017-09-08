@@ -8,7 +8,7 @@ RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 #Use pip to install: apk add py2-pip && pip install shadowsocks
 RUN cd / \
         && wget -c https://github.com/$(curl -s https://github.com/shadowsocks/shadowsocks/releases |grep tar.gz |awk -F\" 'NR==1{print $2}') -O /shadowsocks.tar.gz \
-        && wget -c https://github.com/$(curl -s https://github.com/shadowsocksr-backup/shadowsocksr-csharp/releases |grep tar.gz |awk -F\" 'NR==1{print $2}') -O /shadowsocksr.tar.gz \
+        && wget -c https://github.com/$(curl -s https://github.com/shadowsocksr-backup/shadowsocksr/releases |grep tar.gz |awk -F\" 'NR==1{print $2}') -O /shadowsocksr.tar.gz \
         && tar zxf shadowsocks.tar.gz \
         && tar zxf shadowsocksr.tar.gz \
         && mv shadowsocks-* shadowsocks \
