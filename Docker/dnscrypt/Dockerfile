@@ -3,7 +3,7 @@ MAINTAINER "The CentOS Project" <admin@jiobxn.com>
 ARG LATEST="0"
 
 RUN \cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN yum clean all; yum -y update; yum -y install net-tools iproute bash-completion vim wget git file rng-tools ldns-devel bzip2 make gcc autoconf bind bind-utils iptables cronie; yum clean all
+RUN yum clean all; yum -y update; yum -y install net-tools iproute bash-completion vim wget git file rng-tools ldns-devel make gcc autoconf bind bind-utils iptables cronie; yum clean all
 
 RUN cd /usr/local/src \
         && wget -c $(curl -s http://libevent.org/ |grep stable.tar.gz |awk -F\" 'NR==1{print $4}') \
@@ -14,8 +14,8 @@ RUN cd /usr/local/src \
 RUN cd /usr/local/src \
         && tar zxf libevent-*.tar.gz \
         && tar zxf libsodium.tar.gz \
-        && tar jxf dnscrypt-proxy.tar.gz \
-        && \rm *.tar.* \
+        && tar zxf dnscrypt-proxy.tar.gz \
+        && \rm *.tar.gz \
         && cd /usr/local/src/libevent-* \
         && ./configure && make -j8 && make install \
         && cd /usr/local/src/libsodium-* \
