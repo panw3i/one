@@ -7,14 +7,14 @@ RUN yum clean all; yum -y update; yum -y install net-tools iproute bash-completi
 
 RUN cd /usr/local/src \
         && wget -c $(curl -s http://libevent.org/ |grep stable.tar.gz |awk -F\" 'NR==1{print $4}') \
-        && wget -c https://download.libsodium.org/libsodium/releases/LATEST.tar.gz \
+        && wget -c https://download.libsodium.org/libsodium/releases/LATEST.tar.gz -O libsodium.tar.gz \
         && git clone --recursive git://github.com/cofyc/dnscrypt-wrapper.git \
-        && wget -c https://github.com/$(curl -s https://github.com/jedisct1/dnscrypt-proxy/releases |grep tar.bz2 |awk -F\" 'NR==1{print $2}')
+        && wget -c https://download.dnscrypt.org/dnscrypt-proxy/LATEST.tar.gz -O dnscrypt-proxy.tar.gz
 
 RUN cd /usr/local/src \
         && tar zxf libevent-*.tar.gz \
-        && tar zxf LATEST.tar.gz \
-        && tar jxf dnscrypt-proxy-*.tar.bz2 \
+        && tar zxf libsodium.tar.gz \
+        && tar jxf dnscrypt-proxy.tar.gz \
         && \rm *.tar.* \
         && cd /usr/local/src/libevent-* \
         && ./configure && make -j8 && make install \
