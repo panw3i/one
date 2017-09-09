@@ -103,7 +103,7 @@ else
 				-e SERVER_LISTEN=[0.0.0.0:5443] \\
 				-e SERVER_UPSTREAM=<8.8.8.8:53> \\
 				-e CLIENT_LISTEN=[0.0.0.0:53] \\
-				-e CLIENT_UPSTREAM=<"server address" | CISCO | HOME> \\
+				-e CLIENT_UPSTREAM=<server_address:port | CISCO | HOME> \\
 				-e PROVIDER_KEY=<Provider public key>
 				-e CHINADNS=<Y> \\
 				-e BIND_VERSION=["windows 2003 DNS"] \\
