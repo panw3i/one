@@ -25,7 +25,7 @@ Shadowsocks
 
 			docker run -d --restart always \\
 				-p 8443:8443 \
-				-e SS_K=[newpass] \\        随机密码
+				-e SS_K=[pwmake 64] \\      随机密码
 				-e SS_M=[aes-256-cfb] \\    加密方式
 				-e SS_P=[8443] \\           服务器端口
 				-e SS_o=[tls1.2_ticket_auth_compatible] \\    混淆插件
@@ -86,3 +86,37 @@ https://github.com/breakwa11/shadowsocks-rss/wiki/config.json
 
 https://copr.fedorainfracloud.org/coprs/librehat/shadowsocks/repo/epel-7/librehat-shadowsocks-epel-7.repo  
 yum install shadowsocks-libev
+
+===
+
+Shadowsocks-libev
+===
+
+## Example:
+
+    #运行一个SS服务器(USA)
+    docker run -d --restart always -p 8443:8443 -e SS_K=MyPassw01d --name ss jiobxn/shadowsocks:libev
+
+    #运行一个SS客户端(china)
+    docker run -d --restart always --privileged -e SS_S=<server ip> -e SS_P=8443 -e SS_K=MyPassw01d -e REDIR=Y -e DNS=172.17.0.2 --name ss jiobxn/shadowsocks:libev
+
+    #运行一个DNS服务器(china)
+    docker run -d --privileged --network container:ss -e CLIENT_UPSTREAM=CISCO -e CHINADNS=Y --name dns jiobxn/dnscrypt
+
+
+****
+
+## Run Defult Parameter
+**协定：** []是默参数，<>是自定义参数
+
+			docker run -d --restart always \\
+				-p 8443:8443 \
+				-e SS_K=[pwmake 64] \\        随机密码
+				-e SS_M=[aes-256-cfb] \\    加密方式
+				-e SS_P=[8443] \\           服务器端口
+				-e LOCAL=<Y> \\             ss-local模式
+				-e REDIR=<Y> \\             ss-redir模式
+				-e SS_S=<SS_SERVER> \\       服务器地址
+				-e SS_B=[127.0.0.1] \\       本地监听地址
+				-e SS_L=[1080] \\            本地监听端口
+				--hostname shadowsocks --name shadowsocks shadowsocks
