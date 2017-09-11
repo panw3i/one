@@ -4,16 +4,16 @@ Shadowsocks
 ## Example:
 
     #运行一个SS服务器
-    docker run -d --restart always -p 8443:8443 -e SS_PASS=MyPassw01d --name ss jiobxn/shadowsocks
+    docker run -d --restart always -p 8443:8443 -e SS_K=MyPassw01d --name ss jiobxn/shadowsocks
 
     #运行一个SSR服务器
-    docker run -d --restart always -p 8444:8443 -e SS_PASS=MyPassw01d -e SSR=Y --name ssr jiobxn/shadowsocks
+    docker run -d --restart always -p 8444:8443 -e SS_K=MyPassw01d -e SSR=Y --name ssr jiobxn/shadowsocks
 
     #运行一个SS客户端
-    docker run -d --restart always --network=host -e SS_ADDR=<server ip> -e SS_PORT=8443 -e SS_PASS=MyPassw01d -e SL_ADDR=0.0.0.0 --name ss jiobxn/shadowsocks
+    docker run -d --restart always --network=host -e SS_S=<server ip> -e SS_P=8443 -e SS_K=MyPassw01d -e SS_B=0.0.0.0 --name ss jiobxn/shadowsocks
 
     #运行一个SSR客户端
-    docker run -d --restart always --network=host -e SS_ADDR=<server ip> -e SS_PORT=8444 -e SS_PASS=MyPassw01d -e SSR=Y -e SL_ADDR=0.0.0.0 --name ssr jiobxn/shadowsocks
+    docker run -d --restart always --network=host -e SS_S=<server ip> -e SS_P=8444 -e SS_K=MyPassw01d -e SSR=Y -e SS_B=0.0.0.0 --name ssr jiobxn/shadowsocks
 
     # update build
     docker build --build-arg LATEST=1 -t shadowsocks .
@@ -25,15 +25,15 @@ Shadowsocks
 
 			docker run -d --restart always \\
 				-p 8443:8443 \
-				-e SS_PASS=[newpass] \\        随机密码
-				-e SS_EMOD=[aes-256-cfb] \\    加密方式
-				-e SS_PORT=[8443] \\           服务器端口
-				-e SS_OBFS=[tls1.2_ticket_auth_compatible] \\    混淆插件
-				-e SS_PROTOCOL=[auth_aes128_sha1] \\             协议插件
+				-e SS_K=[newpass] \\        随机密码
+				-e SS_M=[aes-256-cfb] \\    加密方式
+				-e SS_P=[8443] \\           服务器端口
+				-e SS_o=[tls1.2_ticket_auth_compatible] \\    混淆插件
+				-e SS_O=[auth_aes128_sha1] \\                 协议插件
 				-e SSR=<Y> \\                启用SSR
-				-e SS_ADDR=<SS_ADDR> \\      服务器地址
-				-e SL_ADDR=[127.0.0.1] \\    本地监听地址
-				-e SL_PORT=[1080] \\         本地监听端口
+				-e SS_S=<SS_SERVER> \\       服务器地址
+				-e SS_B=[127.0.0.1] \\       本地监听地址
+				-e SS_L=[1080] \\            本地监听端口
 				--hostname shadowsocks --name shadowsocks shadowsocks
 
 ****
