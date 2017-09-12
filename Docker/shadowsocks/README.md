@@ -87,7 +87,6 @@ https://github.com/breakwa11/shadowsocks-rss/wiki/config.json
 https://copr.fedorainfracloud.org/coprs/librehat/shadowsocks/repo/epel-7/librehat-shadowsocks-epel-7.repo  
 yum install shadowsocks-libev
 
-===
 
 Shadowsocks-libev
 ===
@@ -97,11 +96,12 @@ Shadowsocks-libev
     #运行一个SS服务器(USA)
     docker run -d --restart always -p 8443:8443 -e SS_K=MyPassw01d --name ss jiobxn/shadowsocks:libev
 
-    #运行一个SS客户端(china)
-    docker run -d --restart always --privileged -e SS_S=<server ip> -e SS_P=8443 -e SS_K=MyPassw01d -e REDIR=Y -e DNS=172.17.0.2 --name ss jiobxn/shadowsocks:libev
-
     #运行一个DNS服务器(china)
-    docker run -d --privileged --network container:ss -e CLIENT_UPSTREAM=CISCO -e CHINADNS=Y --name dns jiobxn/dnscrypt
+    docker run -d -e CLIENT_UPSTREAM=CISCO -e CHINADNS=Y -e BIND_QUERY_LOG=Y --name 11dns jiobxn/dnscrypt
+    #运行一个SS服务器(china)
+    docker run -d --restart always --privileged --link 11dns:mydns -p 10083:8443 -e SS_K=newpass --name 22ss jiobxn/shadowsocks:libev
+    #运行一个SS客户端(china)
+    docker run -d --restart always --privileged --network container:22ss -e SS_S=<server ip> -e SS_P=8443 -e SS_K=MyPassw01d -e REDIR=Y -e DNS=mydns --name 33ss jiobxn/shadowsocks:libev
 
 
 ****
@@ -116,6 +116,7 @@ Shadowsocks-libev
 				-e SS_P=[8443] \\           服务器端口
 				-e LOCAL=<Y> \\             ss-local模式
 				-e REDIR=<Y> \\             ss-redir模式
+				-e DNS=<mydns | dns_address> \\    指定DNS
 				-e SS_S=<SS_SERVER> \\       服务器地址
 				-e SS_B=[127.0.0.1] \\       本地监听地址
 				-e SS_L=[1080] \\            本地监听端口
