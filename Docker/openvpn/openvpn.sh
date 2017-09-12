@@ -21,11 +21,11 @@ if [ -z "$(grep "redhat.xyz" /etc/openvpn/server.conf)" ]; then
 	# Get ip address
 	DEV=$(route -n |awk '$1=="0.0.0.0"{print $NF }')
 	if [ -z $SERVER_IP ]; then
-		SERVER_IP=$(curl -s https://httpbin.org/ip |awk -F\" 'NR==2{print $4}')
+		SERVER_IP=$(curl -s ip.cn |egrep -o '([0-9]{1,3}\.){3}[0-9]{1,3}')
 	fi
 
 	if [ -z $SERVER_IP ]; then
-		SERVER_IP=$(curl -s https://showip.net/)
+		SERVER_IP=$(curl -s myip.ipip.net |egrep -o '([0-9]{1,3}\.){3}[0-9]{1,3}')
 	fi
 
 	if [ -z $SERVER_IP ]; then
