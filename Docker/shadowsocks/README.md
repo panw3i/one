@@ -110,9 +110,9 @@ yum install shadowsocks-libev
 ## Run Defult Parameter
 **协定：** []是默参数，<>是自定义参数
 
-			docker run -d --restart always \\
+			docker run -d --restart always --privileged \\
 				-p 8443:8443 \
-				-e SS_K=[pwmake 64] \\        随机密码
+				-e SS_K=[pwmake 64] \\      随机密码
 				-e SS_M=[aes-256-cfb] \\    加密方式
 				-e SS_P=[8443] \\           服务器端口
 				-e LOCAL=<Y> \\             ss-local模式
