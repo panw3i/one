@@ -53,7 +53,11 @@ if [ ! -f /usr/bin/shadowsocks ]; then
 		echo "/usr/bin/ss-local -s $SS_S -p $SS_P -k $SS_K -m $SS_M -b $SS_B -l $SS_L -u" >>/usr/bin/shadowsocks
 	elif [ "$SS_S" -a "$REDIR" ]; then
 		init_net
-		[ -n $DNS ] && echo 'echo "nameserver '$DNS'" >/etc/resolv.conf' >/usr/bin/shadowsocks
+                if [ $DNS ]; then
+                        [ "$DNS" == "mydns" ] && echo 'echo "nameserver '$(awk '$2=="mydns"{print $1}' /etc/hosts)'" >/etc/resolv.conf' >/usr/bin/shadowsocks
+                else
+                        echo 'echo "nameserver '$DNS'" >/etc/resolv.conf' >/usr/bin/shadowsocks
+                fi
 
 		echo '[ -z "`ipset list |grep chnroute`" ] && ipset -R < /etc/sysconfig/ipset.chnroute' >>/usr/bin/shadowsocks
 		echo '[ -z "`iptables -t nat -S |grep shadowsocks`" ] && iptables-restore < /etc/sysconfig/iptables.shadowsocks' >>/usr/bin/shadowsocks
@@ -79,6 +83,7 @@ else
 				-e SS_P=[8443] \\
 				-e LOCAL=<Y> \\
 				-e REDIR=<Y> \\
+				-e DNS=<mydns | dns_address> \\
 				-e SS_S=<SS_SERVER> \\
 				-e SS_B=[127.0.0.1] \\
 				-e SS_L=[1080] \\
