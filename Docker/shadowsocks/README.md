@@ -84,12 +84,13 @@ https://github.com/breakwa11/shadowsocks-rss/wiki/config.json
 
 ****
 
-https://copr.fedorainfracloud.org/coprs/librehat/shadowsocks/repo/epel-7/librehat-shadowsocks-epel-7.repo  
-yum install shadowsocks-libev
-
 
 Shadowsocks-libev
 ===
+
+https://copr.fedorainfracloud.org/coprs/librehat/shadowsocks/repo/epel-7/librehat-shadowsocks-epel-7.repo  
+yum install shadowsocks-libev
+
 
 ## Example:
 
