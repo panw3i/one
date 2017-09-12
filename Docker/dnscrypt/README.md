@@ -56,5 +56,5 @@ DNSCrypt
 				-e BIND_FORWARDERS=<8.8.8.8;> \\               转发DNS，不能有端口号，注意有";"
 				-e BIND_FORWARD_ONLY=<Y> \\                    只使用转发DNS，不递归查询
 				-e BIND_CACHE_SIZE=[32m] \\                    dns缓存大小
-				-e BIND_ENABLE_LOG=<Y> \\                      记录解析日记
+				-e BIND_QUERY_LOG=<Y> \\                       记录解析日记
 				--hostname dns --name dns dnscrypt
