@@ -109,3 +109,10 @@ Nginx
 关于日志记录客户端真实IP(nginx proxy)
 
     sed -i 's/$remote_addr/$proxy_add_x_forwarded_for/' /etc/nginx/nginx.conf
+
+****
+
+关闭IE浏览器证书检查
+
+    Internet选项-->高级-->安全-->对证书地址不匹配发出警告(取消勾选)
+    Internet选项-->安全-->Internet-->自定义级别-->其他-->显示混合内容(启用)
