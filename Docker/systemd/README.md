@@ -15,22 +15,6 @@ Systemd
 
 ## GNOME
 
-    [root@bogon ~]# docker run -d --restart always --privileged --network host -v /sys/fs/cgroup:/sys/fs/cgroup:ro --name gnome gnome
-    b6dc60657e585823a7c32818bacf344bae3ed34fbdddd67a8306c5ffa8babc2b
-    [root@bogon ~]# docker exec -it gnome vncserver
-    
-    You will require a password to access your desktops.
-    
-    Password:
-    Verify:
-    Would you like to enter a view-only password (y/n)? 
-    xauth:  file /root/.Xauthority does not exist
-    
-    New 'bogon:1 ()' desktop is bogon:1
-    
-    Creating default startup script /root/.vnc/xstartup
-    Creating default config /root/.vnc/config
-    Starting applications specified in /root/.vnc/xstartup
-    Log file is /root/.vnc/bogon:1.log
-
-
+    docker run -d --restart always --privileged --network host -v /sys/fs/cgroup:/sys/fs/cgroup:ro --hostname GNOME --name gnome gnome
+    docker exec -it gnome bash
+    [root@GNOME ~]# vncserver
