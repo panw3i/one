@@ -13,4 +13,24 @@ Systemd
     4. 说明：要创建一个固定IP的容器用 docker network create -d=bridge --subnet=192.168.10.0/24 --gateway=192.168.10.1 mynetwork
 
 
+## GNOME
+
+    [root@bogon ~]# docker run -d --restart always --privileged --network host -v /sys/fs/cgroup:/sys/fs/cgroup:ro --name gnome gnome
+    b6dc60657e585823a7c32818bacf344bae3ed34fbdddd67a8306c5ffa8babc2b
+    [root@bogon ~]# docker exec -it gnome vncserver
+    
+    You will require a password to access your desktops.
+    
+    Password:
+    Verify:
+    Would you like to enter a view-only password (y/n)? 
+    xauth:  file /root/.Xauthority does not exist
+    
+    New 'bogon:1 ()' desktop is bogon:1
+    
+    Creating default startup script /root/.vnc/xstartup
+    Creating default config /root/.vnc/config
+    Starting applications specified in /root/.vnc/xstartup
+    Log file is /root/.vnc/bogon:1.log
+
 
